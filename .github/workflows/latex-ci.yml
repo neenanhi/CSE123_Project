@@ -28,6 +28,7 @@ jobs:
         with:
           packages: |
             scheme-basic
+            blindtext
             latex-bin
             latexmk
             amsmath
