@@ -1,50 +1,56 @@
 name: Build LaTeX Document
 
- on:
-   push:
-     branches:
-       - main
-   pull_request:
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
- jobs:
-   build_pdf:
-     runs-on: ubuntu-latest
+jobs:
+  build_pdf:
+    runs-on: ubuntu-latest
 
-     steps:
-       - name: Checkout repository
-         uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-       - name: Install LaTeX
-         run: sudo apt-get update && sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-latex-extra
+      - name: Install LaTeX
+        run: sudo apt-get update && sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-latex-extra
 
-       - name: Detect and compile main LaTeX file
-         run: |
-           # Find the main .tex file by searching for \documentclass
-           main_file=$(grep -rl '^\\documentclass' docs/ --include=\*.tex | sed 's|^\./||')
-           if [ -z "$main_file" ]; then
-             echo "Error: No main LaTeX file detected!"
-             exit 1
-           fi
-           echo "Main LaTeX file detected: $main_file"
-           # Extract directory and move there to compile
-           main_dir=$(dirname "$main_file")
-           cd "$main_dir" || exit 1
-           # Create build directory if it doesn't exist
-           mkdir -p build
-           # Compile the LaTeX document twice for references
-           # Use -output-directory to specify where the PDF and auxiliary files should go
-           pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"
-           pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"
-       - name: Upload PDF as an artifact
-         uses: actions/upload-artifact@v4
-         with:
-           name: compiled-pdf
-           path: docs/**/build/*.pdf
+      - name: Detect and compile main LaTeX file
+        run: |
+          # Find the main .tex file by searching for \documentclass
+          main_file=$(grep -rl '^\\documentclass' docs/ --include=\*.tex | sed 's|^\./||')
 
-       - name: Commit and push PDF to repository
-         if: github.event_name == 'push'  # Only push changes on direct pushes, not PRs
-         run: |
-           git config --global user.name "GitHub Actions"
-           git config --global user.email "actions@github.com"
-           git add docs/**/build/*.pdf
-           git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-generated PDF" && git push)
+          if [ -z "$main_file" ]; then
+            echo "Error: No main LaTeX file detected!"
+            exit 1
+          fi
+
+          echo "Main LaTeX file detected: $main_file"
+
+          # Extract directory and move there to compile
+          main_dir=$(dirname "$main_file")
+          cd "$main_dir" || exit 1
+
+          # Create build directory if it doesn't exist
+          mkdir -p build
+
+          # Compile the LaTeX document twice for references
+          # Use -output-directory to specify where the PDF and auxiliary files should go
+          pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"
+          pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"
+
+      - name: Upload PDF as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-pdf
+          path: docs/**/build/*.pdf
+
+      - name: Commit and push PDF to repository
+        if: github.event_name == 'push'  # Only push changes on direct pushes, not PRs
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add docs/**/build/*.pdf
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-generated PDF" && git push)
