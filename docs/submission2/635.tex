@@ -1,0 +1,53 @@
+
+\section{6-3-5}
+\subsection{Hardware \& Mechanics}
+\begin{itemize}
+    \item use a servo motor for deadbolt control
+    \item hall effect sensor to detect if the door is open or closed
+    \item implement linear actuator for silent locking
+    \item maybe anti-backlash gears to reduce mechanical play
+    \item consider designing a modular lock housing with 3D-printed parts
+    \item have a backup battery to ensure operation during power outages
+\end{itemize}
+
+\section{Smartphone Integration}
+\begin{itemize}
+    \item develop a smartphone app for remote locking/unlocking
+    \item push notifications for lock activity (ex: ``Door locked at 3:45 PM'')
+    \item have biometric authentication (Face ID or fingerprint)
+    \item Use Bluetooth for proximity-based auto-unlock
+    \item NFC support for quick unlocking via phone tap
+    \item include multi-user access control with time-based permissions
+\end{itemize}
+
+\subsection{Security Features}
+\begin{itemize}
+    \item Implement AES-256 encryption for communication between the lock and phone
+    \item maybe two-factor authentication for app access
+    \item develop a tamper-detection alarm if the lock is forced
+    \item lockdown mode for multiple failed attempts
+    \item include a manual override mechanism in case of system failure
+    \item utilize rolling codes for Bluetooth pairing to prevent hacking
+\end{itemize}
+
+\subsection{Software \& Control}
+\begin{itemize}
+    \item ESP32 microcontroller for Wi-Fi and Bluetooth control
+    \item Develop a closed-loop system to verify if the lock is engaged properly
+    \item make a real-time event log accessible via the app
+    \item add a scheduling feature for auto-locking at specific times
+    \item guest mode with temporary passcodes
+    \item Integration with voice assistants like Alexa or Google Assistant
+\end{itemize}
+
+\subsection{Advanced Features}
+\begin{itemize}
+    \item GPS stuff
+    \item add geofencing to lock or unlock based on the user's location
+    \item integrate with smart home platforms like Home Assistant
+    \item use AI-based behavior analysis to suggest locking patterns
+    \item add a camera with facial recognition for auto-unlock
+    \item enable remote firmware updates
+    \item learn database SQL
+    \item use solar charging for battery-powered locks
+\end{itemize}
