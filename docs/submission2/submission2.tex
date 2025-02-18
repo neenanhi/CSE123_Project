@@ -1,12 +1,25 @@
 % Main tex file, other sections will be inputted here
 
 \documentclass{article}
+
+% packages used
 \usepackage{blindtext}
 \usepackage{titlesec}
 \usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{ % Got from overleaf example page
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={submission2},
+    pdfpagemode=FullScreen,
+    }
+
 \title{Submission 2 - Smart lock} % can think of another name for our product
 \author{Adam Wu, Jackson Kennedy, Neena Nguyen, Nathaniel Laurente}
-\date{Feb 13, 2025}
+\date{Feb 17, 2025}
 \begin{document}
 
 \maketitle
@@ -22,13 +35,15 @@ There is a need for a lock and key system that can notify users if they forget t
 
 \subsection{6-3-5 method}
 
-\subsection{Morphological Charts}
+\input{morphological.tex}
 
 \subsection{Mind Maps}
 
 \input{Decision_Table.tex}
 
+\newpage
 \section{Basic Planning}
-\subsection{Gantt Chart}
+
+\input{ganttChart.tex}
 
 \end{document}
