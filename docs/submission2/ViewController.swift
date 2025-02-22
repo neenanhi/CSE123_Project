@@ -2,7 +2,6 @@
 //  ViewController.swift
 //  SmartLock123
 //
-//  Created by J T on 2/27/25.
 //
 
 import UIKit
