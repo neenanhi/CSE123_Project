@@ -19,27 +19,25 @@ jobs:
 
       - name: Detect and compile main LaTeX file
         run: |
-          # Find the main .tex file by searching for \documentclass
-          main_file=$(grep -rl '^\\documentclass' docs/ --include=\*.tex | sed 's|^\./||')
+          # Loop over all directories in docs and compile any LaTeX files
+          find docs -type f -name "*.tex" | while read main_file; do
+            # Check if the file has a \documentclass (main LaTeX file)
+            if grep -q '^\\documentclass' "$main_file"; then
+              echo "Main LaTeX file detected: $main_file"
 
-          if [ -z "$main_file" ]; then
-            echo "Error: No main LaTeX file detected!"
-            exit 1
-          fi
+              # Extract directory and move there to compile
+              main_dir=$(dirname "$main_file")
+              cd "$main_dir" || exit 1
 
-          echo "Main LaTeX file detected: $main_file"
+              # Create build directory if it doesn't exist
+              mkdir -p build
 
-          # Extract directory and move there to compile
-          main_dir=$(dirname "$main_file")
-          cd "$main_dir" || exit 1
-
-          # Create build directory if it doesn't exist
-          mkdir -p build
-
-          # Compile the LaTeX document twice for references
-          # Use -output-directory to specify where the PDF and auxiliary files should go
-          pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"
-          pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"
+              # Compile the LaTeX document twice for references
+              # Use -output-directory to specify where the PDF and auxiliary files should go
+              pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"
+              pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"
+            fi
+          done
 
       - name: Upload PDF as an artifact
         uses: actions/upload-artifact@v4
