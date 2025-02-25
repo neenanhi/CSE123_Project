@@ -17,14 +17,29 @@ jobs:
       - name: Install LaTeX
         run: sudo apt-get update && sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-latex-extra
 
-      - name: Detect and compile main LaTeX file
+      - name: Detect and compile all main LaTeX files
         run: |
-          # Loop over all directories in docs and compile any LaTeX files
-          find docs -type f -name "*.tex" | while read main_file; do
-            # Check if the file has a \documentclass (main LaTeX file)
-            if grep -q '^\\documentclass' "$main_file"; then
-              echo "Main LaTeX file detected: $main_file"
+          # Define the Bash script inline
+          main_tex_files=()
 
+          # Find all .tex files in the docs directory and its subdirectories
+          find docs -type f -name "*.tex" | while read -r main_file; do
+              # Check if the file has a \documentclass (main LaTeX file)
+              if grep -q '^\\documentclass' "$main_file"; then
+                  echo "Main LaTeX file detected: $main_file"
+                  # Add the main file to the array
+                  main_tex_files+=("$main_file")
+              fi
+          done
+
+          # Print all main LaTeX files found
+          echo "List of main LaTeX files:"
+          for file in "${main_tex_files[@]}"; do
+              echo "$file"
+          done
+
+          # Loop over all main LaTeX files and compile them
+          for main_file in "${main_tex_files[@]}"; do
               # Extract directory and move there to compile
               main_dir=$(dirname "$main_file")
               cd "$main_dir" || exit 1
@@ -36,7 +51,6 @@ jobs:
               # Use -output-directory to specify where the PDF and auxiliary files should go
               pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"
               pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"
-            fi
           done
 
       - name: Upload PDF as an artifact
