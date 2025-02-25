@@ -23,12 +23,15 @@ jobs:
           main_tex_files=()
 
           # Find all .tex files in the docs directory and its subdirectories
+          echo "Searching for .tex files in docs/..."
           find docs -type f -name "*.tex" | while read -r main_file; do
               # Check if the file has a \documentclass (main LaTeX file)
               if grep -q '^\\documentclass' "$main_file"; then
                   echo "Main LaTeX file detected: $main_file"
                   # Add the main file to the array
                   main_tex_files+=("$main_file")
+              else
+                  echo "Skipping non-main LaTeX file: $main_file"
               fi
           done
 
@@ -40,21 +43,37 @@ jobs:
 
           # Loop over all main LaTeX files and compile them
           for main_file in "${main_tex_files[@]}"; do
+              echo "Compiling $main_file..."
               # Extract directory and move there to compile
               main_dir=$(dirname "$main_file")
-              cd "$main_dir" || exit 1
+              cd "$main_dir" || { echo "Failed to cd into $main_dir"; exit 1; }
 
               # Create build directory if it doesn't exist
               mkdir -p build
 
               # Compile the LaTeX document twice for references
               # Use -output-directory to specify where the PDF and auxiliary files should go
-              pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"
-              pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"
+              if ! pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"; then
+                  echo "Error: First compilation of $main_file failed!"
+                  exit 1
+              fi
+              if ! pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"; then
+                  echo "Error: Second compilation of $main_file failed!"
+                  exit 1
+              fi
+
+              # Verify that the PDF was generated
+              pdf_file="build/$(basename "$main_file" .tex).pdf"
+              if [[ -f "$pdf_file" ]]; then
+                  echo "Successfully generated PDF: $pdf_file"
+              else
+                  echo "Error: PDF was not generated for $main_file!"
+                  exit 1
+              fi
           done
 
-      - name: Upload PDF as an artifact
+      - name: Upload PDFs as artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: compiled-pdf
+          name: compiled-pdfs
           path: docs/**/build/*.pdf
