@@ -1,6 +1,8 @@
 \section{Design For Manufacture And Assembly}
 
-Currently, our idea for making the lock is having keypad in the front and with a camera or with a fingerprint scanner at the top of the lock. Inside the lock, we have an ESP32-C3 that will connect to the wifi and the server. For now, there is only the front side of the lock drawn. We will also have the back side of the lock drawn next. Our design below is a non functioning prototype that is meant for aesthetics.
+\subsection{Prototyping}
+
+Our current idea for creating smart lock is having a pinpad on the front along with either a camera or fingerprint scanner on the top of the lock. Inside the lock, we have an ESP32-C3 microcontroller that connects to the wifi and the server. Our current design is shown below as a non functioning prototype, meant for aesthetics.
 
 % Information about side-to-side figures:
 % https://tex.stackexchange.com/questions/37581/latex-figures-side-by-side
@@ -20,5 +22,9 @@ Currently, our idea for making the lock is having keypad in the front and with a
     \caption{First lock design}
 \end{figure}
 
-The prototype can also be updated in the future, meaning that this will not be the final prototype that we will be building. We will look over the costs and potential flaws that is in our current model.
+The most basic functionality that our lock needs to do is being able to send information to the lock from a device to the lock, telling it to either lock or unlock the door. As we slowly develop our smart lock, we will be able to add in more functionalities such as generating pin codes for the pincode lock. By the end of Winter 2025 quarter, we can prove that our phone and microcontroller is able to connect to the server to tell the lock to either unlock or lock the door.
+
+\subsection{Functional Prototype}
+
+As for our functional prototype construction, we would need a list of materials shown below.
 
