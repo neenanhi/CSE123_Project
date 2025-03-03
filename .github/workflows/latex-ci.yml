@@ -14,63 +14,35 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install LaTeX
-        run: sudo apt-get update && sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-latex-extra
+      - name: Setup TexLive Action
+        run: teatimeguest/setup-texlive-action@v3.3.4
+        with:
+          packages: |
+            scheme-basic
+            latex-bin
+            latexmk
+            texlive-latex-extra
+            texlive-graphics
+            texlive-hyperref
 
-      - name: Detect and compile all main LaTeX files
+      - name: Compile LaTeX Document
         run: |
-          # Define the Bash script inline
-          main_tex_files=()
+          MAIN_TEX_FILE="docs/submission3/submission3.tex"
 
-          # Find all .tex files in the docs directory and its subdirectories
-          echo "Searching for .tex files in docs/..."
-          find docs -type f -name "*.tex" | while read -r main_file; do
-              # Check if the file has a \documentclass (main LaTeX file)
-              if grep -q '^\\documentclass' "$main_file"; then
-                  echo "Main LaTeX file detected: $main_file"
-                  # Add the main file to the array
-                  main_tex_files+=("$main_file")
-              else
-                  echo "Skipping non-main LaTeX file: $main_file"
-              fi
-          done
+          echo "Compiling $MAIN_TEX_FILE..."
 
-          # Print all main LaTeX files found
-          echo "List of main LaTeX files:"
-          for file in "${main_tex_files[@]}"; do
-              echo "$file"
-          done
+          mkdir -p docs/submission3/build
 
-          # Loop over all main LaTeX files and compile them
-          for main_file in "${main_tex_files[@]}"; do
-              echo "Compiling $main_file..."
-              # Extract directory and move there to compile
-              main_dir=$(dirname "$main_file")
-              cd "$main_dir" || { echo "Failed to cd into $main_dir"; exit 1; }
+          pdflatex -interaction=nonstopmode -output-directory=docs/submission3/build "$MAIN_TEX_FILE"
+          pdflatex -interaction=nonstopmode -output-directory=docs/submission3/build "$MAIN_TEX_FILE"
 
-              # Create build directory if it doesn't exist
-              mkdir -p build
-
-              # Compile the LaTeX document twice for references
-              # Use -output-directory to specify where the PDF and auxiliary files should go
-              if ! pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"; then
-                  echo "Error: First compilation of $main_file failed!"
-                  exit 1
-              fi
-              if ! pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"; then
-                  echo "Error: Second compilation of $main_file failed!"
-                  exit 1
-              fi
-
-              # Verify that the PDF was generated
-              pdf_file="build/$(basename "$main_file" .tex).pdf"
-              if [[ -f "$pdf_file" ]]; then
-                  echo "Successfully generated PDF: $pdf_file"
-              else
-                  echo "Error: PDF was not generated for $main_file!"
-                  exit 1
-              fi
-          done
+          PDF_FILE="docs/submission3/build/$(basename "$MAIN_TEX_FILE" .tex).pdf"
+          if [[ -f "$PDF_FILE" ]]; then
+            echo "Successfully generated PDF: $PDF_FILE"
+          else
+            echo "Error: PDF was not generated!"
+            exit 1
+          fi
 
       - name: Upload PDFs as artifacts
         uses: actions/upload-artifact@v4
