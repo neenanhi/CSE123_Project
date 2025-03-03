@@ -16,7 +16,7 @@ jobs:
       - name: Compile LaTeX files
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: docs/submission3/submission3.tex
+          root_file: submission3.tex
           compiler: latexmk # Can also use xelatex, lualatex, or latexmk
           args: "-interaction=nonstopmode -pdf"
           texlive_version: 2024
