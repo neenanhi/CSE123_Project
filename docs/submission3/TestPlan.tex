@@ -1,17 +1,50 @@
 \section{Test Plan}
-\textit{Firebase Connectivity Test}
-\newline
+
 \subsection{Scope}
-\textbf{Purpose}
+\Large 
+\textit{Firebase Mobile Connectivity Test}
+\newline
+\newline
+\normalsize
+\textbf{Test Goals and Purpose} 
 \begin{itemize}
+    
     \item Ensure that an IOS device can securely connect and push data to the Firebase Firestore servers.
-    \item Ensure that an ESP32 device can securely connect and retrieve data from the Firebase Firestore servers.
-\textbf{Parameters}
-\item 1/0 LOCK$\_$SIGNAL necessary for defining lock-state, 1 
+
 \end{itemize}
-\textit{Lock Functionality Test}
+\textbf{Parameters:}
 \begin{itemize}
+
+\item 1/0 LOCK$\_$STATE necessary for defining lock-state, 1 is unlocked, 0 is locked.
+
+\end{itemize}
+\textbf{Expectations of Test}
+\begin{itemize}
+
+\item There will be no issue with pushing a simple piece of data for LOCK$\_$STATE to the firestore servers, clicking lock will properly push a 0 and clicking unlock will store a 1.
+
+\end{itemize}
+\Large
+\textit{Lock Hardware Functionality Test}
+\newline
+\newline
+\normalsize
+\textbf{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that an ESP32 device can securely connect and retrieve data from the Firebase Firestore servers.
     \item Ensure that the ESP32 board can correctly interact with hardware to enable mechanisms for locking/unlocking.
+\end{itemize}
+\textbf{Parameters:}
+\begin{itemize}
+
+\item 1/0 LOCK$\_$STATE necessary for defining lock-state, 0 is locked, 1 is unlocked.
+
+\end{itemize}
+\textbf{Expectations of Test}
+\begin{itemize}
+
+\item The locking mechanism will respond appropriately after retrieving from Firestore, and the bolt will trigger when the parameter is set to 0 and likewise release given a 1 value.
+
 \end{itemize}
 \subsection{Administrative Details}
 
