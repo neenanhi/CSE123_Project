@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup TexLive Action
-        run: teatimeguest/setup-texlive-action@v3.3.4
+        uses: teatimeguest/setup-texlive-action@v3.3.4
         with:
           packages: |
             scheme-basic
