@@ -9,45 +9,21 @@ on:
 jobs:
   build_pdf:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup TexLive Action
-        uses: teatimeguest/setup-texlive-action@v3.3.4
+      - name: Compile LaTeX files
+        uses: xu-cheng/latex-action@v3
         with:
-          packages: |
-            scheme-basic
-            latexmk
-            blindtext
-            titlesec
-            booktabs
-            graphics
-            caption
-            hyperref
-
-      - name: Compile LaTeX Document
-        run: |
-          MAIN_TEX_FILE="docs/submission3/submission3.tex"
-
-          echo "Compiling $MAIN_TEX_FILE..."
-
-          mkdir -p docs/submission3/build
-
-          pdflatex -interaction=nonstopmode -output-directory=docs/submission3/build "$MAIN_TEX_FILE"
-          pdflatex -interaction=nonstopmode -output-directory=docs/submission3/build "$MAIN_TEX_FILE"
-
-          PDF_FILE="docs/submission3/build/$(basename "$MAIN_TEX_FILE" .tex).pdf"
-          if [[ -f "$PDF_FILE" ]]; then
-            echo "Successfully generated PDF: $PDF_FILE"
-          else
-            echo "Error: PDF was not generated!"
-            exit 1
-          fi
+          root_file: docs/submission3/submission3.tex
+          compiler: latexmk # Can also use xelatex, lualatex, or latexmk
+          args: "-interaction=nonstopmode"
+          texlive_version: 2024
 
       - name: Upload PDFs as artifacts
         uses: actions/upload-artifact@v4
         with:
           name: compiled-pdfs
-          path: docs/**/build/*.pdf
+          path: docs/submission3/build/submission3.pdf
+
