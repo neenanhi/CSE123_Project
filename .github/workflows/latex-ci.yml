@@ -19,11 +19,13 @@ jobs:
         with:
           packages: |
             scheme-basic
-            latex-bin
             latexmk
-            texlive-latex-extra
-            texlive-graphics
-            texlive-hyperref
+            blindtext
+            titlesec
+            booktabs
+            graphics
+            caption
+            hyperref
 
       - name: Compile LaTeX Document
         run: |
