@@ -1,13 +1,12 @@
 \section{Test Plan}
 
-\subsection{Scope}
-\Large
-\textit{Firebase Mobile Connectivity Test}
+\textcolor{violet}{\subsection{Scope}}
+\textcolor{red}{Firebase Mobile Connectivity Test}
 \newline
 \newline
-\normalsize
 \textbf{Test Goals and Purpose} 
 \begin{itemize}
+    
     \item Ensure that an IOS device can securely connect and push data to the Firebase Firestore servers.
 
 \end{itemize}
@@ -15,19 +14,18 @@
 \begin{itemize}
 
 \item 1/0 LOCK$\_$STATE necessary for defining lock-state, 1 is unlocked, 0 is locked.
+\item 7 digit QUALIFIED$\_$PIN list on an allow list for physical keypad on SmartLock.
 
 \end{itemize}
 \textbf{Expectations of Test}
 \begin{itemize}
 
-\item There will be no issue with pushing a simple piece of data for LOCK$\_$STATE to the firestore servers, clicking lock will properly push a 0 and clicking unlock will store a 1.
+\item There will be no issue with pushing a simple piece of data for LOCK$\_$STATE to the firestore servers, clicking lock will properly push a 0 and clicking unlock will store a 1. Additionally, the pin list composed of generated and custom user pins will also have no trouble being communicated with Firestore servers to later be fetched by the physical device as an additional mechanism for locking and unlocking.
 
 \end{itemize}
-\Large
-\textit{Lock Hardware Functionality Test}
+\textcolor{red}{Lock Hardware Functionality Test}
 \newline
 \newline
-\normalsize
 \textbf{Test Goals and Purpose}
 \begin{itemize}
     \item Ensure that an ESP32 device can securely connect and retrieve data from the Firebase Firestore servers.
@@ -37,20 +35,45 @@
 \begin{itemize}
 
 \item 1/0 LOCK$\_$STATE necessary for defining lock-state, 0 is locked, 1 is unlocked.
+\item 7 digit QUALIFIED$\_$PIN list on an allow list for physical keypad on SmartLock.
 
 \end{itemize}
 \textbf{Expectations of Test}
 \begin{itemize}
 
-\item The locking mechanism will respond appropriately after retrieving from Firestore, and the bolt will trigger when the parameter is set to 0 and likewise release given a 1 value.
+\item The locking mechanism will respond appropriately after retrieving from Firestore, and the bolt will trigger when the parameter is set to 0 and likewise release given a 1 value. Additionally, the bolt will release given a valid input from the QUALIFIED$\_$PIN list and reject other non-valid input pins.
 
 \end{itemize}
-\subsection{Administrative Details}
-
-\subsection{Design of Experiment}
-
-\subsection{Testing Procedures}
-
-\subsection{Independent Variable}
-
-\subsection{Dependent Variable}
+\textcolor{violet}{\subsection{Administrative Details}}
+\noindent\textcolor{red}{Firebase Mobile Connectivity Test}
+\newline
+\newline
+\textit{Date $\&$ Location:} Mar 10 @ Baskin Engineering.
+\newline
+\textit{Conducting:} Jackson Kennedy, Adam Wu, Nathaniel Laurente, Neena Nguyen.
+\newline
+\newline
+\textcolor{red}{Lock Hardware Functionality Test}
+\newline
+\newline
+\textit{Date $\&$ Location:} Mar 31 @ Baskin Engineering.
+\newline
+\textit{Conducting:} Jackson Kennedy, Adam Wu, Nathaniel Laurente, Neena Nguyen.
+\newline
+\textcolor{violet}{\subsection{Design of Experiment}}
+\noindent\textcolor{red}{Firebase Mobile Connectivity Test}
+\newline
+\textit{Testing method type:} Functional Testing
+\newline
+\textit{Test apparatus:} N/A Cloud Based
+\newline
+\textit{Independent Variables:} Lock Status, Acceptable Pins
+\newline
+\textit{Dependent Variables:} N/A
+\newline
+\textit{Number of factors:}
+\newline
+\textit{Sampling Procedures:} 2 samples of observing Firestore for 1/0 LOCK$\_$STATE. 2 randomly generated PINs and 1 custom-user pin.
+\newline
+\textcolor{red}{Lock Hardware Functionality Test}
+\textcolor{violet}{\subsection{Testing Procedures}}
