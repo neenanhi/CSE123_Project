@@ -9,71 +9,22 @@ on:
 jobs:
   build_pdf:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install LaTeX
-        run: sudo apt-get update && sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-latex-extra
-
-      - name: Detect and compile all main LaTeX files
-        run: |
-          # Define the Bash script inline
-          main_tex_files=()
-
-          # Find all .tex files in the docs directory and its subdirectories
-          echo "Searching for .tex files in docs/..."
-          find docs -type f -name "*.tex" | while read -r main_file; do
-              # Check if the file has a \documentclass (main LaTeX file)
-              if grep -q '^\\documentclass' "$main_file"; then
-                  echo "Main LaTeX file detected: $main_file"
-                  # Add the main file to the array
-                  main_tex_files+=("$main_file")
-              else
-                  echo "Skipping non-main LaTeX file: $main_file"
-              fi
-          done
-
-          # Print all main LaTeX files found
-          echo "List of main LaTeX files:"
-          for file in "${main_tex_files[@]}"; do
-              echo "$file"
-          done
-
-          # Loop over all main LaTeX files and compile them
-          for main_file in "${main_tex_files[@]}"; do
-              echo "Compiling $main_file..."
-              # Extract directory and move there to compile
-              main_dir=$(dirname "$main_file")
-              cd "$main_dir" || { echo "Failed to cd into $main_dir"; exit 1; }
-
-              # Create build directory if it doesn't exist
-              mkdir -p build
-
-              # Compile the LaTeX document twice for references
-              # Use -output-directory to specify where the PDF and auxiliary files should go
-              if ! pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"; then
-                  echo "Error: First compilation of $main_file failed!"
-                  exit 1
-              fi
-              if ! pdflatex -interaction=nonstopmode -output-directory=build "$(basename "$main_file")"; then
-                  echo "Error: Second compilation of $main_file failed!"
-                  exit 1
-              fi
-
-              # Verify that the PDF was generated
-              pdf_file="build/$(basename "$main_file" .tex).pdf"
-              if [[ -f "$pdf_file" ]]; then
-                  echo "Successfully generated PDF: $pdf_file"
-              else
-                  echo "Error: PDF was not generated for $main_file!"
-                  exit 1
-              fi
-          done
+      - name: Compile LaTeX files
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: submission3.tex
+          compiler: latexmk # Can also use xelatex, lualatex, or latexmk
+          args: "-interaction=nonstopmode -pdf"
+          texlive_version: 2024
+          working_directory: docs/submission3
 
       - name: Upload PDFs as artifacts
         uses: actions/upload-artifact@v4
         with:
           name: compiled-pdfs
-          path: docs/**/build/*.pdf
+          path: docs/submission3/submission3.pdf
+
