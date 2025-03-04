@@ -31,6 +31,7 @@
     \item Ensure that invalid codes should not release bolt, while valid codes should.
 \end{itemize}
 
+
 \subparagraph{Parameters}
 \begin{itemize}
     \item 1/0 LOCK$\_$STATE necessary for defining lock-state, 0 is locked, 1 is unlocked. Retrieved from firebase.
@@ -43,6 +44,33 @@
     \item Expecting the lock to not unlock after a code is expired, only unlock when it is still valid in a time frame.
 \end{itemize}
 
+% Nathaniel's addition
+
+\subsubsection{Multi-User \& Concurrency Test (Low Priority)}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that multiple users can simultaneously interact with the smart lock through the mobile app and keypad without causing system conflicts.
+    \item Verify that Firebase can handle concurrent updates to the lock state and PIN list without failure.
+    \item Ensure the lock responds appropriately when multiple unlock requests are received from different users.
+\end{itemize}
+
+
+\subparagraph{Parameters}
+\begin{itemize}
+    \item Simultaneous requests from different mobile devices attempting to unlock/lock the door.
+    \item Simultaneous PIN entries from different users on the physical keypad and mobile app.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Multiple users attempting to unlock the door at the same time should not cause conflicts or undefined behavior.
+    \item The lock should process and execute the most recent valid request, ensuring no delays or duplicate actions.
+    \item System logs should correctly track each user’s request, ensuring accountability and reliable data collection for user feedback.
+\end{itemize}
+% End Nathaniel's addition
+\newpage
+
+% New Section ----------------------------------------------------------------------------------------
 \textcolor{teal}{\subsection{Administrative Details}}
 
 \subsubsection{Firebase Mobile Connectivity Test}
@@ -52,6 +80,11 @@
 
 \subsubsection{Lock Hardware Functionality Test}
 \textbf{\textit{Date $\&$ Location:}} Mar 31, 2025 in class
+\newline
+\textbf{\textit{Conducting Test:}} Jackson Kennedy, Adam Wu, Nathaniel Laurente, Neena Nguyen, and Professor Harrison.
+
+\subsubsection{Multi-User \& Concurrency Test}
+\textbf{\textit{Date $\&$ Location:}} April 18, 2025 in class
 \newline
 \textbf{\textit{Conducting Test:}} Jackson Kennedy, Adam Wu, Nathaniel Laurente, Neena Nguyen, and Professor Harrison.
 
@@ -80,8 +113,24 @@
 \newline
 \textbf{\textit{Number of factors:}} N/A factors considered in this moment
 \newline
-\textbf{\textit{Sampling Procedures:}} Samples obtained from servers for LOCK\_STATE, only 0 or 1. Then we have samples for pin codes as well from firebase.
+\textbf{\textit{Sampling Procedures:}} Samples obtained from servers for LOCK\_STATE, only 0 or 1. Then we have samples for pin codes as well from Firebase.
 \newline
+
+\subsubsection{Multi-User \& Concurrency Test}
+\textbf{\textit{Testing method type:}} Multiple phones will send an unlock signal from phone at nearly the exact same time and see if any undefined behavior occurs. Send a lock signal and an unlock signal at the same time to test if we can prioritize actions that came first, or lock the app after an action from one device has been made.
+\newline
+\textbf{\textit{Test apparatus:}} Mobile Device along with ESP32-C3.
+\newline
+\textbf{\textit{Independent Variables:}} Make sure that the ESP32-C3 can read a simple "Hello world" on the server for basic testing.
+\newline
+\textbf{\textit{Dependent Variables:}} ESP32-C3 behavior after multiple devices send a signal at the same time or immediately one after the other.
+\newline
+\textbf{\textit{Number of factors:}} 2 factors to be considered
+\newline
+\textbf{\textit{Sampling Procedures:}} Samples obtained from servers for LOCK\_STATE, only 0 or 1. Determine if multiple signals causes undefined or expected behavior.
+
+
+% New Section -----------------------------------------------------------------------------------------
 \textcolor{teal}{\subsection{Testing Procedures}}
 \subsubsection{Safety Precautions}
 Safety precautions for our project includes not having fast and forceful locks that can hurt individuals.
