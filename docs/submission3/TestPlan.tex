@@ -1,92 +1,98 @@
 \section{Test Plan}
 
 \textcolor{teal}{\subsection{Scope}}
-\underline{Firebase Mobile Connectivity Test}
-\newline
-\newline
-\textbf{Test Goals and Purpose} 
+\subsubsection{Firebase Mobile Connectivity Test}
+\subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    
     \item Ensure that an IOS device can securely connect and push data to the Firebase Firestore servers.
-
+    \item What happens when there may be bad network connection
+    \item Set a certain time frame for the pin to be qualified for
 \end{itemize}
-\textbf{Parameters:}
+
+\subparagraph{Parameters}
 \begin{itemize}
-
-\item 1/0 LOCK$\_$STATE necessary for defining lock-state, 1 is unlocked, 0 is locked.
-\item 7 digit QUALIFIED$\_$PIN list on an allow list for physical keypad on SmartLock.
-
+    \item 1/0 LOCK$\_$STATE necessary for defining lock-state, 1 is unlocked, 0 is locked.
+    \item 7 digit QUALIFIED$\_$PIN list on an allow list for physical keypad on SmartLock.
+    \item Make sure what data we send from phone is on firebase
+    \item Provide time frame as input for start and expiration time for pin code
 \end{itemize}
-\textbf{Expectations of Test}
+
+\subparagraph{Expectations of Test}
 \begin{itemize}
-
-\item There will be no issue with pushing a simple piece of data for LOCK$\_$STATE to the firestore servers, clicking lock will properly push a 0 and clicking unlock will store a 1. Additionally, the pin list composed of generated and custom user pins will also have no trouble being communicated with Firestore servers to later be fetched by the physical device as an additional mechanism for locking and unlocking.
-
+    \item There will be no issue with pushing a simple piece of data for LOCK$\_$STATE to the firestore servers, clicking lock will properly push a 0 and clicking unlock will store a 1. Additionally, the pin list composed of generated and custom user pins will also have no trouble being communicated with Firestore servers to later be fetched by the physical device as an additional mechanism for locking and unlocking.
+    \item Testing the time frame of the pin code, ensure only the time when valid to use the pin. Otherwise other times should be invalid.
 \end{itemize}
-\underline{Lock Hardware Functionality Test}
-\newline
-\newline
-\textbf{Test Goals and Purpose}
+
+\subsubsection{Lock Hardware Functionality Test}
+\subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Ensure that an ESP32 device can securely connect and retrieve data from the Firebase Firestore servers.
-    \item Ensure that the ESP32 board can correctly interact with hardware to enable mechanisms for locking/unlocking.
+    \item Ensure that an ESP32-C3 device can securely connect and retrieve data from the Firebase Firestore servers.
+    \item Ensure that the ESP32-C3 board can correctly interact with hardware to enable mechanisms for locking/unlocking.
+    \item Ensure that invalid codes should not release bolt, while valid codes should.
 \end{itemize}
-\textbf{Parameters:}
+
+\subparagraph{Parameters}
 \begin{itemize}
-
-\item 1/0 LOCK$\_$STATE necessary for defining lock-state, 0 is locked, 1 is unlocked.
-\item 7 digit QUALIFIED$\_$PIN list on an allow list for physical keypad on SmartLock.
+    \item 1/0 LOCK$\_$STATE necessary for defining lock-state, 0 is locked, 1 is unlocked. Retrieved from firebase.
+    \item 7 digit QUALIFIED$\_$PIN list on an allow list for physical keypad on SmartLock.
 \end{itemize}
-\textbf{Expectations of Test}
+
+\subparagraph{Expectations of Test}
 \begin{itemize}
-
-\item The locking mechanism will respond appropriately after retrieving from Firestore, and the bolt will trigger when the parameter is set to 0 and likewise release given a 1 value. Additionally, the bolt will release given a valid input from the QUALIFIED$\_$PIN list and reject other non-valid input pins.
-
+    \item The locking mechanism will respond appropriately after retrieving from Firestore, and the bolt will trigger when the parameter is set to 0 and likewise release given a 1 value. Additionally, the bolt will release given a valid input from the QUALIFIED$\_$PIN list and reject other non-valid input pins.
+    \item Expecting the lock to not unlock after a code is expired, only unlock when it is still valid in a time frame.
 \end{itemize}
+
 \textcolor{teal}{\subsection{Administrative Details}}
-\noindent\underline{Firebase Mobile Connectivity Test}
+
+\subsubsection{Firebase Mobile Connectivity Test}
+\textbf{\textit{Date $\&$ Location:}} Mar 12, 2025 in class
 \newline
+\textbf{\textit{Conducting Test:}} Jackson Kennedy, Adam Wu, Nathaniel Laurente, Neena Nguyen, and Professor Harrison.
+
+\subsubsection{Lock Hardware Functionality Test}
+\textbf{\textit{Date $\&$ Location:}} Mar 31, 2025 in class
 \newline
-\textit{Date $\&$ Location:} Mar 10 @ Baskin Engineering.
-\newline
-\textit{Conducting:} Jackson Kennedy, Adam Wu, Nathaniel Laurente, Neena Nguyen.
-\newline
-\newline
-\underline{Lock Hardware Functionality Test}
-\newline
-\newline
-\textit{Date $\&$ Location:} Mar 31 @ Baskin Engineering.
-\newline
-\textit{Conducting:} Jackson Kennedy, Adam Wu, Nathaniel Laurente, Neena Nguyen.
-\newline
+\textbf{\textit{Conducting Test:}} Jackson Kennedy, Adam Wu, Nathaniel Laurente, Neena Nguyen, and Professor Harrison.
+
 \textcolor{teal}{\subsection{Design of Experiment}}
-\noindent\underline{Firebase Mobile Connectivity Test}
+\subsubsection{Firebase Mobile Connectivity Test}
+\textbf{\textit{Testing method type:}} Functional Testing, does the simple job of sending unlock or lock to firebase server, also sending pins.
 \newline
-\textit{Testing method type:} Functional Testing
+\textbf{\textit{Test apparatus:}} Firebase Cloud service
 \newline
-\textit{Test apparatus:} N/A Cloud Based
+\textbf{\textit{Independent Variables:}} Lock Status, Acceptable Pins
 \newline
-\textit{Independent Variables:} Lock Status, Acceptable Pins
+\textbf{\textit{Dependent Variables:}} N/A
 \newline
-\textit{Dependent Variables:} N/A
+\textbf{\textit{Number of factors:}}
 \newline
-\textit{Number of factors:}
+\textbf{\textit{Sampling Procedures:}} 2 samples of observing Firestore for 1/0 LOCK$\_$STATE. 2 randomly generated PINs and 1 custom-user pin.
+
+\subsubsection{Lock Hardware Functionality Test}
+\textbf{\textit{Testing method type:}} When phone sends data for unlock or lock onto firebase, the lock should quickly retrieve information and respond accordingly. The purpose of this is to make sure the lock receives the data fast enough so that people waiting outside the lock does not wait too long for door to unlock. This should also be similar for the pin code case.
 \newline
-\textit{Sampling Procedures:} 2 samples of observing Firestore for 1/0 LOCK$\_$STATE. 2 randomly generated PINs and 1 custom-user pin.
+\textbf{\textit{Test apparatus:}} Utilize ESP32-C3 alongside a Solenoid door lock.
 \newline
+\textbf{\textit{Independent Variables:}} Make sure that the ESP32-C3 can read a simple "Hello world" on the server for basic testing.
 \newline
-\underline{Lock Hardware Functionality Test}
+\textbf{\textit{Dependent Variables:}} Everytime we are generating a new code from phone to firebase, the ESP32-C3 should also be able to retrieve those codes as valid codes immediately.
 \newline
-\textit{Testing method type:} 
+\textbf{\textit{Number of factors:}} N/A factors considered in this moment
 \newline
-\textit{Test apparatus:} 
-\newline
-\textit{Independent Variables:} 
-\newline
-\textit{Dependent Variables:} 
-\newline
-\textit{Number of factors:}
-\newline
-\textit{Sampling Procedures:} 
+\textbf{\textit{Sampling Procedures:}} Samples obtained from servers for LOCK\_STATE, only 0 or 1. Then we have samples for pin codes as well from firebase.
 \newline
 \textcolor{teal}{\subsection{Testing Procedures}}
+\subsubsection{Safety Precautions}
+Safety precautions for our project includes not having fast and forceful locks that can hurt individuals.
+
+\subsubsection{Data Collection Method}
+Collect data from the phone providing the custom pins onto firebase, as well as collecting data for locking or unlocking. We will also note down which users are grouped together to be able to use the same pin for unlcocking door.
+
+\subsubsection{Observation of External Factors}
+Some external factors that could make our product not function properly could include:
+
+\begin{itemize}
+    \item Bad network connection from phone or from ESP32-C3
+    \item Firebase not loading properly
+\end{itemize}
