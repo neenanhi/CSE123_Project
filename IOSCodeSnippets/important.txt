@@ -1,0 +1,7 @@
+I have included code snippets and a view of the storyboard, however this won't cleanly compile here because of the neccesary frameworks.
+
+Most of the work is actually done with toolchains, frameworks, database keys. These are not here for basic security reasons. Basic source code is included here, and some basic code snippets that help the app function.
+
+It's to note that these are a small part of the mobile environment, but the IDE uses uncommon formats like .storyboard and third-party package dependencies.
+
+These swift files are still extremely important and will be expanded upon more as the app is programatically expanded however I don't want to push private app information to github so I have also commented out some of the code.
