@@ -40,5 +40,10 @@ class homeViewController: UIViewController {
        Database info is here - hiding code for upload
         */
     }
+
+// set up button components here from storyboard
+// custom style from storyboard to program
+// maybe add .storyboard
+// Firebase dependencies
    
 }
