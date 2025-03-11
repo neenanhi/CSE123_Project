@@ -2,6 +2,7 @@
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{xcolor}
+\usepackage{hyperref}
 
 \pagestyle{fancy}
 
@@ -10,6 +11,8 @@
 \fancyfoot[R]{\textcolor{teal}{\rule[0mm]{0.45\linewidth}{2pt}}} 
 
 \fancyfoot[C]{\thepage}
+
+\renewcommand{\contentsname}{\textcolor{teal}{Table of Contents}}
 
 \begin{document}
 
@@ -34,11 +37,10 @@
 \pagestyle{fancy}      
 
 \section{Front Matter}
-\subsection{Executive Summary}
-Executive Summary Goes Here
+\subsection{\textcolor{gray}{Executive Summary}}
+Executive Summary Here
 
-
-\subsection{Ethics Statement for Smart Lock Project}
+\subsection{\textcolor{gray}{Ethics Statement for Smart Lock Project}}
 Our Smart Lock is designed to enhance security and convenience for users while upholding ethical standards in privacy, safety, and accessibility. We recognize our responsibility to develop and deploy technology that prioritizes ethical considerations in the following ways:
 
 \textcolor{teal}{\subsubsection{Privacy and Data Protection}}
@@ -81,6 +83,23 @@ To uphold ethical standards, we will:
 
 By adhering to these ethical principles, we ensure that our Smart Lock product aligns with values of privacy, security, fairness, and social responsibility.
 
-\subsection{Table of Contents}
+
+\tableofcontents
+
+\newpage
+
+\section{Body}
+\subsection{\textcolor{gray}{Background}}
+\subsection{\textcolor{gray}{Problem Definition}}
+\subsection{\textcolor{gray}{Concepts Considered}}
+\subsection{\textcolor{gray}{Concept Selection}}
+\subsection{\textcolor{gray}{Detail of Design}}
+\subsection{\textcolor{gray}{Economic Analysis}}
+\subsection{\textcolor{gray}{Outstanding Issues}}
+\section{Appendices}
+\subsection{\textcolor{gray}{Models and Simulations}}
+\subsection{\textcolor{gray}{Decision Table Inputs}}
+\subsection{\textcolor{gray}{Test Plan}}
+\subsection{\textcolor{gray}{Results}}
 
 \end{document}
