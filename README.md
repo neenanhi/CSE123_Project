@@ -29,4 +29,8 @@ The **Auto Smart Lock** is designed to provide a secure and convenient way to co
 ### Stage 3: Connecting ESP32 to Wi-Fi
 
 ### Stage 4: Linking ESP32 with Firebase
-
+1. **Install Required Libraries**: We installed the `Firebase_Arduino_Client_Library_for_ESP8266_and_ESP32` along with `WiFi` and `ArduinoJson` libraries in Arduino IDE.
+2. **Set Up Firebase Credentials**: We created a Firebase project, enabled authentication, and obtained the database URL and API key.
+3. **Initialize Wi-Fi Connection**: The ESP32C3 was programmed to connect to a specified Wi-Fi network using `WiFi.begin(ssid, password)`.
+4. **Authenticate with Firebase**: We used the Firebase client library to authenticate the ESP32C3 with Firebase using the database URL and an authentication token.
+5. **Read and Write Data**: The ESP32C3 successfully sent and retrieved data from Firebase using `Firebase.set()` and `Firebase.get()` functions, allowing real-time communication with the mobile app.
