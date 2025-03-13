@@ -11,7 +11,7 @@
 #include "freertos/task.h"
 
 #define WIFI_SSID "SSID"
-#define WIFI_PASS "PASS"
+#define WIFI_PASS "PASSWORD"
 
 static const char *TAG = "WIFI_CLIENT";
 static bool wifi_connected = false; // Track Wi-Fi connection state
