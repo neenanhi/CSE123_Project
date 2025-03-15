@@ -1,0 +1,31 @@
+\subsection{\textcolor{gray}{Test Results}}
+
+\subsubsection{\textcolor{gray}{From Test Plan}}
+We will be testing our Firebase mobile connectivity, Esp32 hardware functionality, and multi-user and concurrency. For each of the tests, I will provide step by step instructions.
+
+In the first test for Firebase mobile connectivity, we will test the connection between the mobile app and the firestore database. We will first build the mobile app and connect the firebase API keys to the app. Then with the mobile app, we will test the connection to the firestore database by sending a value to the database document. We can check if this succeeds by checking the firebase console and seeing if the value is updated.
+
+In the second test for the ESP32 hardware functionality, we will test the connection between the ESP32 and wifi. Once connected to wifi, we will test the connection to the firestore database by using the API keys provided by firebase. Then we will create a document in the firestore database and use the ESP32 to fetch the document data. We can check if this succeeds by checking the fetched data is the same as the data in the firestore database. Also from the hardware functionality test, we are going to test the functionality of the solenoid lock, making sure that we can send a signal to unlock and lock the solenoid lock. One more test that we will need to take into consideration is the keypad functionality. We will test the functionality of the keypad by making sure that we can read the input from the keypad and send the input to the ESP32.
+
+In the third test for multi-user and concurrency, we will test the connection between multiple mobile apps and the firestore database. We will first build the mobile app and connect the firebase API keys to the app. Then with the mobile app, we will test the connection to the firestore database by sending a value to the database document. We can check if this succeeds by checking the firebase console and seeing if the value is updated. We will then test the connection between multiple mobile apps and the firestore database by sending values to the database document from multiple mobile apps. We can check if this succeeds by checking the firebase console and seeing if the values are updated.
+
+% GPT table
+\subsubsection{\textcolor{gray}{Test Result Summary Table}}
+\begin{table}[h]
+    \centering
+    \resizebox{\textwidth}{!}{ % Resizes table to fit within page width
+    \rowcolors{2}{teal!10}{teal!25}
+    \begin{tabular}{|l|c|c|p{6cm}|}
+        \hline
+        \rowcolor{teal!50}
+        \textbf{Objective ( Target )} & \textbf{Result} & \textbf{Met?} & \textbf{Discussion} \\
+        \hline
+        Firebase Connectivity & Appropriate 1/0 & N/A & Half this test done - explain how lock/unlock work but haven't tested PINs yet. \\
+        
+        Lock Hardware Functionality & N/A -\textit{Mar 31, 2025} & N/A & While this test has not been conducted yet, we suspect we will pass this test as the Firebase - Firestore lock/unlock was already successful, and the appropriate data was well-received by the ESP32-C3. All that remains is to ensure that the solenoid lock responds properly to an input signal, as well as compares and responds accordingly to valid/invalid codes. \\
+        
+        Concurrency & N/A -\textit{April 18, 2025} & N/A & While this test has not been conducted yet, we suspect that we will pass this test. Firebase should be able to handle multiple calls close to each other, as well as transmit this signal in the appropriate order. The Firestore database updated extremely quickly in real-time and shouldn't have trouble with concurrent calls. The PIN entries from different users also shouldn't cause conflict, and the door should unlock/lock as intended. \\
+        
+        \hline
+    \end{tabular}}
+\end{table}
