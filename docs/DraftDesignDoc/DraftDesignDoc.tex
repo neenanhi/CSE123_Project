@@ -1,9 +1,11 @@
-\documentclass[a4paper,12pt]{report}
+\documentclass[a4paper,12pt]{article}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{xcolor}
 \usepackage[table]{xcolor}
 \usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{indentfirst}
 
 \pagestyle{fancy}
 
@@ -21,13 +23,13 @@
     \begin{center}
         \vspace*{2cm}
 
-        \includegraphics[width=0.8\textwidth]{slimg.png}\\[1cm]
+        \includegraphics[width=0.8\textwidth]{./img/slimg.png}\\[1cm]
 
         {\Huge \textbf{Smart Lock}}\\[0.5cm]
         {\textcolor{teal}{\Large A Cloud-Based Key}}\\[1.5cm]
 
         {\LARGE \textbf{Group 5}}\\[0.5cm]
-        {\Large \textit{Names}}\\[2cm]
+        {\Large \textit{Nathaniel Laurente, Adam Wu, Neena Nguyen, Jackson Kennedy}}\\[2cm]
 
         {\Large \today}
     \end{center}
@@ -37,68 +39,38 @@
 \pagenumbering{arabic}
 \pagestyle{fancy}      
 
+
+
+% BEGIN DOCUMENT -------------------------------------------------------------------------
+
+
 \section{Front Matter}
-\subsection{\textcolor{gray}{Executive Summary}}
-Executive Summary Here
 
-\subsection{\textcolor{gray}{Ethics Statement for Smart Lock Project}}
-Our Smart Lock is designed to enhance security and convenience for users while upholding ethical standards in privacy, safety, and accessibility. We recognize our responsibility to develop and deploy technology that prioritizes ethical considerations in the following ways:
+% Executive Summary
+\input{Executive_summary.tex}
 
-\textcolor{teal}{\subsubsection{Privacy and Data Protection}}
-We are committed to safeguarding user privacy by:
-\begin{itemize}
-    \item Minimizing data collection to only essential information required for functionality.
-    \item Implementing encryption and secure authentication methods to prevent unauthorized access.
-    \item Ensuring that user data is never shared or sold to third parties without explicit consent.
-\end{itemize}
-
-\textcolor{teal}{\subsubsection{Security and Reliability}}
-To maintain the integrity of the smart lock system, we will:
-\begin{itemize}
-    \item Use cybersecurity measures to prevent hacking and tampering.
-    \item Regularly update software and firmware to address potential vulnerabilities.
-    \item Ensure the lock functions reliably under various conditions to prevent accidental lockouts or failures.
-\end{itemize}
-
-\textcolor{teal}{\subsubsection{User Safety and Accessibility}}
-We aim to create a system that is safe and inclusive by:
-\begin{itemize}
-    \item Designing intuitive user interfaces for easy access by individuals with different levels of technical proficiency.
-    \item Ensuring compliance with accessibility standards for individuals with disabilities.
-\end{itemize}
-
-\textcolor{teal}{\subsubsection{Ethical Use and Non-Discrimination}}
-The smart lock must be used ethically and responsibly by:
-\begin{itemize}
-    \item Preventing misuse that could lead to unauthorized surveillance or discrimination.
-    \item Avoiding biases in authentication methods that may disadvantage certain user demographics.
-\end{itemize}
-
-\textcolor{teal}{\subsubsection{Transparency and Accountability}}
-To uphold ethical standards, we will:
-\begin{itemize}
-    \item Clearly communicate to users how their data is handled and stored.
-    \item Provide documentation on security features, risks, and best practices.
-    \item Accept feedback and take responsibility for any ethical concerns that may arise during development and deployment.
-\end{itemize}
-
-By adhering to these ethical principles, we ensure that our Smart Lock product aligns with values of privacy, security, fairness, and social responsibility.
+% Ethics Statement
+\input{Ethics_statement.tex}
 
 
 \tableofcontents
-
 \newpage
 
-\section{Body}
-\subsection{\textcolor{gray}{Background}}
-\subsection{\textcolor{gray}{Problem Definition}}
-\subsection{\textcolor{gray}{Concepts Considered}}
-\subsection{\textcolor{gray}{Concept Selection}}
-\subsection{\textcolor{gray}{Detail of Design}}
+\input{Background.tex}
+
+
+\input{Problem_definiton.tex}
+
+\input{Concepts_considered.tex}
+
+\input{Concept_selection.tex}
+
+
+\section{\textcolor{gray}{Detail of Design}}
 Below is a rough flowchart of our mobile app - that has already been programmed.
 
 \begin{center}
-    \includegraphics[width=100mm,scale=0.1]{flowsl.png}
+    \includegraphics[width=100mm,scale=0.1]{./img/flowsl.png}
 \end{center}
 
 \subsection{\textcolor{gray}{Economic Analysis}}
