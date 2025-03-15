@@ -1,9 +1,10 @@
-\documentclass[a4paper,12pt]{report}
+\documentclass[a4paper,12pt]{article}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{xcolor}
 \usepackage[table]{xcolor}
 \usepackage{hyperref}
+\usepackage{indentfirst}
 
 \pagestyle{fancy}
 
@@ -27,7 +28,7 @@
         {\textcolor{teal}{\Large A Cloud-Based Key}}\\[1.5cm]
 
         {\LARGE \textbf{Group 5}}\\[0.5cm]
-        {\Large \textit{Names}}\\[2cm]
+        {\Large \textit{Nataniel Laurente, Adam Wu, Neena Nguyen, Jackson Kennedy}}\\[2cm]
 
         {\Large \today}
     \end{center}
@@ -37,12 +38,17 @@
 \pagenumbering{arabic}
 \pagestyle{fancy}      
 
+
+
+% BEGIN DOCUMENT -------------------------------------------------------------------------
+
+
 \section{Front Matter}
-\subsection{\textcolor{gray}{Executive Summary}}
-Executive Summary Here
+\input{Executive_summary.tex}
 
 \subsection{\textcolor{gray}{Ethics Statement for Smart Lock Project}}
 Our Smart Lock is designed to enhance security and convenience for users while upholding ethical standards in privacy, safety, and accessibility. We recognize our responsibility to develop and deploy technology that prioritizes ethical considerations in the following ways:
+\newpage
 
 \textcolor{teal}{\subsubsection{Privacy and Data Protection}}
 We are committed to safeguarding user privacy by:
@@ -98,7 +104,7 @@ By adhering to these ethical principles, we ensure that our Smart Lock product a
 Below is a rough flowchart of our mobile app - that has already been programmed.
 
 \begin{center}
-    \includegraphics[width=100mm,scale=0.1]{flowsl.png}
+    \includegraphics[width=100mm,scale=0.1]{./img/flowsl.png}
 \end{center}
 
 \subsection{\textcolor{gray}{Economic Analysis}}
