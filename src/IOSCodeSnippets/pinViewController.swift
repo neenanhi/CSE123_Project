@@ -36,14 +36,18 @@ class pinViewController: UIViewController, UITableViewDataSource {
             let userRef = db.collection("users").document(user.uid)
             userRef.updateData([
                 "userPins": FieldValue.arrayRemove([pinToDelete])
-            ])if let error = error {
+            ]) { error in
+                if let error = error {
                     print("Error deleting pin from Firestore: \(error.localizedDescription)")
                 } else {
                     print("Pin deleted from Firestore.")
                     
                     self.testData.remove(at: indexPath.row)
                     tableView.deleteRows(at: [indexPath], with: .fade)
-
+                }
+            }
+        }
+    }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
             return 100
         }
