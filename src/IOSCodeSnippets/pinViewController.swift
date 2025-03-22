@@ -38,9 +38,9 @@ class pinViewController: UIViewController, UITableViewDataSource {
                 "userPins": FieldValue.arrayRemove([pinToDelete])
             ]) { error in
                 if let error = error {
-                    print("Error deleting pin from Firestore: \(error.localizedDescription)")
+                    print("error in deletion\(error.localizedDescription)")
                 } else {
-                    print("Pin deleted from Firestore.")
+                    print("deleted pin")
                     
                     self.testData.remove(at: indexPath.row)
                     tableView.deleteRows(at: [indexPath], with: .fade)
@@ -73,6 +73,16 @@ guard let user = Auth.auth().currentUser else {
         pinTableView.reloadData()
         
         let userRef = db.collection("users").document(user.uid)
+
+	 userRef.updateData([
+               "userPins": FieldValue.arrayUnion([newPin])
+           ]) { error in
+               if let error = error {
+                   print("\(error.localizedDescription)")
+               } else {
+                   print("New PIN added")
+               }
+           }
 }
     
    // var testData = ["1981845", "8481713"]
