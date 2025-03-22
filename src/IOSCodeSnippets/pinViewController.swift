@@ -30,7 +30,14 @@ class pinViewController: UIViewController, UITableViewDataSource {
                    forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             guard let user = Auth.auth().currentUser else { return }
-    
+
+            let pinToDelete = testData[indexPath.row]
+
+            let userRef = db.collection("users").document(user.uid)
+            userRef.updateData([
+                "userPins": FieldValue.arrayRemove([pinToDelete])
+            ])
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
             return 100
         }
