@@ -85,6 +85,10 @@ guard let user = Auth.auth().currentUser else {
            }
 }
 	func loadUserPins() {
+guard let user = Auth.auth().currentUser else {
+            print("can't find user auth")
+            return
+        }
 }
     
    // var testData = ["1981845", "8481713"]
