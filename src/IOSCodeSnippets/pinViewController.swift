@@ -68,6 +68,11 @@ guard let user = Auth.auth().currentUser else {
                 newPin.append(randomChar)
             }
         }
+
+	  testData.append(newPin)
+        pinTableView.reloadData()
+        
+        let userRef = db.collection("users").document(user.uid)
 }
     
    // var testData = ["1981845", "8481713"]
