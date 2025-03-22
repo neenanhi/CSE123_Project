@@ -1,9 +1,12 @@
 import UIKit
+import FirebaseAuth
 import FirebaseFirestore
 
 class pinViewController: UIViewController, UITableViewDataSource {
 	
 	let db = Firestore.firestore()
+	
+	@IBOutlet weak var newPinButton: UIButton!
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return testData.count
