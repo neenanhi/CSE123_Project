@@ -63,6 +63,11 @@ guard let user = Auth.auth().currentUser else {
         
         let allowedCharacters = ["0", "1", "2", "3", "7", "8", "9", "A", "C", "D"]
         var newPin = ""
+	for _ in 0..<4 {
+            if let randomChar = allowedCharacters.randomElement() {
+                newPin.append(randomChar)
+            }
+        }
 }
     
    // var testData = ["1981845", "8481713"]
