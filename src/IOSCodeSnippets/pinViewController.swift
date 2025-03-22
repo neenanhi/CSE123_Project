@@ -55,6 +55,9 @@ class pinViewController: UIViewController, UITableViewDataSource {
 
     
     @IBOutlet weak var pinTableView: UITableView!
+
+@IBAction func generatePin(_ sender: Any) {
+}
     
    // var testData = ["1981845", "8481713"]
     
