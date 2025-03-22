@@ -25,6 +25,11 @@ class pinViewController: UIViewController, UITableViewDataSource {
         
         return cell
     }
+
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
+                   forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            guard let user = Auth.auth().currentUser else { return }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
             return 100
