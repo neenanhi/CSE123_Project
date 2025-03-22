@@ -89,6 +89,8 @@ guard let user = Auth.auth().currentUser else {
             print("can't find user auth")
             return
         }
+
+	let userRef = db.collection("users").document(user.uid)
 }
     
    // var testData = ["1981845", "8481713"]
