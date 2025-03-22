@@ -84,6 +84,8 @@ guard let user = Auth.auth().currentUser else {
                }
            }
 }
+	func loadUserPins() {
+}
     
    // var testData = ["1981845", "8481713"]
     
