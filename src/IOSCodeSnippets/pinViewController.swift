@@ -57,6 +57,12 @@ class pinViewController: UIViewController, UITableViewDataSource {
     @IBOutlet weak var pinTableView: UITableView!
 
 @IBAction func generatePin(_ sender: Any) {
+guard let user = Auth.auth().currentUser else {
+            return
+        }
+        
+        let allowedCharacters = ["0", "1", "2", "3", "7", "8", "9", "A", "C", "D"]
+        var newPin = ""
 }
     
    // var testData = ["1981845", "8481713"]
