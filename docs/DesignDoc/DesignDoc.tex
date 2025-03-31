@@ -1,4 +1,5 @@
 \documentclass[a4paper,12pt]{article}
+\usepackage[a4paper,margin=3cm]{geometry}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{xcolor}
@@ -15,7 +16,7 @@
 \pagestyle{fancy}
 
 \fancyhf{} 
-\fancyfoot[C]{\thepage}
+\fancyhead[R]{\thepage}
 
 \renewcommand{\contentsname}{\textcolor{teal}{Table of Contents}}
 
@@ -92,5 +93,8 @@
 \input{Test_Results.tex}
 
 \input{Future_Testing.tex}
+
+\input{FutureTestingTest.tex}
+
 
 \end{document}
