@@ -158,3 +158,9 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
       \textbf{PASS} &
         \begin{minipage}[t]{\linewidth}
         \begin{itemize}
+            \item Correct OTP (within 5 minutes) causes the bolt to retract and \texttt{LOCK\_STATE} becomes 1.
+          \item Firestore logs an \texttt{OTP\_UNLOCK} event with the correct timestamp.
+          \item Upon reusing the same OTP after expiration ( ~5 minutes), the lock stays locked.
+          \item Firestore logs an \texttt{OTP\_EXPIRED} event, indicating rejection.\\
+        \end{itemize}
+        \end{minipage} \\
