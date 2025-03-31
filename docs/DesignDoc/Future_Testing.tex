@@ -143,3 +143,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \item In the app (or Firebase console), confirm:
         \begin{itemize}
             \item The OTP record appears with status “used” and a timestamp matching the entry time.
+            \item \texttt{LOCK\_STATE} flips to 1 (unlocked) and an \texttt{OTP\_UNLOCK} event is logged.
+        \end{itemize}
+        \item Wait for 6 minutes (so the original OTP expires), then try entering the same OTP again.
+        \item Observe that the lock remains closed and Firestore logs an \texttt{OTP\_EXPIRED} attempt.
+    \end{itemize}
