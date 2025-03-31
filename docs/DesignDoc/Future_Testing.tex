@@ -148,3 +148,13 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \item Wait for 6 minutes (so the original OTP expires), then try entering the same OTP again.
         \item Observe that the lock remains closed and Firestore logs an \texttt{OTP\_EXPIRED} attempt.
     \end{itemize}
+
+    \subparagraph{Expectations of Test}
+    \begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
