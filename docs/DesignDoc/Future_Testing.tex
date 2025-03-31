@@ -139,3 +139,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \begin{itemize}
         \item Open the mobile app and request a fresh OTP. Note the timestamp displayed (e.g., “Valid until 14:35”).
         \item On the keypad, enter the exact OTP digits within 5 minutes of generation.
+        \item Observe the lock: it should retract immediately upon correct entry.
+        \item In the app (or Firebase console), confirm:
+        \begin{itemize}
+            \item The OTP record appears with status “used” and a timestamp matching the entry time.
