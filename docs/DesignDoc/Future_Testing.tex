@@ -134,3 +134,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \item Ensure the system rejects expired or reused OTPs.
         \item Check that the OTP event is recorded in Firestore with its timestamp and status.
     \end{itemize}
+
+    \subparagraph{How We Test It}
+    \begin{itemize}
+        \item Open the mobile app and request a fresh OTP. Note the timestamp displayed (e.g., “Valid until 14:35”).
+        \item On the keypad, enter the exact OTP digits within 5 minutes of generation.
