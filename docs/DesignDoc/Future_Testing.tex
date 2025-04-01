@@ -177,4 +177,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-
+    \item Ensure that once an OTP’s valid window (default: 5 minutes) has passed, it can no longer unlock the door.
+    \item Confirm that the user receives a clear “OTP expired” message on the app or keypad display.
+    \item Verify Firestore logs the expired‐OTP attempt with a timestamp and status “OTP\_EXPIRED.”
+\end{itemize}
