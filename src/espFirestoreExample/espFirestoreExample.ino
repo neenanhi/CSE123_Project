@@ -100,7 +100,7 @@ int inputIndex = 0;
      pinMode(LED_BUILTIN, OUTPUT);
      pinMode(LED_LOCK, OUTPUT);
  
-     /* No need, use wifi Provisioning instead now
+     //No need, use wifi Provisioning instead now
      WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
  
      Serial.print("Connecting to Wi-Fi");
@@ -118,9 +118,7 @@ int inputIndex = 0;
      Serial.println(WiFi.localIP());
      Serial.println();
      isWiFiConnected = true; // <- Set here after WiFi is confirmed!
-     */
      
- 
      
  
      Firebase.printf("Firebase Client v%s\n", FIREBASE_CLIENT_VERSION);
