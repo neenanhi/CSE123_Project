@@ -104,6 +104,14 @@ int inputIndex = 0;
      WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
  
      Serial.print("Connecting to Wi-Fi");
+     while (WiFi.status() != WL_CONNECTED)
+     {
+         Serial.print(".");
+         digitalWrite(LED_BUILTIN, HIGH);
+         delay(300);
+         digitalWrite(LED_BUILTIN, LOW);
+         delay(300);
+     }
      Serial.println();
      digitalWrite(LED_BUILTIN, LOW);
      Serial.print("Connected with IP: ");
