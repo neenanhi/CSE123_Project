@@ -99,32 +99,6 @@ int inputIndex = 0;
      Serial.begin(115200);
      pinMode(LED_BUILTIN, OUTPUT);
      pinMode(LED_LOCK, OUTPUT);
-
-     WiFiManager wfm;           // wifi manager object
-     wfm.setDebugOutput(false); // suppressing debug info
-     wfm.resetSettings();       // removes previous network settings (for testing use)
-     WiFiManagerParameter custom_text_box("my_text", "Enter your string here", "default string", 50); // custom text box
-     wfm.addParameter(&custom_text_box);  // custom parameter
-     digitalWrite(LED_BUILTIN, HIGH);     // HIGH for not connected to wifi yet (first time setup)
-     if (!wfm.autoConnect("SmartLock AP", "12345678")) {
-        // Did not connect, print error message
-        Serial.println("failed to connect and hit timeout");
- 
-        // Reset and try again
-        ESP.restart();
-        delay(1000);
-     }
-
-     // Connected!
-     digitalWrite(LED_BUILTIN, LOW);  // LOW for connected to wifi
-     Serial.println("WiFi connected");
-     Serial.print("IP address: ");
-     Serial.println(WiFi.localIP());
-     isWiFiConnected = true;
-
-     // Print out the custom text box value to serial monitor
-     Serial.print("Custom text box entry: ");
-     Serial.println(custom_text_box.getValue());
  
      /* No need, use wifi Provisioning instead now
      WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
@@ -583,60 +557,4 @@ void processKeypadInput() {
     }
 }
 
-void sendAcknowledgementIfNeeded() {
-    if (sendAck & unlockAck) {
-        sendAck = false;
-        unlockAck = false;
-        Serial.println("Sending Unlock Acknowledgement...");
-        sendUnlockAcknowledgment();
-    } else if (sendAck & lockAck) {
-        sendAck = false;
-        lockAck = false;
-        Serial.println("Sending Lock Acknowledgement...");
-        sendLockAcknowledgement();
-    }
-}
 
-bool createemergencyUserPins() {
-    // Free any existing pins before creating new ones
-    freeemergencyUserPins();
-
-    if (!jsonValid) return false;
-
-    JsonArray values = doc[0]["found"]["fields"]["emergencyUserPins"]["arrayValue"]["values"];
-    userPinCount = values.size();
-
-    if (userPinCount == 0) return false;
-
-    emergencyUserPins = new char*[userPinCount];
-
-    for (size_t i = 0; i < userPinCount; ++i) {
-        const char* pin = values[i]["stringValue"];
-        size_t len = strlen(pin) + 1;
-        emergencyUserPins[i] = new char[len];
-        strncpy(emergencyUserPins[i], pin, len - 1);
-        emergencyUserPins[i][len - 1] = '\0';  // null-terminate safely
-    }
-
-    return true;
-}
-
-char** getemergencyUserPins() {
-    return emergencyUserPins;
-}
-
-size_t getUserPinCount() {
-    return userPinCount;
-}
-
-void freeemergencyUserPins() {
-    if (emergencyUserPins != nullptr) {
-        for (size_t i = 0; i < userPinCount; ++i) {
-            delete[] emergencyUserPins[i];
-        }
-        delete[] emergencyUserPins;
-        emergencyUserPins = nullptr;
-        userPinCount = 0;
-    }
-}
-// END SIMPLIFIED FUNCTIONS
