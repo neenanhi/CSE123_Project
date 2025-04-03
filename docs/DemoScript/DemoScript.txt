@@ -33,8 +33,10 @@ Parents at work again
 
 
 Scenario #3
-Lock Battery dies
-* The lock shows no signs of having power
+Lock Battery Begins to Die
+
+* The lock shows signs of battery running low
+
 * Using a backup battery and a special unique keypad sequence to trigger extra power temporarily (only one time use)
 
 
