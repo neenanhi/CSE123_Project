@@ -37,7 +37,7 @@ Lock Battery Begins to Die
 
 * The lock shows signs of battery running low
 
-* Using a backup battery and a special unique keypad sequence to trigger extra power temporarily (only one time use)
+* Using our customized battery power reader, sends push notification to app to warn user of battery failing with adequate warning time and messages before replacement.
 
 
 Scenario #4
