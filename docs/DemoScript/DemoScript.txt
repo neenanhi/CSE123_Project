@@ -1,4 +1,4 @@
-﻿Introduction:
+Introduction:
 
 
 *SmartLock is bolted into a demo door (can be a part of an old separated door piece with a standard deadbolt setup that doesn’t necessarily need to be attached via hinge to any wall)*
@@ -10,8 +10,8 @@ Our smart lock solution will allow users to lock/unlock their doors from anytime
 Demo Portion:
 
 
-PARENT 1 - 
-KID 1 -
+PARENT 1 - Nathanial
+KID 1 - Neena
 PARENT 2 -
 KID 2 -
 
