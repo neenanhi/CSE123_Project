@@ -34,6 +34,8 @@ To store and manage authentication and device data, we used [Firebase Firestore]
 4. Get Firebase configuration keys (`apiKey`, `authDomain`, etc.).
 
 ### Stage 2: Connecting the Mobile App to Firebase
+1. Initialize Firebase in mobile app using config keys from Stage 1.
+2. Set up Firebase SDKs for Firestore and authentication.
 
 ### Stage 3: Connecting ESP32 to Wi-Fi
 
