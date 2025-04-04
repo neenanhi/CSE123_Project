@@ -59,9 +59,7 @@ int inputIndex = 0;
  void sendUnlockAcknowledgment();
  void sendLockAcknowledgement();
  String getIsLocked();
- bool createemergencyUserPins();
- char** getemergencyUserPins();
- size_t getemergencyUserPinsCount();
+
  
  // ServiceAuth is required for Google Cloud Functions functions.
  ServiceAuth sa_auth(FIREBASE_CLIENT_EMAIL, FIREBASE_PROJECT_ID, PRIVATE_KEY, 3000 /* expire period in seconds (<= 3600) */);
