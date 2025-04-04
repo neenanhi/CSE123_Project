@@ -508,24 +508,6 @@ void processKeypadInput() {
                 sendLockAcknowledgement();
             }
 
-            if (otpStoredPinCount > 0) {
-                for (size_t i = 0; i < otpStoredPinCount; i++) {
-                    if (String(otpStoredPins[i]) == enteredPIN) {
-                        Serial.println("OTP PIN Matched: " + String(otpStoredPins[i]));
-                        OTPUsed();
-
-
-                        digitalWrite(LED_LOCK, HIGH);
-                        sendUnlockAcknowledgment();
-                        delay(10000); // Auto-lock after 10 seconds
-                        digitalWrite(LED_LOCK, LOW);
-                        sendLockAcknowledgement();
-                        isMatched = true;
-                        break; // Exit loop once matched
-                    }
-                }
-            }
-
             if (!isMatched) {
                 digitalWrite(LED_LOCK, LOW);
                 Serial.println("Invalid or expired PIN.");
