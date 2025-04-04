@@ -62,7 +62,6 @@ int inputIndex = 0;
  bool createemergencyUserPins();
  char** getemergencyUserPins();
  size_t getemergencyUserPinsCount();
- void freeemergencyUserPins();
  
  // ServiceAuth is required for Google Cloud Functions functions.
  ServiceAuth sa_auth(FIREBASE_CLIENT_EMAIL, FIREBASE_PROJECT_ID, PRIVATE_KEY, 3000 /* expire period in seconds (<= 3600) */);
@@ -178,21 +177,6 @@ void loop() {
  
      if (aResult.available())
      {
-        //  Firebase.printf("task: %s, payload: %s\n", aResult.uid().c_str(), aResult.c_str());
-        //  String JsonString = aResult.c_str();
-        //  handleJsonStream(JsonString); // deubug checker, also helps with deserilization of JsonDoc
-         
-        //  String isLockedVal = getIsLocked();
-        //  Serial.println("isLocked value: " + getIsLocked());
-
-        //  if (isLockedVal == "1") {
-        //    // Unlock
-        //    digitalWrite(LED_LOCK, HIGH);
-        //    sendUnlockAcknowledgment();
-        //  } else {
-        //    // Lock
-        //    digitalWrite(LED_LOCK, LOW);
-        //  }
 
          if (aResult.uid() == "batchGetTask") {
             Serial.println("Processing batchGet result...");
@@ -216,7 +200,6 @@ void loop() {
                 // bool valid = isPinValid(enteredPin); // If you write that helper
 
                 // ✅ Free memory after you're done using emergencyUserPins
-                freeemergencyUserPins();
             } else {
                 Serial.println("Failed to extract emergencyUserPins.");
             }
