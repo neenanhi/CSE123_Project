@@ -27,13 +27,6 @@
  #define MAX_USER_PINS 10
  #define MAX_PIN_LENGTH 5  // 4 digits + null terminator
 
- char storedPins[MAX_USER_PINS][MAX_PIN_LENGTH];
- size_t storedPinCount = 0;
-
- bool noWifiPinUsed = false;
-
- char otpStoredPins[MAX_USER_PINS][MAX_PIN_LENGTH];
- size_t otpStoredPinCount = 0;
 
 std::deque<String> pinQueue = {"1111", "2222", "3333", "4444"};
 
