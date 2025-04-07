@@ -71,3 +71,8 @@ We also referred to the example project below:
 3. Refer to the [FirebaseClient GitHub](https://github.com/mobizt/FirebaseClient) for detailed library setup.
 4. Make a copy of the `secrets.h.example` file as `secrets.h` and fill in your credentials.
 
+##### Running it:
+- Open the Arduino IDE.
+- Select your ESP32-C3 board and port.
+- Open the sketch.
+- Upload the code to your ESP32-C3 board.
