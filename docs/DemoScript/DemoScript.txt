@@ -1,0 +1,54 @@
+Introduction:
+
+
+*SmartLock is bolted into a demo door (can be a part of an old separated door piece with a standard deadbolt setup that doesn’t necessarily need to be attached via hinge to any wall)*
+
+
+Our smart lock solution will allow users to lock/unlock their doors from anytime and anywhere, eliminate the need for physical keys, and provide secure authentication methods for authorized users.
+
+
+Demo Portion:
+
+
+PARENT 1 - Nathanial
+KID 1 - Neena
+PARENT 2 - Jackson
+KID 2 - Adam
+
+
+Scenario #1
+Parents at Work
+* Kid comes home from school
+* Kid can’t unlock door
+* Kid texts parent to unlock door
+* Parent unlocks door from far away via mobile app lock/unlock as proof of concept of Parent unlocking from work with button functionalities
+
+
+Scenario #2
+Parents at work again
+* Parent generates new PIN code to be used
+* New pin gets reflected in PIN list in app
+* Kid comes home from school
+* Kid uses newly generated PIN to unlock door via keypad mechanism
+
+
+Scenario #3
+Lock Battery Begins to Die
+
+* The lock shows signs of battery running low
+
+* Using our customized battery power reader, sends push notification to app to warn user of battery failing with adequate warning time and messages before replacement.
+
+
+Scenario #4
+Setting time frame for a pin
+* Set a new pin that has start and expiration time for a guest
+* Showing that the new pin can only unlock during the creation of the pin, and in the time frame
+* Show the pin does not work when it has past the expiration date
+
+
+Conclusion:
+To further improve this project in the future, a more cost and customizable alternative to Firebase could be used to store data more efficiently. Additionally, this new storage could be used alongside a more expensive fingerprint scanner for a form of MFA, where user fingerprints could be logged in a secure and non-invasive manner in a data storage with constant-security updates.
+
+
+We will also be using our own custom board instead of the esp32c3 in our manufactured design for our product. Overall, we have achieved our minimum viable product, where we can unlock and lock our door using our phone or the keypad.
