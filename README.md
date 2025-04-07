@@ -60,3 +60,8 @@ To enable communication between the ESP32 and Firestore, we used the [FirebaseCl
 
 We followed the [FirebaseClient GitHub documentation](https://github.com/mobizt/FirebaseClient) and used this YouTube tutorial for initial setup with the ESP32-C3:  
 📺 [ESP32-C3 Firebase Tutorial – YouTube](https://www.youtube.com/watch?v=md1uEOnau5k)
+
+We also referred to the example project below:
+
+#### 🔧 ESP32-C3 Firestore Database Example
+
