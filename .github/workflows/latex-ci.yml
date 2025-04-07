@@ -7,24 +7,39 @@ on:
   pull_request:
 
 jobs:
-  build_pdf:
+  build_pdfs:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - dir: docs/DemoEqualityContribution
+            file: DemoEqualityContribution.tex
+          - dir: docs/DraftDesignDoc
+            file: DraftDesignDoc.tex
+          - dir: docs/submission2
+            file: submission2.tex
+          - dir: docs/submission3
+            file: submission3.tex
+          - dir: docs/DemoScript
+            file: DemoScript.tex
+
+    name: Build ${{ matrix.file }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Compile LaTeX files
+      - name: Compile LaTeX - ${{ matrix.file }}
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: submission3.tex
-          compiler: latexmk # Can also use xelatex, lualatex, or latexmk
+          root_file: ${{ matrix.file }}
+          compiler: latexmk
           args: "-interaction=nonstopmode -pdf"
           texlive_version: 2024
-          working_directory: docs/submission3
+          working_directory: ${{ matrix.dir }}
 
-      - name: Upload PDFs as artifacts
+      - name: Upload PDF - ${{ matrix.file }}
         uses: actions/upload-artifact@v4
         with:
-          name: compiled-pdfs
-          path: docs/submission3/submission3.pdf
+          name: ${{ matrix.file }}-pdf
+          path: ${{ matrix.dir }}/${{ matrix.file }}.pdf
 
