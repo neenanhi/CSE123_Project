@@ -1,3 +1,9 @@
+# Auto Smart Lock
+
+A secure and convenient system to control a smart lock remotely using a smartphone and cloud services.
+
+---
+
 ### Table of Contents
 1. [Introduction](#introduction)
 2. [Key Components](#key-components)
