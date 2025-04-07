@@ -187,3 +187,10 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item In the mobile app, request a new OTP and note its expiration time (e.g., “Valid until 14:35”).
     \item Wait for at least 6 minutes so that the original OTP has definitely expired.
     \item At the keypad, enter the exact same OTP digits that were generated earlier.
+    \item Observe the lock: it should remain locked and may flash a message like “OTP expired.”
+    \item In Firestore (or the app’s log), confirm:
+    \begin{itemize}
+        \item An \texttt{OTP\_EXPIRED} event appears with the correct timestamp.
+        \item \texttt{LOCK\_STATE} remains 0 (locked).
+    \end{itemize}
+\end{itemize}
