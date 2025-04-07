@@ -15,8 +15,8 @@ A secure and convenient system to control a smart lock remotely using a smartpho
 
 ---
 
-### Introduction
-The **Auto Smart Lock** is designed to provide a secure and convenient way to control a lock remotely using a smartphone (key). The system utilizes a WiFi enabled ESP32C3 microcontroller, Firebase Firestore for cloud data storage, and a mobile application for the key's functionality.
+### 🛠️ Introduction
+The **Auto Smart Lock** is a Wifi-based system designed to remotely control an electronic door lock using a smartphone. It combines a Firebase cloud backend with a custom mobile app and an ESP32-C3 microcontroller to manage data, security, and remote access.
 
 ---
 
