@@ -11,7 +11,7 @@ A secure and convenient system to control a smart lock remotely using a smartpho
    - [Stage 1: Setting Up Firebase](#stage-1-setting-up-firebase)
    - [Stage 2: Connecting Mobile App to Firebase](#stage-2-connecting-mobile-app-to-firebase)
    - [Stage 3: Connecting ESP32 to Wi-Fi](#stage-3-connecting-esp32-to-wi-fi)
-   - [Stage 4: Linking ESP32 with Firebase](#stage-4-linking-esp32-with-firebase)
+   - [Stage 4: Linking ESP32 with Firestore](#stage-4-linking-esp32-with-firestore)
 
 ---
 
@@ -76,3 +76,9 @@ We also referred to the example project below:
 - Select your ESP32-C3 board and port.
 - Open the sketch.
 - Upload the code to your ESP32-C3 board.
+
+1. **Install Required Libraries**: We installed the `Firebase_Arduino_Client_Library_for_ESP8266_and_ESP32` along with `WiFi` and `ArduinoJson` libraries in Arduino IDE.
+2. **Set Up Firebase Credentials**: We created a Firebase project, enabled authentication, and obtained the database URL and API key.
+3. **Initialize Wi-Fi Connection**: The ESP32C3 was programmed to connect to a specified Wi-Fi network using `WiFi.begin(ssid, password)`.
+4. **Authenticate with Firebase**: We used the Firebase client library to authenticate the ESP32C3 with Firebase using the database URL and an authentication token.
+5. **Read and Write Data**: The ESP32C3 successfully sent and retrieved data from Firebase using `Firebase.set()` and `Firebase.get()` functions, allowing real-time communication with the mobile app.
