@@ -1,38 +1,0 @@
-insert TEAM NAME,,,insert TEAM #,insert student emails here,,,,,,,,,,,"Yellow = item bought by BELS, must return",,
-Item,Qty,Part Name + hyperlink,Status,Vendor,Vendor Part Number,Manufacturer ,"Manufacturer
-Part Number",Unit Price,"Sub Total
-(Calculated)","Sales Tax
-(Calculated)",Shipping Costs,"Total Cost
-(Calculated)",Team Notes,Approved by (teaching staff only),PO Order Number,BELS Comments (BELS only),Possession
-1,1,4x4 Matrix Keypad,,Mouser,485-3844,adafruit,3844, $ 5.95 , $ 5.95 , $ 0.58 , $ 7.99 , $ 14.52 ,Just need one for now,,,,
-2,1,Relay Module Esp32c3,,Amazon,DIY-RELAY-3-5V-1C-LH,DIYables,DIY-RELAY-3-5V-1C-LH, $ 9.99 , $ 9.99 , $ 0.97 , $ -   , $ 10.96 ,"Just need one order, comes with 3 for our 2 locks for testing parallelization",,,,
-3,1,DC 12V Solenoid Lock,,Amazon,"‎DIY-SOLENOID-LOCK-MINI-NEW-2",DIYables,"‎DIY-SOLENOID-LOCK-12V", $ 14.99 , $ 14.99 , $ 1.46 , $ -   , $ 16.45 ,2 Locks for multiple testing,,,,
-4,1,12 Volt Power Adapter Supply,,Amazon,"MZ-M12V2A24",TMEZON,"MZ-M12V2A24", $ 7.99 , $ 7.99 , $ 0.78 , $ -   , $ 8.77 ,Power supply for solenoid lock,,,,
-5,1,Power Jack Plug Adapter,,Amazon,DIY-DC-CONNECTOR,DIYables, DIY-DC-CONNECTOR, $ 5.99 , $ 5.99 , $ 0.58 , $ -   , $ 6.57 ,Power Jack for 12V Power supply,,,,
-6,2,Battery Fuel Gauge,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-7,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-8,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-9,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-10,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-11,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-12,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-13,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-14,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-15,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-16,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-17,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-18,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-19,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-20,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-21,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-22,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-23,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-24,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-25,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-26,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-27,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-28,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-29,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-30,,,,,,,, $ -   , $ -   , $ -   , $ -   , $ -   ,,,,,
-,,,,,,,,,,,,,,,,,
-TOTALS,,,,,,,, $ 44.91 , $ 44.91 , $ 4.38 , $ 7.99 , $ 57.28 ,,,,,
