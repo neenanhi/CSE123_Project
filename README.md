@@ -47,10 +47,13 @@ To store and manage authentication and device data, we used [Firebase Firestore]
 2. Set up Firebase SDKs for Firestore and authentication.
 
 ### Stage 3: Connecting ESP32-C3 to Wi-Fi
-The ESP32-C3 was configured to connect to a local Wi-Fi network following these steps:
-- Include the `Wifi.h` library.
-- Store the credentials on the ESP32-C3.
-- Ensure the ESP32-C3 auto reconnects after resets.
+The ESP32-C3 was configured to connect to a local Wi-Fi network. We follow this tutorial to set up Wi-Fi in station (STA) mode:
+🔗 [ESP32 Wi-Fi Station (STA) Mode - Random Nerd Tutorials](https://randomnerdtutorials.com/esp32-wi-fi-manager-esp32/)
+
+#### Steps:
+- Call `WiFi.begin(ssid, password)` to connect to the router.
+- Monitor connection status using `WiFi.status()`.
+- Print the IP address to the Serial Monitor once connected.
 
 ### Stage 4: Linking ESP32 with Firebase
 To enable communication between the ESP32 and Firestore, we used this [FirebaseClient](https://github.com/mobizt/FirebaseClient) library. This allows the ESP32 to read from and write to Firestore.
