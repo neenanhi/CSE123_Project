@@ -1,2 +1,5 @@
 # ignore secrets.h
 **/secrets.h
+
+# never allow .DS_STORE file to sneak into Git
+**/.DS_STORE
