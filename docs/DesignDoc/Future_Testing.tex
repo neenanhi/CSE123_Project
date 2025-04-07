@@ -204,3 +204,9 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
   \textbf{PASS} &
     \begin{minipage}[t]{\linewidth}
     \begin{itemize}
+        \item Entering an expired OTP does not cause the bolt to retract—\texttt{LOCK\_STATE} stays 0.
+      \item App or keypad displays “OTP expired” immediately when the code is entered.
+      \item Firestore logs a new \texttt{OTP\_EXPIRED} event with a timestamp matching the attempt.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
