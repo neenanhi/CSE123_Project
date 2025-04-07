@@ -56,5 +56,7 @@ The ESP32-C3 was configured to connect to a local Wi-Fi network. We follow this 
 - Print the IP address to the Serial Monitor once connected.
 
 ### Stage 4: Linking ESP32 with Firebase
-To enable communication between the ESP32 and Firestore, we used this [FirebaseClient](https://github.com/mobizt/FirebaseClient) library. This allows the ESP32 to read from and write to Firestore.
+To enable communication between the ESP32 and Firestore, we used the [FirebaseClient](https://github.com/mobizt/FirebaseClient) library. This allows the ESP32 to read from and write to Firestore documents.
 
+We followed the [FirebaseClient GitHub documentation](https://github.com/mobizt/FirebaseClient) and used this YouTube tutorial for initial setup with the ESP32-C3:  
+📺 [ESP32-C3 Firebase Tutorial – YouTube](https://www.youtube.com/watch?v=md1uEOnau5k)
