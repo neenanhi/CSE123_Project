@@ -65,3 +65,9 @@ We also referred to the example project below:
 
 #### 🔧 ESP32-C3 Firestore Database Example
 
+##### Requirements:
+1. [Install Arduino IDE](https://www.arduino.cc/en/software).
+2. Follow [YouTube](https://www.youtube.com/watch?v=md1uEOnau5k) tutorial for setting up ESP32-C3.
+3. Refer to the [FirebaseClient GitHub](https://github.com/mobizt/FirebaseClient) for detailed library setup.
+4. Make a copy of the `secrets.h.example` file as `secrets.h` and fill in your credentials.
+
