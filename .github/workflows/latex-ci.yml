@@ -14,14 +14,19 @@ jobs:
         include:
           - dir: docs/DemoEqualityContribution
             file: DemoEqualityContribution.tex
+            pdf: DemoEqualityContribution.pdf
           - dir: docs/DraftDesignDoc
             file: DraftDesignDoc.tex
+            pdf: DraftDesignDoc.pdf
           - dir: docs/submission2
             file: submission2.tex
+            pdf: submission2.pdf
           - dir: docs/submission3
             file: submission3.tex
+            pdf: submission3.pdf
           - dir: docs/DemoScript
             file: DemoScript.tex
+            pdf: DemoScript.pdf
 
     name: Build ${{ matrix.file }}
     steps:
@@ -40,6 +45,6 @@ jobs:
       - name: Upload PDF - ${{ matrix.file }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.file }}-pdf
-          path: ${{ matrix.dir }}/${{ matrix.file }}.pdf
+          name: ${{ matrix.pdf }}-pdf
+          path: ${{ matrix.dir }}/${{ matrix.pdf }}
 
