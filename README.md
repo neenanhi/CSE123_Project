@@ -20,13 +20,16 @@ The **Auto Smart Lock** is a Wifi-based system designed to remotely control an e
 
 ---
 
-### Key Components
-* ESP32-C3 Microcontroller
-* Firebase Firestore
-* Mobile App
-* DC 12V Solenoid Electric Door Lock
-* Keypad
-* Rechargeable Power Bank
+### 🔧 Key Components
+- **ESP32-C3 Microcontroller**
+(Handles Wi-Fi communication and lock control logic)
+- **Firebase Firestore** (Cloud database to store and sync lock states)
+- **Mobile App** (Acts as a digital key to control the lock)
+- **DC 12V Solenoid Electric Door Lock**
+- **Keypad** (Optional physical entry method)
+- **Rechargeable Power Bank** (Provides portable power to the lock)
+
+---
 
 ## Stages of Development
 
