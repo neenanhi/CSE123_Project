@@ -48,17 +48,25 @@ The current roles have been assigned as follows:
     \item Kid uses newly generated PIN to unlock door via keypad mechanism
 \end{itemize}
 
-\subsection{Scenario 3: Lock Battery Dies}
-\begin{itemize}
-    \item The lock shows no sign of having power
-    \item Using a backup battery and a special unique keypad sequence to trigger extra power temporarily (only one time use)
-\end{itemize}
-
-\subsection{Scenario 4: Setting time frame for a pin}
+\subsection{Scenario 3: Setting time frame for a pin}
 \begin{itemize}
     \item Set a new pin that has start and expiration time for a guest
     \item Showing that the new pin can only unlock during the creation of the pin, and in the time frame
     \item Show the pin does not work when it has past the expiration date
+\end{itemize}
+
+\subsection{Scenario 4: Lock disconnected from Wi-Fi}
+\begin{itemize}
+    \item The parent can use one of the pre-configured PIN code and send it to the kid
+    \item Show that the code can only work once
+    \item The used PIN code will be removed from the server and will be replaced with a new set of codes
+    \item The new set of codes will be sent to the lock with 2-way acknowledgement system
+\end{itemize}
+
+\subsection{Scenario 5: Lock Battery Dies}
+\begin{itemize}
+    \item The lock shows no sign of having power
+    \item Using a backup battery and a special unique keypad sequence to trigger extra power temporarily (only one time use)
 \end{itemize}
 
 \section{Conclusion}
