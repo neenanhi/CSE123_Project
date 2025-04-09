@@ -226,3 +226,9 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \begin{itemize}
         \item Verify that multiple quick incorrect PIN entries trigger an audible alarm.
         \item Ensure the lock remains locked during the alarm state and does not unlock.
+        \item Confirm the alarm stops after a set timeout or when a correct PIN is entered.
+        \item Check that each failed attempt and the alarm event are logged in Firestore.
+    \end{itemize}
+    
+    \subparagraph{How We Test It}
+    \begin{itemize}
