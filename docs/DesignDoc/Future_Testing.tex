@@ -236,3 +236,9 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \item Listen for the alarm sound and observe that \texttt{LOCK\_STATE} remains 0 (locked).
         \item After the alarm has sounded for at least 30 seconds, enter a valid PIN.
         \item In Firestore, confirm:
+        \begin{itemize}
+            \item Each of the five wrong PIN attempts is recorded.
+            \item An “ALARM\_TRIGGERED” event appears when the alarm starts.
+            \item A “ALARM\_RESET” or “UNLOCK” event appears once the correct PIN silences the alarm and unlocks the door.
+        \end{itemize}
+    \end{itemize}
