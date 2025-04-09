@@ -232,3 +232,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     
     \subparagraph{How We Test It}
     \begin{itemize}
+        \item Enter \textbf{five} incorrect 4-digit PINs within 10 seconds.
+        \item Listen for the alarm sound and observe that \texttt{LOCK\_STATE} remains 0 (locked).
+        \item After the alarm has sounded for at least 30 seconds, enter a valid PIN.
+        \item In Firestore, confirm:
