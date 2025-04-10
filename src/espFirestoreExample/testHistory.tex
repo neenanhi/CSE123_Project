@@ -20,6 +20,7 @@ This document lists the testing activities conducted from April 7 to April 30, 2
 \hline
 April 7, 2025 & Test 1 & Firebase Data Sync & Passed \\
 April 9, 2025 & Test 2 & Keypad Input Buffer & Failed \\
+April 10, 2025 & Test 3 & ESP32 Power Management & Passed \\
 
 
 \hline
@@ -40,4 +41,9 @@ Result: Some key presses were missed.
 Problems: Buffer size may be too small or not processing inputs fast enough.
 Details: Keypad had to saudered to the jumper pins to work properly. The keypad was not working properly and was not able to record the key presses. The keypad was not able to record the key presses because it was not connected to the jumper pins. 
 
+\subsection*{Test 3: ESP32 Power Management (April 10, 2025)}
+Goal: Measure power usage in sleep and active modes.
+Method: Checked current draw with a multimeter in both modes.
+Result: Power usage was within expected limits.
+Problems: None.
 \end{document}
