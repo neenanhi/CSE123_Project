@@ -12,3 +12,5 @@ Before the Demo
 
 Introduction
 Neena: “We built a smart lock solution that lets users lock and unlock their doors from anywhere, at any time—no physical key needed. Our lock supports secure authentication methods and provides flexible, time-based access control.”
+
+Adam: “Here’s our schematic: we have our ESP32-C3 microcontroller and iOS app connected through Firestore Cloud. We handle Wi-Fi configuring using a one time set up access point, receive keypad inputs, and manage OTPs and emergency pins through the app. We also implemented features like logout, access logs, and a secure database for PIN handling.”
