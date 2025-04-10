@@ -19,6 +19,7 @@ This document lists the testing activities conducted from April 7 to April 30, 2
 \textbf{Date} & \textbf{Test \#} & \textbf{Component} & \textbf{Status} \\
 \hline
 April 7, 2025 & Test 1 & Firebase Data Sync & Passed \\
+April 9, 2025 & Test 2 & Keypad Input Buffer & Failed \\
 
 
 \hline
@@ -31,5 +32,11 @@ Goal: Check if data from ESP32 updates properly in Firebase.
 Method: Sent test data to Firebase and checked if it matched the received data.
 Result: Data synced correctly without any issues. Also added a new test to check if the data was updated in the Firebase database.
 Problems: None.
+
+\subsection*{Test 2: Keypad Input Buffer (April 9, 2025)}
+Goal: See if the keypad input buffer can handle multiple key presses quickly.
+Method: Pressed multiple keys rapidly to check how many were recorded.
+Result: Some key presses were missed.
+Problems: Buffer size may be too small or not processing inputs fast enough.
 
 \end{document}
