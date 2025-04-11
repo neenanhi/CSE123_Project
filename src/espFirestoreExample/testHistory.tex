@@ -19,8 +19,8 @@ This document lists the testing activities conducted from April 7 to April 30, 2
 \textbf{Date} & \textbf{Test \#} & \textbf{Component} & \textbf{Status} \\
 \hline
 April 7, 2025 & Test 1 & Firebase Data Sync & Passed \\
-April 9, 2025 & Test 2 & Keypad Input Buffer & Failed \\
-April 10, 2025 & Test 3 & ESP32 Power Management & Passed \\
+April 9, 2025 & Test 2 & Keypad Input Buffer & Passed \\
+April 10, 2025 & Test 3 & ESP32 Power Management & Failed \\
 
 
 \hline
@@ -43,7 +43,11 @@ Details: Keypad had to saudered to the jumper pins to work properly. The keypad 
 
 \subsection*{Test 3: ESP32 Power Management (April 10, 2025)}
 Goal: Measure power usage in sleep and active modes.
-Method: Checked current draw with a multimeter in both modes.
-Result: Power usage was within expected limits.
+Method: Checked current with a fuel gauge to determine the life span given 2 AA batteries.
+Result: Battery fuel gauge was unable to give an accurate reading of the battery life.
 Problems: None.
+Details: The battery fuel gauge was not able to give an accurate reading of the battery life due to the source of current we were using. Discarding the use of the battery fuel gauge for prototype, but will be included in final design.
+
+
+
 \end{document}
