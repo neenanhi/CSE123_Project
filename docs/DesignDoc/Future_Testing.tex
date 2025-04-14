@@ -252,3 +252,6 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
       \textbf{PASS} &
         \begin{minipage}[t]{\linewidth}
         \begin{itemize}
+            \item An audible alarm sounds immediately after the \textbf{fifth} wrong entry.
+            \item \texttt{LOCK\_STATE} remains 0 as the alarm sounds.
+            \item Firestore logs five “PIN\_FAILED” events and one “ALARM\_TRIGGERED” event.
