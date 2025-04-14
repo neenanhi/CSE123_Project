@@ -255,3 +255,5 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
             \item An audible alarm sounds immediately after the \textbf{fifth} wrong entry.
             \item \texttt{LOCK\_STATE} remains 0 as the alarm sounds.
             \item Firestore logs five “PIN\_FAILED” events and one “ALARM\_TRIGGERED” event.
+            \item Entering a correct PIN during or after the alarm stops the alarm and changes \texttt{LOCK\_STATE} to 1.
+            \item Firestore logs an “ALARM\_RESET” (or “UNLOCK”) event matching the unlock time.\\
