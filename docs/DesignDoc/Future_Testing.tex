@@ -293,3 +293,6 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Using the mobile app or Firebase console, check Firestore for log entries:
     \begin{itemize}
         \item Two “UNLOCK\_REQUEST” events—one from Device A and one from Device B—each with its own timestamp.
+        \item A single “LOCK\_STATE = 1” event corresponding to the bolt movement.
+        \item No “ERROR” or “RETRY” entries related to overlapping commands.
+    \end{itemize}
