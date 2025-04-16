@@ -69,4 +69,10 @@ Goal: Test how the system reconnects to WiFi after disconnection.
 Method: Disconnected and reconnected WiFi multiple times.
 Result: Device failed to reconnect twice out of five tests.
 Problems: Reconnection timeout may be too short. And pin use for still doesn't always delete the pin from the database.
+
+\subsection*{Test 7: Keypad Debouncing (April 16, 2025)}
+Goal: Ensure the keypad registers only one press per button press.
+Method: Pressed buttons rapidly to see if multiple inputs were recorded for a single press.
+Result: Debouncing was successful; no duplicate inputs were recorded.
+Problems: None.
 \end{document}
