@@ -22,3 +22,11 @@ Demonstrates quick remote unlock via app.
 1. Neena: “Nathaniel is coming home and forgot his keys. Adam plays the dad who’s at work.”
 2. Nathaniel: “I forgot my keys, can you unlock the door for me?”
 3. Adam: “I just got the text and will press Unlock on the app.”
+4. Neena: “You can see the lock has retracted slightly. We’ll show it again for clarity—it’s a subtle visual change.”
+5. Nathaniel texts back: “I’m in.”
+6. Adam presses Lock.
+7. Repeat the unlock/lock flow to show reliability.
+8. Neena: “In the final version, we plan a notification system that alerts users if the door remains unlocked.”
+
+Scenario 2: Guest One-Time PIN
+Demonstrates one-time PIN functionality for visitors without app access.
