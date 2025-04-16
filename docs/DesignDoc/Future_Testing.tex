@@ -287,3 +287,6 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 
 \subparagraph{How We Test It}
 \begin{itemize}
+    \item Have two separate smartphones (Device A and Device B) both logged in with valid user credentials.
+    \item On Device A, trigger an unlock command via the mobile app. At nearly the same moment (within 50 ms), trigger an unlock from Device B.
+    \item Observe the lock’s hardware: the deadbolt should retract only once and remain unlocked until re-locked manually.
