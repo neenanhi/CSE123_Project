@@ -290,3 +290,6 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Have two separate smartphones (Device A and Device B) both logged in with valid user credentials.
     \item On Device A, trigger an unlock command via the mobile app. At nearly the same moment (within 50 ms), trigger an unlock from Device B.
     \item Observe the lock’s hardware: the deadbolt should retract only once and remain unlocked until re-locked manually.
+    \item Using the mobile app or Firebase console, check Firestore for log entries:
+    \begin{itemize}
+        \item Two “UNLOCK\_REQUEST” events—one from Device A and one from Device B—each with its own timestamp.
