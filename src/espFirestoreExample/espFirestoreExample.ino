@@ -126,27 +126,6 @@ int inputIndex = 0;
      Serial.print("Custom text box entry: ");
      Serial.println(custom_text_box.getValue());
  
-     /* No need, use wifi Provisioning instead now
-     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
- 
-     Serial.print("Connecting to Wi-Fi");
-     while (WiFi.status() != WL_CONNECTED)
-     {
-         Serial.print(".");
-         digitalWrite(LED_BUILTIN, HIGH);
-         delay(300);
-         digitalWrite(LED_BUILTIN, LOW);
-         delay(300);
-     }
-     Serial.println();
-     digitalWrite(LED_BUILTIN, LOW);
-     Serial.print("Connected with IP: ");
-     Serial.println(WiFi.localIP());
-     Serial.println();
-     isWiFiConnected = true; // <- Set here after WiFi is confirmed!
-     */
-     
- 
      
  
      Firebase.printf("Firebase Client v%s\n", FIREBASE_CLIENT_VERSION);
