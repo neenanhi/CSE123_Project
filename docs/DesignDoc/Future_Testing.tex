@@ -282,3 +282,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Verify that when two authorized devices send unlock requests nearly simultaneously, the lock handles them without false errors or multiple bolt actuations.
     \item Ensure only one mechanical unlock occurs, even if multiple API calls arrive within a very short window.
     \item Confirm both unlock requests and their respective timestamps are recorded in Firestore.
+    \item Check that no error or retry logic is triggered by briefly overlapping requests.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
