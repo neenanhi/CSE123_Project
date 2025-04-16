@@ -63,4 +63,10 @@ Goal: Verify PINs against Firebase records.
 Method: Entered several PINs and checked for correct responses.
 Result: All PINs were verified as expected.
 Problems: If app isn't open during deletion use of pin, once reconnected to Wifi the pin will not disappear.
+
+\subsection*{T-006: WiFi Reconnect Handling (April 16, 2025)}
+Goal: Test how the system reconnects to WiFi after disconnection.
+Method: Disconnected and reconnected WiFi multiple times.
+Result: Device failed to reconnect twice out of five tests.
+Problems: Reconnection timeout may be too short. And pin use for still doesn't always delete the pin from the database.
 \end{document}
