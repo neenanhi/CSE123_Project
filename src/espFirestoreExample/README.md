@@ -8,3 +8,7 @@
 
 ### Running it:
 * Open the Arduino IDE, then sketch and upload onto the ESP32-C3 board.
+
+### Libraries:
+
+### Boards Manager:
