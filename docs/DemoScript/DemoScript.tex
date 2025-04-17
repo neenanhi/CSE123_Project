@@ -1,0 +1,79 @@
+\documentclass[12pt]{article}
+
+\usepackage{graphicx}
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\title{ SmartLock Demo Script }
+\author{ Adam Wu, Jackson Kennedy, Neena Nguyen, and Nathaniel Laurente }
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+*SmartLock is bolted into a demo door (can be a part of an old separated door piece with a standard deadbolt setup that doesn’t necessarily need to be attached via hinge to any wall)*
+
+Our smart lock solution will allow users to lock/unlock their doors from anytime and anywhere, eliminate the need for physical keys, and provide secure authentication methods for authorized users.
+
+\section{Demo Portion}
+The current roles have been assigned as follows:
+\begin{itemize}
+    \item Parent 1: Nathaniel
+    \item Kid 1: Neena
+    \item Parent 2: Jackson
+    \item Kid 2: Adam
+\end{itemize}
+
+\subsection{Scenario 1: Parents at work}
+\begin{itemize}
+    \item Kid comes home from school
+    \item Kid can't unlock door
+    \item Kid texts parent to unlock door
+    \item Parent unlocks door from far away via mobile app lock/unlock as proof of concept of Parent unlocking from work with button functionalities
+\end{itemize}
+
+\subsection{Scenario 2: Parents at work again}
+\begin{itemize}
+    \item Parent generates new PIN code to be used
+    \item New PIN gets reflected in PIN list in app
+    \item Kid comes home from school
+    \item Kid uses newly generated PIN to unlock door via keypad mechanism
+\end{itemize}
+
+\subsection{Scenario 3: Setting time frame for a pin}
+\begin{itemize}
+    \item Set a new pin that has start and expiration time for a guest
+    \item Showing that the new pin can only unlock during the creation of the pin, and in the time frame
+    \item Show the pin does not work when it has past the expiration date
+\end{itemize}
+
+\subsection{Scenario 4: Lock disconnected from Wi-Fi}
+\begin{itemize}
+    \item The parent can use one of the pre-configured PIN code and send it to the kid
+    \item Show that the code can only work once
+    \item The used PIN code will be removed from the server and will be replaced with a new set of codes
+    \item The new set of codes will be sent to the lock with 2-way acknowledgement system
+\end{itemize}
+
+\subsection{Scenario 5: Lock Battery Dies}
+\begin{itemize}
+    \item The lock shows no sign of having power
+    \item Using a backup battery and a special unique keypad sequence to trigger extra power temporarily (only one time use)
+\end{itemize}
+
+\section{Conclusion}
+To further improve this project in the future, a more cost and customizable alternative to Firebase could be used to store data more efficiently. Additionally, this new storage could be used alongside a more expensive fingerprint scanner for a form of MFA, where user fingerprints could be logged in a secure and non-invasive manner in a data storage with constant-security updates.
+
+We will also be using our own custom board instead of the esp32c3 in our manufactured design for our product. Overall, we have achieved our minimum viable product, where we can unlock and lock our door using our phone or the keypad.
+
+Something about what we planned on producing, but did not work.
+
+\end{document}
