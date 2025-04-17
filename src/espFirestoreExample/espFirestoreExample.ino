@@ -43,6 +43,7 @@
 #include <FirebaseClient.h>
 #include "ExampleFunctions.h" // Provides the functions used in the examples.
 #include "secrets.h"          // Provides all the authentication
+#define LED_BUILTIN 1         // Using GPIO 1 for the LED lights
 
 void processData(AsyncResult &aResult);
 void batch_get_async(BatchGetDocumentOptions &options);
@@ -66,35 +67,40 @@ Firestore::Documents Docs;
 AsyncResult firestoreResult;
 
 bool taskCompleted = false;
+bool isWiFiConnected = false;
 
 void setup()
 {
     Serial.begin(115200);
+    pinMode(LED_BUILTIN, OUTPUT);
+
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
     Serial.print("Connecting to Wi-Fi");
     while (WiFi.status() != WL_CONNECTED)
     {
         Serial.print(".");
+        digitalWrite(LED_BUILTIN, HIGH);
+        delay(300);
+        digitalWrite(LED_BUILTIN, LOW);
         delay(300);
     }
     Serial.println();
+    digitalWrite(LED_BUILTIN, HIGH);
     Serial.print("Connected with IP: ");
     Serial.println(WiFi.localIP());
     Serial.println();
+
+    isWiFiConnected = true; // <- Set here after WiFi is confirmed!
 
     Firebase.printf("Firebase Client v%s\n", FIREBASE_CLIENT_VERSION);
 
     set_ssl_client_insecure_and_buffer(ssl_client);
 
-    // Assign the valid time only required for authentication process with ServiceAuth and CustomAuth.
     app.setTime(get_ntp_time());
 
     Serial.println("Initializing app...");
     initializeApp(aClient, app, getAuth(sa_auth), auth_debug_print, "🔐 authTask");
-
-    // Or intialize the app and wait.
-    // initializeApp(aClient, app, getAuth(sa_auth), 120 * 1000, auth_debug_print);
 
     app.getApp<Firestore::Documents>(Docs);
 }
@@ -107,27 +113,48 @@ void loop()
     // To maintain the authentication and async tasks
     app.loop();
 
-    if (app.ready())
+    bool currentWiFiStatus = (WiFi.status() == WL_CONNECTED);
+
+    // If WiFi status changed
+    if (currentWiFiStatus != isWiFiConnected)
     {
-        unsigned long currentTime = millis();
+        isWiFiConnected = currentWiFiStatus;
 
-        // Check if it's time to poll Firestore again
-        if (currentTime - lastPollTime >= pollInterval)
+        if (isWiFiConnected)
         {
-            lastPollTime = currentTime; // Update the last poll time
-
-            BatchGetDocumentOptions options;
-            options.documents("users/FuduqA91EfdHhEA8JAQNJ3SwrRJ2");
-            options.mask(DocumentMask("isLocked"));
-
-            // Perform the Firestore read operation
-            batch_get_async(options);
-
-            // Optionally, handle the result in a callback or process it later
+            Serial.println("WiFi reconnected!");
+            digitalWrite(LED_BUILTIN, HIGH);
+        }
+        else
+        {
+            Serial.println("WiFi lost!");
         }
     }
 
-    // For async call with AsyncResult.
+    // If WiFi is not connected, blink LED and skip Firestore tasks
+    if (!isWiFiConnected)
+    {
+        digitalWrite(LED_BUILTIN, HIGH);
+        delay(300);
+        digitalWrite(LED_BUILTIN, LOW);
+        delay(300);
+        return; // Skip the rest of loop
+    }
+
+    // If WiFi is connected, proceed as usual
+    unsigned long currentTime = millis();
+
+    if (currentTime - lastPollTime >= pollInterval)
+    {
+        lastPollTime = currentTime;
+
+        BatchGetDocumentOptions options;
+        options.documents("users/FuduqA91EfdHhEA8JAQNJ3SwrRJ2");
+        options.mask(DocumentMask("isLocked"));
+
+        batch_get_async(options);
+    }
+
     processData(firestoreResult);
 }
 
