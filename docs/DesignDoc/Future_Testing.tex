@@ -315,3 +315,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
       \item No “ERROR” or “RETRY” events appear in the logs due to the near-simultaneous requests.
       \item After waiting 10 seconds, a new unlock from any one device still behaves normally (bolt retracts, state logs correctly).\\
     \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any of the following occurs:
+    \begin{itemize}
+      \item Bolt retracts twice or does not retract at all.  
