@@ -1,4 +1,5 @@
 import UIKit
+import FirebaseFirestore
 
 class pinViewController: UIViewController, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -27,7 +28,7 @@ class pinViewController: UIViewController, UITableViewDataSource {
     
     @IBOutlet weak var pinTableView: UITableView!
     
-    var testData = ["1981845", "8481713"]
+   // var testData = ["1981845", "8481713"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
