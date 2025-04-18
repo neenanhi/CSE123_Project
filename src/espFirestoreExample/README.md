@@ -22,4 +22,6 @@
 #### (Assuming Firestore Cloud Up and Running)
 
 1. Download both espFirebase.ino and secrets.h.example in the current repo.
-2. 
+2. Open both files within same Arduino IDE. 
+3. Replace all definitions with credentials necessary to access your firestore cloud. (Including the Private Key)
+4. Rename your "secrets.h.example" to "secrets.h".
