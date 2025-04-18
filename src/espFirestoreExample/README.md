@@ -10,7 +10,9 @@
 * Open the Arduino IDE, then sketch and upload onto the ESP32-C3 board.
 
 ### Libraries:
-1. ArduinoJson by Benoit Blanchon
+1. ArduinoJson by Benoit Blanchon.
+2. Firebase Arduino Client Library for ESP8266 and ESP32 by Mobizt.
+
 
 
 ### Boards Manager:
