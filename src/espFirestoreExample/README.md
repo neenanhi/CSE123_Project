@@ -14,4 +14,6 @@
 2. Firebase Arduino Client Library for ESP8266 and ESP32 by Mobizt.
 3. FirebaseClient by Mobizt.
 
-### Boards Manager:
+### Boards Manager Additions:
+1: Arduino AVR Boards by Arduino
+2: esp32 by Espressif Systems
