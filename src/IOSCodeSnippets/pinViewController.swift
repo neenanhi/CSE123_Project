@@ -1,10 +1,3 @@
-//
-//  pinViewController.swift
-//  SmartLock123
-//
-//  Created by J T on 3/3/25.
-//
-
 import UIKit
 
 class pinViewController: UIViewController, UITableViewDataSource {
