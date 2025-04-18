@@ -30,3 +30,6 @@ Demonstrates quick remote unlock via app.
 
 Scenario 2: Guest One-Time PIN
 Demonstrates one-time PIN functionality for visitors without app access.
+1. Neena: “Adam’s brother, Jackson, is visiting from abroad and doesn’t have access to the app.”
+2. Jackson: “I just got to the house, how can I get in?”
+3. Adam: “I’ll generate a one-time PIN using the app and text it to Jackson.”
