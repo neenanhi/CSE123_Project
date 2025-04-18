@@ -2,6 +2,9 @@ import UIKit
 import FirebaseFirestore
 
 class pinViewController: UIViewController, UITableViewDataSource {
+	
+	let db = Firestore.firestore()
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return testData.count
     }
