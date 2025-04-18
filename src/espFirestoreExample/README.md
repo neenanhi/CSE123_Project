@@ -25,3 +25,5 @@
 2. Open both files within same Arduino IDE. 
 3. Replace all definitions with credentials necessary to access your firestore cloud. (Including the Private Key)
 4. Rename your "secrets.h.example" to "secrets.h".
+5. Upload sketch and observe in the 115200 baud monitor the status of your esp.
+6. After the sketch has fully uploaded and you're in the 115200 monitor, you should see you're esp first attempting to connect to WiFi. After the lock connects, the esp will immediately try to fetch the data from the firestore cloud, and display whether the lock is "locked" or "unlocked" based on the value in the firestore cloud.
