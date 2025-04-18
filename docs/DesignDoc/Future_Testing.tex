@@ -323,3 +323,12 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
       \item Firestore only shows one “UNLOCK\_REQUEST” or shows duplicate “LOCK\_STATE” events.  
       \item An unexpected “ERROR” or “RETRY” event is logged.  
       \item Subsequent unlock attempts (after 10 s) fail or behave abnormally.
+    \end{itemize} \\ 
+  \hline
+\end{tabular}
+\end{center}
+
+\vspace{0.5em}
+
+\noindent\textbf{Reset after the test:}  
+Lock the door with a valid PIN or mobile‐app command. Ensure \texttt{LOCK\_STATE} returns to 0 so the lock is ready for the next test.\\
