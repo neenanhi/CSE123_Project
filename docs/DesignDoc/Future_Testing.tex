@@ -312,3 +312,6 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
       \item The deadbolt retracts exactly once, despite two unlock commands coming within 50 ms of each other.
       \item Firestore shows two distinct “UNLOCK\_REQUEST” entries with separate device IDs and timestamps.
       \item Firestore shows a single “LOCK\_STATE = 1” event matching the bolt actuation time.
+      \item No “ERROR” or “RETRY” events appear in the logs due to the near-simultaneous requests.
+      \item After waiting 10 seconds, a new unlock from any one device still behaves normally (bolt retracts, state logs correctly).\\
+    \end{itemize}
