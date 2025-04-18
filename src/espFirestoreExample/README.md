@@ -15,5 +15,5 @@
 3. FirebaseClient by Mobizt.
 
 ### Boards Manager Additions:
-1 Arduino AVR Boards by Arduino
-2 esp32 by Espressif Systems
+1. Arduino AVR Boards by Arduino
+2. esp32 by Espressif Systems
