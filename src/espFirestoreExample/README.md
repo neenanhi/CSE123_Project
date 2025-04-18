@@ -17,3 +17,9 @@
 ### Boards Manager Additions:
 1. Arduino AVR Boards by Arduino
 2. esp32 by Espressif Systems
+
+### First Run Instructions:
+#### (Assuming Firestore Cloud Up and Running)
+
+1. Download both espFirebase.ino and secrets.h.example in the current repo.
+2. 
