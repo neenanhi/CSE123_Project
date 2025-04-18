@@ -12,7 +12,6 @@
 ### Libraries:
 1. ArduinoJson by Benoit Blanchon.
 2. Firebase Arduino Client Library for ESP8266 and ESP32 by Mobizt.
-
-
+3. FirebaseClient by Mobizt.
 
 ### Boards Manager:
