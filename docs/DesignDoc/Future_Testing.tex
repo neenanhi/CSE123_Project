@@ -320,3 +320,6 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
   \textbf{FAIL} & Any of the following occurs:
     \begin{itemize}
       \item Bolt retracts twice or does not retract at all.  
+      \item Firestore only shows one “UNLOCK\_REQUEST” or shows duplicate “LOCK\_STATE” events.  
+      \item An unexpected “ERROR” or “RETRY” event is logged.  
+      \item Subsequent unlock attempts (after 10 s) fail or behave abnormally.
