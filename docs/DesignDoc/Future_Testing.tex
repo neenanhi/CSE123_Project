@@ -308,3 +308,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
   \hline
   \textbf{PASS} &
     \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item The deadbolt retracts exactly once, despite two unlock commands coming within 50 ms of each other.
+      \item Firestore shows two distinct “UNLOCK\_REQUEST” entries with separate device IDs and timestamps.
+      \item Firestore shows a single “LOCK\_STATE = 1” event matching the bolt actuation time.
