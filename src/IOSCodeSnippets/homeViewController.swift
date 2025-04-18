@@ -1,10 +1,3 @@
-//
-//  ------------.swift
-//  SmartLock123
-//
-//  Created by J T on 3/3/25.
-//
-
 import UIKit
 import FirebaseFirestore
 
