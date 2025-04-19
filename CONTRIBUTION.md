@@ -20,3 +20,6 @@ We've implemented a simple system that ensures only reviewed code gets merged in
    ```bash
     git checkout -b "what_youre_working_on"
 
+4. **Make your changes**
+   - Write your code, edit files, and commit changes as needed.
+   
