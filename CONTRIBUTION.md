@@ -39,6 +39,11 @@ We've implemented a simple system that ensures only reviewed code gets merged in
 
 ## 📁 File Organization
 
-
+- `src/` — Main source code for the ESP32C3 (sender/receiver/input/etc.)
+- `docs/` — Documentation files
+- `img/iosApp` — Images related to the iOS application
+- `materials/` — Course-related materials
+- `DemoEqualityContribution.pdf` — PDF outlining team contributions
+- `README.md` - Project Overview
 
 
