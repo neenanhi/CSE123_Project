@@ -22,4 +22,7 @@ We've implemented a simple system that ensures only reviewed code gets merged in
 
 4. **Make your changes**
    - Write your code, edit files, and commit changes as needed.
-   
+   - When you try to push for the first time, Git might give an error with a suggested command. Just copy and use that.
+
+
+
