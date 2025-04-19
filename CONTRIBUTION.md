@@ -11,3 +11,8 @@ We've implemented a simple system that ensures only reviewed code gets merged in
 1. **Sync your fork**
    Go to your GitHub forked repository page and click the **Sync fork** button to get the latest changes from `main`.
 
+2. **Update your local main branch**
+   ```bash
+   git checkout main
+   git pull --ff-only
+
