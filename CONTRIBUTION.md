@@ -37,6 +37,8 @@ We've implemented a simple system that ensures only reviewed code gets merged in
     git checkout main
     git pull --ff-only
 
+## 📁 File Organization
+
 
 
 
