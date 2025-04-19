@@ -30,5 +30,5 @@ We've implemented a simple system that ensures only reviewed code gets merged in
 6. **Wait for review**
    A teammate must review and approve your PR before merging it into `main.`
 
-
-
+7. **After your PR is merged**
+    
