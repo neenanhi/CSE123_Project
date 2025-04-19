@@ -27,3 +27,8 @@ We've implemented a simple system that ensures only reviewed code gets merged in
 5. **Open a Pull Request**
    Push your branch to your fork and open a PR from the GitHub website.
 
+6. **Wait for review**
+   A teammate must review and approve your PR before merging it into `main.`
+
+
+
