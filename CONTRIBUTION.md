@@ -16,3 +16,7 @@ We've implemented a simple system that ensures only reviewed code gets merged in
    git checkout main
    git pull --ff-only
 
+3. **Create a feature branch**
+   ```bash
+    git checkout -b "what_youre_working_on"
+
