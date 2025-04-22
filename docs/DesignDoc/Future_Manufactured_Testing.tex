@@ -14,7 +14,7 @@
     \item Enter a valid PIN from the list.
     \item Observe if LOCK\_STATE is set to 1 in Firestore.
 \end{itemize}
-\subparagraph{ Expect}
+\subparagraph{Expectations of Test}
 \begin{itemize}
     \item Bolt pulls back within 0.5 s of entering PIN.
     \item Firestore shows LOCK\_STATE = 1.
@@ -32,7 +32,7 @@
     \item Enter three different invalid PINs quickly.
     \item Check LOCKOUT\_COUNT and look for alarm.
 \end{itemize}
-\subparagraph{ Expect}
+\subparagraph{Expectations of Test}
 \begin{itemize}
     \item No PIN entries accepted for 60 s.
     \item Alarm or LED shows lockout.
@@ -50,7 +50,7 @@
     \item Lock out with wrong PINs, then enter the emergency PIN.
     \item Check Firestore for an EMERGENCY\_UNLOCK record.
 \end{itemize}
-\subparagraph{ Expect}
+\subparagraph{Expectations of Test}
 \begin{itemize}
     \item Door unlocks right away.
     \item Firestore logs the emergency unlock.
@@ -68,7 +68,7 @@
     \item Request an OTP thats valid for 5 min.
     \item Enter it on the keypad.
 \end{itemize}
-\subparagraph{ Expect}
+\subparagraph{Expectations of Test}
 \begin{itemize}
     \item Firestore stores the OTP and its expiry time.
     \item Valid OTP unlocks the door.
@@ -86,7 +86,7 @@
     \item Wait until after 5 min expiry.
     \item Enter the same OTP on the keypad.
 \end{itemize}
-\subparagraph{ Expect}
+\subparagraph{Expectations of Test}
 \begin{itemize}
     \item Door stays locked.
     \item Firestore logs “OTP\_EXPIRED.”
@@ -107,7 +107,7 @@
     \item Enter a valid PIN while moving phone out of Bluetooth range.
     \item Check logs for separate PIN and BLE events.
 \end{itemize}
-\subparagraph{ Expect}
+\subparagraph{Expectations of Test}
 \begin{itemize}
     \item Door only opens if both PIN and BLE are OK.
     \item Firestore shows which factor failed if it doesnt open.
@@ -124,7 +124,7 @@
     \item Set phone to PST, lock to UTC.
     \item Generate OTP and try it.
 \end{itemize}
-\subparagraph{ Expect}
+\subparagraph{Expectations of Test}
 \begin{itemize}
     \item OTP still works within the correct window.
     \item Auto-lock happens at the right local time.
@@ -139,7 +139,7 @@
 \begin{itemize}
     \item Schedule auto-lock at 2 AM on DST change day.
 \end{itemize}
-\subparagraph{ Expect}
+\subparagraph{Expectations of Test}
 \begin{itemize}
     \item Only one auto-lock event, no skips or doubles.
 \end{itemize}
@@ -153,7 +153,7 @@
 \begin{itemize}
     \item Change PIN role in Firestore and try using both roles.
 \end{itemize}
-\subparagraph{ Expect}
+\subparagraph{Expectations of Test}
 \begin{itemize}
     \item Lock enforces the new role right away.
 \end{itemize}
@@ -167,7 +167,7 @@
 \begin{itemize}
     \item Move phone from 1 m to 6 m away in 0.5 m steps.
 \end{itemize}
-\subparagraph{ Expect}
+\subparagraph{Expectations of Test}
 \begin{itemize}
     \item Unlocks when signal is strong enough, fails when its too weak.
 \end{itemize}
@@ -184,7 +184,7 @@
 \begin{itemize}
     \item Inject bit-flips in RAM/flash every 10 s.
 \end{itemize}
-\subparagraph{ Expect}
+\subparagraph{Expectations of Test}
 \begin{itemize}
     \item System catches or corrects errors, stays stable.
 \end{itemize}
@@ -198,7 +198,7 @@
 \begin{itemize}
     \item Apply a 1 kV pulse on the 12 V input for 1 µs.
 \end{itemize}
-\subparagraph{ Expect}
+\subparagraph{Expectations of Test}
 \begin{itemize}
     \item No damage, system recovers normally.
 \end{itemize}
@@ -212,7 +212,7 @@
 \begin{itemize}
     \item Run a 5–50 Hz vibration sweep at 0.5 g for 10 min.
 \end{itemize}
-\subparagraph{ Expect}
+\subparagraph{Expectations of Test}
 \begin{itemize}
     \item No loose parts, sensors stay stable, lock/unlock still works.
 \end{itemize}
@@ -226,7 +226,7 @@
 \begin{itemize}
     \item Put the lock in a minus 40 °C chamber for 2 h and do 10 cycles.
 \end{itemize}
-\subparagraph{ Expect}
+\subparagraph{Expectations of Test}
 \begin{itemize}
     \item Bolt moves on time, no cracking, battery holds up.
 \end{itemize}
@@ -240,7 +240,7 @@
 \begin{itemize}
     \item Run lock/unlock every 5 min in the heat chamber.
 \end{itemize}
-\subparagraph{ Expect}
+\subparagraph{Expectations of Test}
 \begin{itemize}
     \item MCU stays safe, no shutdowns, data intact.
 \end{itemize}
