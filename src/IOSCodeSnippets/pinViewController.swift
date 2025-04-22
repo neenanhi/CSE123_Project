@@ -118,6 +118,7 @@ guard let user = Auth.auth().currentUser else {
         pinTableView.dataSource = self
    
         pinTableView.rowHeight = 100
+loadUserPins()
         
         pinTableView.reloadData()
         
