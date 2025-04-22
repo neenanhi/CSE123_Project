@@ -116,6 +116,7 @@ guard let user = Auth.auth().currentUser else {
         super.viewDidLoad()
          pinTableView.delegate = self
         pinTableView.dataSource = self
+    pinTableView.backgroundColor = .white
    
         pinTableView.rowHeight = 100
 loadUserPins()
