@@ -91,6 +91,11 @@ guard let user = Auth.auth().currentUser else {
         }
 
 	let userRef = db.collection("users").document(user.uid)
+userRef.getDocument { (document, error) in
+            if let error = error {
+                print("could not fetch user pins \(error.localizedDescription)")
+                return
+            }
 }
     
    // var testData = ["1981845", "8481713"]
