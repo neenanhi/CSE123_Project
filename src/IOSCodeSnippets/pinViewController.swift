@@ -114,7 +114,7 @@ guard let user = Auth.auth().currentUser else {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+         pinTableView.delegate = self
         pinTableView.dataSource = self
    
         pinTableView.rowHeight = 100
