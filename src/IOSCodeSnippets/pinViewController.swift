@@ -96,6 +96,9 @@ userRef.getDocument { (document, error) in
                 print("could not fetch user pins \(error.localizedDescription)")
                 return
             }
+if let document = document, document.exists {
+                if let pins = document.data()?["userPins"] as? [String] {
+                    self.testData = pins
 }
     
    // var testData = ["1981845", "8481713"]
