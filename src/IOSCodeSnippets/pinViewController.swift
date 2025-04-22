@@ -111,7 +111,6 @@ guard let user = Auth.auth().currentUser else {
         }
     }
     
-   // var testData = ["1981845", "8481713"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
