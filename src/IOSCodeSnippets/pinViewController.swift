@@ -85,25 +85,31 @@ guard let user = Auth.auth().currentUser else {
            }
 }
 	func loadUserPins() {
-guard let user = Auth.auth().currentUser else {
-            print("can't find user auth")
+        guard let user = Auth.auth().currentUser else {
+            print("no user auth")
             return
         }
 
-	let userRef = db.collection("users").document(user.uid)
-userRef.getDocument { (document, error) in
+        let userRef = db.collection("users").document(user.uid)
+        
+        userRef.getDocument { (document, error) in
             if let error = error {
-                print("could not fetch user pins \(error.localizedDescription)")
+                print("error\(error.localizedDescription)")
                 return
             }
-if let document = document, document.exists {
+            
+            if let document = document, document.exists {
                 if let pins = document.data()?["userPins"] as? [String] {
                     self.testData = pins
-		self.pinTableView.reloadData()
+                    self.pinTableView.reloadData()
                 } else {
-                    print("userPins not found")
+                    print("userPins doesn't exist")
                 }
-}
+            } else {
+                print("document doesn't exist")
+            }
+        }
+    }
     
    // var testData = ["1981845", "8481713"]
     
