@@ -27,6 +27,9 @@ jobs:
           - dir: docs/DemoScript
             file: DemoScript.tex
             pdf: DemoScript.pdf
+          - dir: docs/DesignDoc
+            file: DesignDoc.tex
+            pdf: DesignDoc.pdf
 
     name: Build ${{ matrix.file }}
     steps:
