@@ -1,13 +1,10 @@
-//
-//  pinViewController.swift
-//  SmartLock123
-//
-//  Created by J T on 3/3/25.
-//
-
 import UIKit
+import FirebaseFirestore
 
 class pinViewController: UIViewController, UITableViewDataSource {
+	
+	let db = Firestore.firestore()
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return testData.count
     }
@@ -34,7 +31,7 @@ class pinViewController: UIViewController, UITableViewDataSource {
     
     @IBOutlet weak var pinTableView: UITableView!
     
-    var testData = ["1981845", "8481713", "3884177", "3918491", "1193981", "4818191", "9487119", "7738384"]
+   // var testData = ["1981845", "8481713"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
