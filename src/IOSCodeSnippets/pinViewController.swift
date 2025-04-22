@@ -125,6 +125,8 @@ loadUserPins()
         
         
     }
+override func viewWillAppear(_ animated: Bool) {
+}
 
 
 }
