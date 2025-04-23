@@ -125,7 +125,7 @@
          if (isWiFiConnected)
          {
              Serial.println("WiFi reconnected!");
-             digitalWrite(LED_BUILTIN, HIGH);
+             digitalWrite(LED_BUILTIN, LOW); // Turn off LED when WiFi is connected to save power
          }
          else
          {
