@@ -1,0 +1,64 @@
+\newpage
+\subsection{Initial Installation and Setup Procedure}
+
+The following outlines the essential steps required to ensure a seamless setup and onboarding experience for end users upon receiving the SmartLock. This section is intended to guide engineers in implementing a standardized process that balances user-friendliness with robust technical integration. The procedure includes steps from unboxing to successful WiFi provisioning via Bluetooth communication.
+
+\subsubsection{Step 1: Unboxing and Physical Inspection}
+
+Upon receipt of the SmartLock device, users are expected to perform a basic inspection of the package contents.
+
+\begin{itemize}
+    \item Ensure all components are present:
+        \begin{itemize}
+            \item SmartLock main unit
+            \item Mounting bracket and screws
+            \item Quick-start guide with QR Code at Front Page (printed)
+        \end{itemize}
+    \item Verify the unit is free of visible defects or damage.
+    \item Charge the unit if not pre-charged (optional: LED will indicate low battery if charging is required).
+\end{itemize}
+
+\subsubsection{Step 2: Mobile Application Download}
+
+Before any configuration can begin, users must download the official SmartLock companion app. The app serves as the bridge between the mobile device and the lock, handling both Bluetooth communication and network provisioning.
+
+\begin{itemize}
+    \item Available on iOS (App Store) and Android (Google Play Store).
+    \item App name: \textbf{SmartLock Home}.
+    \item Version requirement: iOS 13+ / Android 9+.
+    \item Upon opening the app, users must grant Bluetooth and location permissions as required by the mobile OS.
+\end{itemize}
+
+\subsubsection{Step 3: Initial Bluetooth Pairing}
+
+Once the app is installed, users are prompted to begin the pairing process via Bluetooth. This enables the mobile device to establish a secure connection with the SmartLock unit.
+
+\begin{itemize}
+    \item The SmartLock should be placed in pairing mode. This is triggered automatically on first boot, indicated by a flashing blue LED.
+    \item The app will scan for nearby devices. The SmartLock will be listed as \texttt{SmartLock-XXXX}, where \texttt{XXXX} represents the last 4 digits of the device's MAC address.
+    \item Once selected, the user will initiate pairing. This may include a confirmation prompt or PIN verification depending on device configuration.
+    \item A secure Bluetooth connection will be established upon successful pairing.
+\end{itemize}
+
+\subsubsection{Step 4: WiFi Provisioning}
+
+After a secure Bluetooth channel has been established, the next phase involves transferring the user's WiFi credentials to the SmartLock for permanent network connectivity.
+
+\begin{itemize}
+    \item The mobile app will prompt the user to select a 2.4GHz WiFi network (5GHz bands are not supported).
+    \item Users will enter the SSID and password of their home network.
+    \item Credentials are encrypted and transmitted to the SmartLock via Bluetooth.
+    \item The SmartLock attempts to connect to the provided network. Connection success or failure will be relayed to the app.
+    \item Upon successful connection, the LED will turn solid green, and the app will confirm that setup is complete.
+\end{itemize}
+
+\subsubsection{Final Notes and Engineer Considerations}
+
+\begin{itemize}
+    \item Ensure Bluetooth Low Energy (BLE) is used for communication to optimize power efficiency.
+    \item All user-facing steps should include error handling and clear guidance for troubleshooting.
+    \item Logs of pairing attempts, WiFi status, and user interactions should be stored locally for support diagnostics.
+    \item Future firmware should support Over-the-Air (OTA) updates to streamline enhancements and bug fixes.
+\end{itemize}
+
+This setup process is designed to offer an intuitive user experience while providing the flexibility and security required for a modern smart home device. Engineers should maintain this structure while accounting for evolving mobile OS standards and networking best practices.
