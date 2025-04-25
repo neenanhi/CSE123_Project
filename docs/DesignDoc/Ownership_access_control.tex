@@ -1,7 +1,7 @@
 \newpage
 \subsection{Ownership and Access Control}
 
-Managing ownership and granting user access are critical to ensuring that SmartLock devices remain secure while allowing for flexible sharing. This system must allow primary users to delegate lock access to other users with fine-grained control.
+Managing ownership and granting user access are critical to ensuring that SmartLock devices remain secure while allowing for flexible sharing. This system must allow primary users to delegate lock access to other users, while ensuring that the delegated users have the appropriate permissions.
 
 \subsubsection{Ownership Model}
 
@@ -9,7 +9,7 @@ Each SmartLock must have a primary owner who holds full control over the device 
 
 \begin{itemize}
   \item \textbf{Lock Registration:} When a new lock is initialized, the registering user becomes the owner.
-  \item \textbf{Ownership Metadata:} Store ownership information in the database alongside lock records (e.g., \texttt{lock\_id}, \texttt{owner\_id}).
+  \item \textbf{Ownership Table:} Store ownership information in the database alongside lock records (e.g., \texttt{lock\_id}, \texttt{owner\_id}).
 \end{itemize}
 
 \subsubsection{Access Delegation and Permissions}
@@ -17,8 +17,8 @@ Each SmartLock must have a primary owner who holds full control over the device 
 Primary owners can grant access to other users, allowing them to interact with specific locks under defined conditions.
 
 \begin{itemize}
-  \item \textbf{Access Table Schema:} Maintain a table or collection with fields such as \texttt{lock\_id}, \texttt{user\_id}, \texttt{access\_level} (view, control), \texttt{granted\_by}, and \texttt{expiration}.
-  \item \textbf{Access Rights Enforcement:} Backend logic or Firestore security rules should enforce permissions before allowing user actions.
+  \item \textbf{Access Table:} Maintain a table or collection with fields such as \texttt{lock\_id}, \texttt{user\_id}, \texttt{access\_level} (view, control), \texttt{granted\_by}, and \texttt{expiration} if necessary.
+  \item \textbf{Access Rights Enforcement:} Backend logic and security rules should enforce permissions before allowing user actions.
   \item \textbf{Revocation and Expiration:} Include features for the owner to revoke access at any time or set expiration timers for temporary access.
 \end{itemize}
 
@@ -42,7 +42,7 @@ The frontend application should allow users to manage and review access settings
 \newpage
 \subsection{History and Status Logging}
 
-Comprehensive logging improves security, aids in diagnostics, and enhances transparency for end-users. The SmartLock system should log both user actions and technical status changes.
+ Logging improves security, aids in diagnostics, and enhances transparency for users. The SmartLock system should log both user actions and technical status changes.
 
 \subsubsection{History Log of User Actions}
 
@@ -50,8 +50,8 @@ Tracking user interactions with locks helps in audits, diagnostics, and usage in
 
 \begin{itemize}
   \item \textbf{Log Entry Fields:} Include \texttt{timestamp}, \texttt{user\_id}, \texttt{lock\_id}, and \texttt{action} (e.g., lock, unlock, access granted).
-  \item \textbf{Database Integration:} Automatically write to the history log whenever a user successfully executes an action.
-  \item \textbf{User Access to Logs:} Allow users to view logs for locks they own or have access to, using filtering and search.
+  \item \textbf{Database:} Automatically write to the history log whenever a user successfully executes an action.
+  \item \textbf{User Access to Logs:} Allow users to view logs for locks they own or have access to.
 \end{itemize}
 
 \subsubsection{Status Log for Lock Health Monitoring}
@@ -59,8 +59,7 @@ Tracking user interactions with locks helps in audits, diagnostics, and usage in
 Status logs are essential for monitoring device reliability and connectivity.
 
 \begin{itemize}
-  \item \textbf{ESP32 Event Logging:} Program the ESP32 to push logs to Firestore or a backend endpoint on significant events (e.g., Wi-Fi reconnect, battery low).
-  \item \textbf{Heartbeat System:} Send periodic status pings to indicate the lock is still online and responsive.
+  \item \textbf{Microcontroller Event Logging:} Program the microcontroller to push logs to Cloud structure or a backend data on significant events (e.g., Wi-Fi reconnect, battery low).
   \item \textbf{Technical Dashboard:} Visualize connection stability and firmware state for each lock.
 \end{itemize}
 
@@ -69,7 +68,7 @@ Status logs are essential for monitoring device reliability and connectivity.
 Users must be notified when actions are completed to reinforce trust and responsiveness.
 
 \begin{itemize}
-  \item \textbf{Action Acknowledgement:} ESP32 should confirm action execution back to Firestore (e.g., “locked: true”).
-  \item \textbf{Notification Service:} Use Firebase Cloud Messaging or similar to push real-time updates to the mobile app or web interface.
+  \item \textbf{Action Acknowledgement:} ESP32 should confirm action execution back to Cloud database (e.g., “locked: true”).
+  \item \textbf{Notification Service:} Use real-time updates to the mobile app or web interface.
   \item \textbf{Failure Alerts:} Alert users if an action fails, with details such as connectivity issues or mechanical faults.
 \end{itemize}
