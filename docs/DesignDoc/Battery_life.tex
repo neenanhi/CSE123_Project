@@ -1,0 +1,34 @@
+\newpage
+\subsection{Battery Power Management and Notification System}
+
+While the prototype operates on a continuous power source, a commercial SmartLock will use a secure, long-lasting battery to ensure usability during power outages and in locations without fixed power. Proper battery management involves monitoring charge levels, notifying users, and providing a safe and secure method for recharging or replacing the battery.
+
+\subsubsection{Battery Selection and Power Optimization}
+
+Selecting the right battery type and minimizing power consumption are critical for long-term operation.
+
+\begin{itemize}
+  \item \textbf{Battery Type:} Use high-capacity rechargeable lithium-ion or lithium-polymer batteries capable of lasting several months on a single charge.
+  \item \textbf{Low Power Modes:} Implement deep sleep and wake-on-interrupt features in the firmware to minimize power draw during idle periods.
+\end{itemize}
+
+\subsubsection{Battery Monitoring and User Notification}
+
+Monitoring battery status and notifying users to ensure maintenance and avoid unexpected lockouts.
+
+\begin{itemize}
+  \item \textbf{Voltage Monitoring Circuit:} Integrate a voltage divider or dedicated battery management gauge to continuously monitor battery levels.
+  \item \textbf{Battery State Logging:} Periodically upload battery status to the cloud alongside status logs.
+  \item \textbf{User Notifications:} Send low battery alerts via push notifications, email, or in-app messages when battery drops below a critical threshold (e.g., 30\%).
+\end{itemize}
+
+\subsubsection{Safe and Secure Battery Replacement or Recharging}
+
+Users must be able to service the battery safely without compromising lock security or usability.
+
+\begin{itemize}
+  \item \textbf{Secure Battery Access:} Design an internal battery compartment accessible only when the lock is in an unlocked state or with a secure override mechanism.
+  \item \textbf{Rechargeable Design:} Provide a USB-C or magnetic charging port for easy recharging without disassembling the lock.
+  \item \textbf{Tamper Detection:} Include log entries if the battery compartment is accessed, and notify the owner.
+  \item \textbf{Backup Power Support:} Consider integrating a backup battery to retain state data during battery swap, or integrate a way to reset lock data upon battery replacement or recharge.
+\end{itemize}

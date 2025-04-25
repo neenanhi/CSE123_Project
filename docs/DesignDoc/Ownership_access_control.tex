@@ -1,0 +1,74 @@
+\newpage
+\subsection{Ownership and Access Control}
+
+Managing ownership and granting user access are critical to ensuring that SmartLock devices remain secure while allowing for flexible sharing. This system must allow primary users to delegate lock access to other users, while ensuring that the delegated users have the appropriate permissions.
+
+\subsubsection{Ownership Model}
+
+Each SmartLock must have a primary owner who holds full control over the device and its permissions.
+
+\begin{itemize}
+  \item \textbf{Lock Registration:} When a new lock is initialized, the registering user becomes the owner.
+  \item \textbf{Ownership Table:} Store ownership information in the database alongside lock records (e.g., \texttt{lock\_id}, \texttt{owner\_id}).
+\end{itemize}
+
+\subsubsection{Access Delegation and Permissions}
+
+Primary owners can grant access to other users, allowing them to interact with specific locks under defined conditions.
+
+\begin{itemize}
+  \item \textbf{Access Table:} Maintain a table or collection with fields such as \texttt{lock\_id}, \texttt{user\_id}, \texttt{access\_level} (view, control), \texttt{granted\_by}, and \texttt{expiration} if necessary.
+  \item \textbf{Access Rights Enforcement:} Backend logic and security rules should enforce permissions before allowing user actions.
+  \item \textbf{Revocation and Expiration:} Include features for the owner to revoke access at any time or set expiration timers for temporary access.
+\end{itemize}
+
+\subsubsection{User Interface for Access Management}
+
+The frontend application should allow users to manage and review access settings.
+
+\begin{itemize}
+  \item \textbf{Access Dashboard:} Display which users currently have access to a given lock and their permission levels.
+  \item \textbf{Invite Flow:} Enable owners to invite users via email or user ID, specifying which lock(s) they can access.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+% History and Logging
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\subsection{History and Status Logging}
+
+ Logging improves security, aids in diagnostics, and enhances transparency for users. The SmartLock system should log both user actions and technical status changes.
+
+\subsubsection{History Log of User Actions}
+
+Tracking user interactions with locks helps in audits, diagnostics, and usage insights.
+
+\begin{itemize}
+  \item \textbf{Log Entry Fields:} Include \texttt{timestamp}, \texttt{user\_id}, \texttt{lock\_id}, and \texttt{action} (e.g., lock, unlock, access granted).
+  \item \textbf{Database:} Automatically write to the history log whenever a user successfully executes an action.
+  \item \textbf{User Access to Logs:} Allow users to view logs for locks they own or have access to.
+\end{itemize}
+
+\subsubsection{Status Log for Lock Health Monitoring}
+
+Status logs are essential for monitoring device reliability and connectivity.
+
+\begin{itemize}
+  \item \textbf{Microcontroller Event Logging:} Program the microcontroller to push logs to Cloud structure or a backend data on significant events (e.g., Wi-Fi reconnect, battery low).
+  \item \textbf{Technical Dashboard:} Visualize connection stability and firmware state for each lock.
+\end{itemize}
+
+\subsubsection{Action Confirmation and Notifications}
+
+Users must be notified when actions are completed to reinforce trust and responsiveness.
+
+\begin{itemize}
+  \item \textbf{Action Acknowledgement:} ESP32 should confirm action execution back to Cloud database (e.g., “locked: true”).
+  \item \textbf{Notification Service:} Use real-time updates to the mobile app or web interface.
+  \item \textbf{Failure Alerts:} Alert users if an action fails, with details such as connectivity issues or mechanical faults.
+\end{itemize}
