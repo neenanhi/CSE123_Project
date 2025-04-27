@@ -50,6 +50,11 @@
  void batch_get_async(BatchGetDocumentOptions &options);
  void batch_get_async2(BatchGetDocumentOptions &options);
  void batch_get_await(BatchGetDocumentOptions &options);
+ void batch_write_async(Writes &writes);
+ void batch_write_async2(Writes &writes);
+ void batch_write_await(Writes &writes);
+ void handleJsonStream(String jsonString);
+ String getIsLocked();
  
  // ServiceAuth is required for Google Cloud Functions functions.
  ServiceAuth sa_auth(FIREBASE_CLIENT_EMAIL, FIREBASE_PROJECT_ID, PRIVATE_KEY, 3000 /* expire period in seconds (<= 3600) */);
@@ -66,9 +71,13 @@
  Firestore::Documents Docs;
  
  AsyncResult firestoreResult;
+ JsonDocument doc;
  
  bool taskCompleted = false;
  bool isWiFiConnected = false;
+ bool shouldQueueWrite = false;
+ bool ackValue = true;  // true if door just unlocked, false otherwise
+ bool jsonValid = false;
  
  void setup()
  {
@@ -88,7 +97,7 @@
          delay(300);
      }
      Serial.println();
-     digitalWrite(LED_BUILTIN, HIGH);
+     digitalWrite(LED_BUILTIN, LOW);
      Serial.print("Connected with IP: ");
      Serial.println(WiFi.localIP());
      Serial.println();
@@ -151,26 +160,9 @@
          lastPollTime = currentTime;
          BatchGetDocumentOptions options;
          options.documents("users/FuduqA91EfdHhEA8JAQNJ3SwrRJ2");
-         options.mask(DocumentMask("isLocked"));
-         //Serial.println("PRINT HERE \n");
- 
-         // Getting multiple documents call here
+         options.mask(DocumentMask("isLocked,unlockedAck"));
          batch_get_async(options);
-         //Serial.println("OR HERE \n");
- 
      }
- 
-    // processData(firestoreResult);
-    // Serial.println("BEFORE PRINT \n");
-     // if (firestoreResult.available())
-     // {
-     //   Serial.println("HELLO \n");
- 
-     //   Serial.println(firestoreResult.c_str());
-     // }
-    // Serial.println("AFTER PRINT \n");
- 
- 
  }
  
  void processData(AsyncResult &aResult)
@@ -196,18 +188,14 @@
  
      if (aResult.available())
      {
-         //Serial.println("2ND CRAZY TEST \n");
-         //Firebase.printf("task: %s, payload: %s\n", aResult.uid().c_str(), aResult.c_str());
+        //  Firebase.printf("task: %s, payload: %s\n", aResult.uid().c_str(), aResult.c_str());
          String JsonString = aResult.c_str();
-         //Serial.println(JsonString);
- 
-         // test to print portion of string
-         //Serial.println("NEW TEST\n\n");
-         String part = JsonString.substring(166, 190);
-         Serial.println(part);
- 
-         char isLocked = part[16];
-         if ( (int) (isLocked - '0') == 1) {
+         handleJsonStream(JsonString); // deubug checker, also helps with deserilization of JsonDoc
+         
+         String isLockedVal = getIsLocked();
+         Serial.println("isLocked value: " + getIsLocked());
+
+         if (isLockedVal == "1") {
            // Unlock
            digitalWrite(LED_LOCK, HIGH);
          } else {
@@ -215,11 +203,50 @@
            digitalWrite(LED_LOCK, LOW);
          }
          
-         // end test
-         //Serial.println("CRAZY TEST\n");
- 
      }
  }
+
+ void handleJsonStream(String jsonString) {
+    /**
+     * This functions just prints the name and isLocked value from the Json string.
+    */
+
+    // make sure to clear the document in case it had previous data
+    doc.clear();
+
+    // Deserialize the JSON string
+    DeserializationError error = deserializeJson(doc, jsonString);
+
+    if (error) {
+        Serial.print("deserializeJson() failed: ");
+        Serial.println(error.c_str());
+        jsonValid = false;
+        return;
+    }
+
+    jsonValid = true;
+
+    // Now you can access your fields easily
+    const char* name = doc[0]["found"]["name"];
+    const char* isLocked = doc[0]["found"]["fields"]["isLocked"]["integerValue"];
+    const char* unlockedAck = doc[0]["found"]["fields"]["unlockedAck"]["booleanValue"];
+
+    Serial.print("Name: ");
+    Serial.println(name);
+
+    Serial.print("isLocked: ");
+    Serial.println(isLocked);
+
+    Serial.print("unlockedAck");
+    Serial.println(unlockedAck);
+}
+
+String getIsLocked() {
+    if (!jsonValid) return "error";
+
+    const char* isLocked = doc[0]["found"]["fields"]["isLocked"]["integerValue"];
+    return String(isLocked);
+}
  
  void batch_get_async(BatchGetDocumentOptions &options)
  {
@@ -249,3 +276,31 @@
      else
          Firebase.printf("Error, msg: %s, code: %d\n", aClient.lastError().message().c_str(), aClient.lastError().code());
  }
+
+ void batch_write_async(Writes &writes)
+{
+    Serial.println("Batch writing the documents... ");
+
+    // Async call with callback function.
+    Docs.batchWrite(aClient, Firestore::Parent(FIREBASE_PROJECT_ID), writes, processData, "batchWriteTask");
+}
+
+void batch_write_async2(Writes &writes)
+{
+    Serial.println("Batch writing the documents... ");
+
+    // Async call with AsyncResult for returning result.
+    Docs.batchWrite(aClient, Firestore::Parent(FIREBASE_PROJECT_ID), writes, firestoreResult);
+}
+
+void batch_write_await(Writes &writes)
+{
+    Serial.println("Batch writing the documents... ");
+
+    // Sync call which waits until the payload was received.
+    String payload = Docs.batchWrite(aClient, Firestore::Parent(FIREBASE_PROJECT_ID), writes);
+    if (aClient.lastError().code() == 0)
+        Serial.println(payload);
+    else
+        Firebase.printf("Error, msg: %s, code: %d\n", aClient.lastError().message().c_str(), aClient.lastError().code());
+}
