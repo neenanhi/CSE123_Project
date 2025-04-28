@@ -58,3 +58,40 @@
     \item Firestore logs the use of the emergency PIN distinctly.
     \item The system clears any active lockout status to resume normal operation.
 \end{itemize}
+
+\subsection*{4. OTP Entry Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Confirm that an app-generated one-time password (OTP) grants access as expected.
+    \item Ensure the OTP mechanism is time-bound and secure against reuse.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Request a 5-minute valid OTP from the app.
+    \item Enter the OTP using the keypad.
+    \item Monitor the system and database for changes.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Firestore captures the OTP with a clear expiry time.
+    \item Valid OTPs allow immediate unlock.
+    \item Expired or incorrect OTPs are properly rejected with no unlock attempt.
+\end{itemize}
+
+\subsection*{5. OTP Expiry Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure expired OTPs don’t grant access, even if they were once valid.
+    \item Confirm that users are informed clearly when an OTP is no longer usable.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Generate an OTP and wait for the full 5-minute window to pass.
+    \item Attempt to use the expired code via the keypad.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Lock remains unchanged and secure—no movement or unlock occurs.
+    \item Firestore logs the expired OTP attempt explicitly.
+    \item App and/or interface display an "OTP expired" notification.
+\end{itemize}
