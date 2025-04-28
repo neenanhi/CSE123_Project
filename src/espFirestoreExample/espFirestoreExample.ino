@@ -54,6 +54,8 @@
  void batch_write_async2(Writes &writes);
  void batch_write_await(Writes &writes);
  void handleJsonStream(String jsonString);
+ void sendUnlockAcknowledgment();
+ void sendLockAcknowledgement();
  String getIsLocked();
  
  // ServiceAuth is required for Google Cloud Functions functions.
@@ -75,9 +77,11 @@
  
  bool taskCompleted = false;
  bool isWiFiConnected = false;
- bool shouldQueueWrite = false;
+ bool sendAck = false;
  bool ackValue = true;  // true if door just unlocked, false otherwise
  bool jsonValid = false;
+ bool unlockAck = false;
+ bool lockAck = false;
  
  void setup()
  {
@@ -163,6 +167,18 @@
          options.mask(DocumentMask("isLocked,unlockedAck"));
          batch_get_async(options);
      }
+
+     if (sendAck & unlockAck) {
+        sendAck = false;
+        unlockAck = false;
+        Serial.println("Sending Acknowledgement...");
+        sendUnlockAcknowledgment();
+     } else if (sendAck & lockAck) {
+        sendAck = false;
+        lockAck = false;
+        Serial.println("Sending Acknowledgement...");
+        sendLockAcknowledgement();
+     }
  }
  
  void processData(AsyncResult &aResult)
@@ -189,22 +205,77 @@
      if (aResult.available())
      {
         //  Firebase.printf("task: %s, payload: %s\n", aResult.uid().c_str(), aResult.c_str());
-         String JsonString = aResult.c_str();
-         handleJsonStream(JsonString); // deubug checker, also helps with deserilization of JsonDoc
+        //  String JsonString = aResult.c_str();
+        //  handleJsonStream(JsonString); // deubug checker, also helps with deserilization of JsonDoc
          
-         String isLockedVal = getIsLocked();
-         Serial.println("isLocked value: " + getIsLocked());
+        //  String isLockedVal = getIsLocked();
+        //  Serial.println("isLocked value: " + getIsLocked());
 
-         if (isLockedVal == "1") {
-           // Unlock
-           digitalWrite(LED_LOCK, HIGH);
-         } else {
-           // Lock
-           digitalWrite(LED_LOCK, LOW);
-         }
+        //  if (isLockedVal == "1") {
+        //    // Unlock
+        //    digitalWrite(LED_LOCK, HIGH);
+        //    sendUnlockAcknowledgment();
+        //  } else {
+        //    // Lock
+        //    digitalWrite(LED_LOCK, LOW);
+        //  }
+
+         if (aResult.uid() == "batchGetTask") {
+            Serial.println("Processing batchGet result...");
+            String JsonString = aResult.c_str();
+            handleJsonStream(JsonString);
+            String isLockedVal = getIsLocked();
+            Serial.println("isLocked value: " + isLockedVal);
+
+            if (isLockedVal == "1") {
+                digitalWrite(LED_LOCK, HIGH);
+                sendAck = true;
+                unlockAck = true;
+                // sendUnlockAcknowledgment();
+            } else {
+                digitalWrite(LED_LOCK, LOW);
+                sendAck = true;
+                lockAck = true;
+            }
+        }
+        else if (aResult.uid() == "batchWriteTask") {
+            Serial.println("Processing batchWrite result...");
+            // Maybe just log success/failure here; no further action needed?
+        }
          
      }
  }
+
+ void sendLockAcknowledgement() {
+    /**
+     * Sends to server false in the case the lock is (0)
+    **/
+    Serial.println("Sending unlock acknowledgment...");
+    String documentPath = "users/FuduqA91EfdHhEA8JAQNJ3SwrRJ2";
+    Document<Values::Value> updateDoc;
+    updateDoc.setName(documentPath);
+    updateDoc.add("unlockedAck", Values::Value(Values::BooleanValue(false)));
+    DocumentMask mask("unlockedAck");
+    Write write(mask, updateDoc, Precondition());
+    Writes writes(write);
+    batch_write_await(writes);
+ }
+
+ void sendUnlockAcknowledgment() {
+    /**
+     * Sends to server false in the case the lock is (1)
+    **/
+    Serial.println("Sending unlock acknowledgment...");
+    String documentPath = "users/FuduqA91EfdHhEA8JAQNJ3SwrRJ2";
+    Document<Values::Value> updateDoc;
+    updateDoc.setName(documentPath);
+    updateDoc.add("unlockedAck", Values::Value(Values::BooleanValue(true)));
+    DocumentMask mask("unlockedAck");
+    Write write(mask, updateDoc, Precondition());
+    Writes writes(write);
+    batch_write_await(writes);
+}
+
 
  void handleJsonStream(String jsonString) {
     /**
