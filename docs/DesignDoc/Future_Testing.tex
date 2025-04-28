@@ -95,3 +95,50 @@
     \item Firestore logs the expired OTP attempt explicitly.
     \item App and/or interface display an "OTP expired" notification.
 \end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+\subsection*{Less Common Scenarios (Tests 31–40)}
+
+\subsection*{31. Multi-factor Auth Proximity Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Confirm the system requires both a valid PIN and Bluetooth proximity to unlock.
+    \item Observe behavior if Bluetooth disconnects mid-process.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Start PIN entry and slowly move the paired phone out of Bluetooth range.
+    \item Review logs to see how the system treats incomplete multi-factor input.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Door only unlocks when both factors are simultaneously validated.
+    \item Firestore logs clearly show whether it was the PIN or BLE that failed.
+\end{itemize}
