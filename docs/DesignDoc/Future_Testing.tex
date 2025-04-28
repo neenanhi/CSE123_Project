@@ -142,3 +142,21 @@
     \item Door only unlocks when both factors are simultaneously validated.
     \item Firestore logs clearly show whether it was the PIN or BLE that failed.
 \end{itemize}
+
+\subsection*{32. Time-zone Mismatch Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that timing-sensitive operations work properly despite device time mismatches.
+    \item Verify that scheduled actions and OTPs remain aligned regardless of local time zones.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Set the phone to Pacific Time and the lock to Coordinated Universal Time.
+    \item Generate and use an OTP, and observe if the mismatch causes issues.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item OTPs still work during their intended validity window.
+    \item Scheduled events (e.g., auto-lock) trigger based on synchronized absolute times.
+\end{itemize}
+
