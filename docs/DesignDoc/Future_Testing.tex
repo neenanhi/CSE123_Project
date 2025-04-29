@@ -105,13 +105,13 @@
 \end{itemize}
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Enter 5 wrong PINs within 10 s.
+    \item Enter 5 wrong PINs within 10s.
     \item Observe alarm sound and LOCK\_STATE remains 0.
     \item Attempt correct PIN after alarm to confirm reset.
 \end{itemize}
 \subparagraph{Expectations of Test}
 \begin{itemize}
-    \item Alarm beeps continuously for spec duration (e.g., 30 s).
+    \item Alarm beeps continuously for spec duration (e.g., 30s).
     \item Bolt remains locked (LOCK\_STATE = 0).
     \item Firestore logs each failed attempt and alarm event.
     \item Correct PIN after alarm silences alarm and unlocks door.
@@ -120,13 +120,13 @@
 \subsection*{7. Concurrent Unlock Command Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Verify two family phones sending unlock at once doesn’t confuse the system.
+    \item Verify two family phones sending unlock at once doesn't confuse the system.
     \item Ensure only one actuation happens.
     \item Confirm both requests are logged.
 \end{itemize}
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item From two phones, send unlock API calls within 100 ms.
+    \item From two phones, send unlock API calls within 100 ms.
     \item Watch bolt movement and LOCK\_STATE.
     \item Check Firestore for two event entries.
 \end{itemize}
