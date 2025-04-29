@@ -47,4 +47,9 @@ Auth.auth().signIn(withEmail: email, password: password) { [weak self] (authResu
 }
 }
 
+@IBAction func signUpButtonClicked(_ sender: Any) {
+        
+        self.performSegue(withIdentifier: "loginToSignUp", sender: self)
+    }
+
 }
