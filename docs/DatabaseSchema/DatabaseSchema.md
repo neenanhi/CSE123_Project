@@ -9,3 +9,11 @@ It supports a **many-to-many** relationship between `Users` and `Locks`.
 
 ![ERD Diagram](lock_user_schema.png)
 
+This ERD visualizes the relationship between these entities:
+
+- `User`
+- `Lock`
+- `User_Lock` 
+
+---
+
