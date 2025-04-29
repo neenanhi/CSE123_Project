@@ -35,5 +35,14 @@ class loginViewController: UIViewController {
             return
             
         }
+Auth.auth().signIn(withEmail: email, password: password) { [weak self] (authResult, error) in
+            if let error = error {
+            
+                let alert = UIAlertController(title: "", message: error.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "", style: .default, handler: nil))
+                self?.present(alert, animated: true)
+                return
+            }
+            self?.performSegue(withIdentifier: "loginToHome", sender: self)
 
 }
