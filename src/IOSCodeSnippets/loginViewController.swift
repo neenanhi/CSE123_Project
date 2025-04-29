@@ -24,4 +24,16 @@ class loginViewController: UIViewController {
             }
         }
 
+	@IBAction func loginButtonClicked(_ sender: Any) {
+        
+        guard let email = emailLog.text, !email.isEmpty,
+              let password = passLog.text, !password.isEmpty else {
+            
+            let alert = UIAlertController(title: "", message: "fill all fields", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "", style: .default, handler: nil))
+            present(alert, animated: true)
+            return
+            
+        }
+
 }
