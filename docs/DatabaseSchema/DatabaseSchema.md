@@ -5,3 +5,7 @@ It supports a **many-to-many** relationship between `Users` and `Locks`.
 
 ---
 
+## 📊 Entity-Relationship Diagram (ERD)
+
+![ERD Diagram](lock_user_schema.png)
+
