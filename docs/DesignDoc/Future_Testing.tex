@@ -96,7 +96,26 @@
     \item App and/or interface display an "OTP expired" notification.
 \end{itemize}
 
-
+\subsection*{6. Rapid Wrong PIN Alarm Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure multiple fast wrong PIN entries trigger audible alarm.
+    \item Verify lock does not unlock after wrong entries.
+    \item Check alarm stops after timeout or correct PIN.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Enter 5 wrong PINs within 10 s.
+    \item Observe alarm sound and LOCK\_STATE remains 0.
+    \item Attempt correct PIN after alarm to confirm reset.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Alarm beeps continuously for spec duration (e.g., 30 s).
+    \item Bolt remains locked (LOCK\_STATE = 0).
+    \item Firestore logs each failed attempt and alarm event.
+    \item Correct PIN after alarm silences alarm and unlocks door.
+\end{itemize}
 
 
 
