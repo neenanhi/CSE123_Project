@@ -39,3 +39,13 @@ This ERD visualizes the relationship between these entities:
 | `location`           | `string`    | Where the lock is physically installed    |
 | `authorizedUserIds`  | `string[]`  | Array of User document IDs who can control this lock |
 
+---
+
+## 🔁 Many-to-Many Relationship
+
+This structure allows for:
+- One user ➝ many locks
+- One lock ➝ many users
+
+It's modeled using **arrays of document IDs** on both ends.  
+
