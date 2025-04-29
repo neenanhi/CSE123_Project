@@ -21,3 +21,12 @@ This ERD visualizes the relationship between these entities:
 
 ### 🧍‍♂️ `users` Collection
 
+| Field               | Type        | Description                               |
+|---------------------|-------------|-------------------------------------------|
+| `user_id` (PK)       | `string`    | Document ID (primary key)                 |
+| `email`              | `string`    | User's email address                      |
+| `name`               | `string`    | User's display name                       |
+| `associatedLockIds`  | `string[]`  | Array of Lock document IDs the user can access |
+
+---
+
