@@ -44,5 +44,7 @@ Auth.auth().signIn(withEmail: email, password: password) { [weak self] (authResu
                 return
             }
             self?.performSegue(withIdentifier: "loginToHome", sender: self)
+}
+}
 
 }
