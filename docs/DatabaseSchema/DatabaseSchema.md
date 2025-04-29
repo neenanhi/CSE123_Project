@@ -17,3 +17,7 @@ This ERD visualizes the relationship between these entities:
 
 ---
 
+## 🧱 Firestore Collections & Structure
+
+### 🧍‍♂️ `users` Collection
+
