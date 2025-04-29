@@ -30,3 +30,12 @@ This ERD visualizes the relationship between these entities:
 
 ---
 
+### 🔒 `locks` Collection
+
+| Field               | Type        | Description                               |
+|---------------------|-------------|-------------------------------------------|
+| `lock_id` (PK)       | `string`    | Document ID (primary key)                 |
+| `lockName`           | `string`    | Human-readable name for the lock          |
+| `location`           | `string`    | Where the lock is physically installed    |
+| `authorizedUserIds`  | `string[]`  | Array of User document IDs who can control this lock |
+
