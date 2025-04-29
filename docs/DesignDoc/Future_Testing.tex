@@ -117,7 +117,47 @@
     \item Correct PIN after alarm silences alarm and unlocks door.
 \end{itemize}
 
+\subsection*{7. Concurrent Unlock Command Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify two family phones sending unlock at once doesn’t confuse the system.
+    \item Ensure only one actuation happens.
+    \item Confirm both requests are logged.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item From two phones, send unlock API calls within 100 ms.
+    \item Watch bolt movement and LOCK\_STATE.
+    \item Check Firestore for two event entries.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Bolt retracts only once.
+    \item LOCK\_STATE = 1 after first command.
+    \item Both commands logged with timestamps.
+    \item No errors or retries triggered.
+\end{itemize}
 
+\subsection*{8. Offline Fallback PIN Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure local PIN entry still works if Wi-Fi drops.
+    \item Verify lock uses cached PIN list.
+    \item Confirm Firestore syncs later.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Disable Wi-Fi on ESP32, enter valid PIN.
+    \item Observe bolt movement and local log.
+    \item Re-enable Wi-Fi and check Firestore sync.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Door unlocks locally (LOCK\_STATE = 1 locally).
+    \item Event cached and later pushed to Firestore.
+    \item No user-perceived delay in unlocking.
+    \item Sync event marked with “offline” flag.
+\end{itemize}
 
 
 
