@@ -43,4 +43,18 @@ let db = Firestore.firestore()
                 }
             }
         }
+
+@IBAction func userLoggedOut(_ sender: Any) {
+        
+        do {
+                try Auth.auth().signOut()
+                
+                self.performSegue(withIdentifier: "logoutToLogin", sender: self)
+            } catch let signOutError as NSError {
+                print("signout error: %@", signOutError)
+                let alert = UIAlertController(title: "failed to log user out", message: signOutError.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "", style: .default, handler: nil))
+                self.present(alert, animated: true)
+            }
+    }
 }
