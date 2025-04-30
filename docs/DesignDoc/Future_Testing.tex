@@ -159,7 +159,47 @@
     \item Sync event marked with “offline” flag.
 \end{itemize}
 
+\subsection*{9. Low-Battery Notification Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Check notification when battery falls below 10 %.
+    \item Ensure unlock still works at low battery.
+    \item Verify UI warning persists until charge.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Drain battery to 9 %.
+    \item Press unlock PIN and observe behavior.
+    \item Check mobile app for low-battery alert.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Door still unlocks (LOCK\_STATE = 1).
+    \item App shows persistent “Low Battery” message.
+    \item Firestore logs battery level event.
+    \item Warning clears only when battery > 20 %.
+\end{itemize}
 
+\subsection*{10. Battery Fully Drained Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify lock fails to actuate when battery is dead.
+    \item Ensure system logs failure and alerts user.
+    \item Confirm physical key still works.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Let battery drop to 0 %.
+    \item Enter valid PIN and observe no bolt movement.
+    \item Try physical key override.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Bolt does not move on electronic command.
+    \item Firestore logs “Battery Depleted” error.
+    \item Physical key unlocks door.
+    \item App advises “Replace Battery” notification.
+\end{itemize}
 
 
 
