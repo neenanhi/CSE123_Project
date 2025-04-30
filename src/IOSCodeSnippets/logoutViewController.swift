@@ -11,4 +11,36 @@ let db = Firestore.firestore()
     
     @IBOutlet weak var logoutButton: UIButton!
 
+
+
+	override func viewDidLoad() {
+            super.viewDidLoad()
+        
+        fetchUsername()
+        
+    }
+    
+    func fetchUsername() {
+            guard let user = Auth.auth().currentUser else {
+                usernameLabel.text = "no user logged in currently"
+                return
+            }
+
+            let userDocRef = db.collection("users").document(user.uid)
+            userDocRef.getDocument { (document, error) in
+                if let error = error {
+                    print("\(error.localizedDescription)")
+                    self.usernameLabel.text = "can't load username"
+                    return
+                }
+
+                if let document = document, document.exists {
+                    let data = document.data()
+                    let username = data?["email"] as? String ?? "? user"
+                    self.usernameLabel.text = "\(username)"
+                } else {
+                    self.usernameLabel.text = "Unable to locate user"
+                }
+            }
+        }
 }
