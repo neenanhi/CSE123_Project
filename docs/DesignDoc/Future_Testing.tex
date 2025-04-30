@@ -160,3 +160,34 @@
     \item Scheduled events (e.g., auto-lock) trigger based on synchronized absolute times.
 \end{itemize}
 
+\subsection*{33. DST Transition Auto-lock Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Confirm that daylight saving time transitions don't disrupt automated locking.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Schedule an auto-lock event for 2:00 AM on the day of the DST shift.
+    \item Observe actual lock behavior before, during, and after the transition.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Only one auto-lock event occurs, even with the clock shift.
+    \item No skipped or duplicated scheduling happens.
+\end{itemize}
+
+\subsection*{34. Admin vs. Guest Role Change Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Validate that role-based access control takes effect immediately after role changes.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Change a user's role (e.g., from guest to admin) directly in Firestore.
+    \item Attempt access under both roles shortly after the change.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item The new role is honored without requiring system restart or delay.
+    \item Access permissions align with the updated role instantly.
+\end{itemize}
