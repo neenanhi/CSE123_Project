@@ -291,107 +291,18 @@
     \item Access permissions align with the updated role instantly.
 \end{itemize}
 
-\subsection*{36. RF Interference Packet Loss Test}
+\subsection*{35. BLE Range Boundary Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Simulate garage opener RF noise to test packet loss.
-    \item Verify retry logic for cloud commands.
-    \item Confirm no false unlocks.
+    \item Determine the Bluetooth unlocking behavior at different physical distances.
 \end{itemize}
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Broadcast 433 MHz noise near ESP32 antenna.
-    \item Send unlock API calls and count retries.
-    \item Observe LOCK\_STATE and error logs.
+    \item Gradually move the phone away from the lock in 0.5-meter steps, from 1 m up to 6 m.
+    \item Test unlocking at each position and note the results.
 \end{itemize}
 \subparagraph{Expectations of Test}
 \begin{itemize}
-    \item Commands retried per spec (e.g., 3 times).
-    \item Bolt only moves on successful retry.
-    \item Firestore logs transient network errors.
-    \item No unintended lock/unlock.
-\end{itemize}
-
-\subsection*{37. Magnetic Interference Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Place strong magnet near hall sensor to test false state.
-    \item Ensure system ignores brief sensor spikes.
-    \item Verify correct state after magnet removal.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Hold magnet 1 cm from sensor for 30 s.
-    \item Monitor lock state readings.
-    \item Remove magnet and check sensor recovery.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Any false “unlocked” readings ignored if < 2 s.
-    \item Bolt stays locked (LOCK\_STATE = 0).
-    \item Firestore logs sensor glitch with duration.
-    \item Normal operation resumes immediately.
-\end{itemize}
-
-\subsection*{38. Corroded Contact Intermittency Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Simulate moisture-induced corrosion on battery terminals.
-    \item Verify intermittent power behavior handling.
-    \item Ensure safe shutdown on undervoltage.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Apply salt-water spray to contacts.
-    \item Cycle power and observe voltage drops.
-    \item Attempt unlock during drop events.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Device resets gracefully on undervoltage.
-    \item Bolt remains locked during power dips.
-    \item Firestore logs power instability events.
-    \item System recovers once voltage stabilizes.
-\end{itemize}
-
-\subsection*{39. UV Exposure Housing Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Expose plastic housing to UV light to test warping.
-    \item Confirm no interference with mechanical parts.
-    \item Verify seal integrity remains.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Place lock under UV lamp (340 nm) for 48 h.
-    \item Inspect housing dimensions and seal fit.
-    \item Operate lock/unlock 5 times post-exposure.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item No significant dimensional change (> 1 mm).
-    \item Seals remain watertight.
-    \item Bolt operation unaffected.
-    \item Firestore logs pass/fail UV test result.
-\end{itemize}
-
-\subsection*{40. Heavy Vibration Hall-Sensor Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Shake lock with heavy-equipment vibration profile.
-    \item Ensure hall-sensor readings stay stable.
-    \item Confirm no loosening of fasteners.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Mount on shaker table at 1 g, 20–100 Hz for 15 min.
-    \item Monitor sensor output and bolt status.
-    \item Inspect hardware after test.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Sensor jitter < 5 of normal signal.
-    \item Bolt/unlock still works correctly.
-    \item No loose screws or connectors.
-    \item Firestore logs vibration test data.
+    \item Unlocks reliably at closer distances.
+    \item Fails gracefully beyond Bluetooth’s effective range.
 \end{itemize}
