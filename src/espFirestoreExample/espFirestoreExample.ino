@@ -43,9 +43,31 @@
  #include <FirebaseClient.h>
  #include "ExampleFunctions.h" // Provides the functions used in the examples.
  #include "secrets.h"          // Provides all the authentication
+ #include <Keypad.h>
+ #include <deque>
+
+ #define ROW_NUM     4 // four rows
+ #define COLUMN_NUM  4 // four columns
  #define LED_BUILTIN 1         // Using GPIO 1 for the LED lights
  #define LED_LOCK    7         // Using GPIO 7 for the built in LED (for Lock)
  
+std::deque<String> pinQueue = {"1111", "2222", "3333", "4444"};
+
+char keys[ROW_NUM][COLUMN_NUM] = {
+  {'1', '2', '3', 'A'},
+  {'4', '5', '6', 'B'},
+  {'7', '8', '9', 'C'},
+  {'*', '0', '#', 'D'}
+};
+
+byte pin_rows[ROW_NUM]      = {8, 21, 20, 9}; // GPIO pins for rows
+byte pin_column[COLUMN_NUM] = {3, 4, 5, 6};   // GPIO pins for columns
+
+Keypad keypad = Keypad(makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_NUM);
+
+char inputBuffer[5]; // 4 characters + 1 for null terminator '\0'
+int inputIndex = 0;
+
  void processData(AsyncResult &aResult);
  void batch_get_async(BatchGetDocumentOptions &options);
  void batch_get_async2(BatchGetDocumentOptions &options);
@@ -109,6 +131,7 @@
      isWiFiConnected = true; // <- Set here after WiFi is confirmed!
  
      Firebase.printf("Firebase Client v%s\n", FIREBASE_CLIENT_VERSION);
+     clearBuffer();
  
      set_ssl_client_insecure_and_buffer(ssl_client);
  
@@ -123,63 +146,98 @@
  unsigned long lastPollTime = 0; // Track the last time Firestore was queried
  const unsigned long pollInterval = 10000; // Poll every 10 seconds (adjust as needed)
  
- void loop()
- {
-     // To maintain the authentication and async tasks
-     app.loop();
+//ADAM CODE
+//  void loop()
+//  {
+//      // To maintain the authentication and async tasks
+//      app.loop();
  
-     bool currentWiFiStatus = (WiFi.status() == WL_CONNECTED);
+//      bool currentWiFiStatus = (WiFi.status() == WL_CONNECTED);
  
-     // If WiFi status changed
-     if (currentWiFiStatus != isWiFiConnected)
-     {
-         isWiFiConnected = currentWiFiStatus;
+//      // If WiFi status changed
+//      if (currentWiFiStatus != isWiFiConnected)
+//      {
+//          isWiFiConnected = currentWiFiStatus;
  
-         if (isWiFiConnected)
-         {
-             Serial.println("WiFi reconnected!");
-             digitalWrite(LED_BUILTIN, LOW); // Turn off LED when WiFi is connected to save power
-         }
-         else
-         {
-             Serial.println("WiFi lost!");
-         }
-     }
+//          if (isWiFiConnected)
+//          {
+//              Serial.println("WiFi reconnected!");
+//              digitalWrite(LED_BUILTIN, LOW); // Turn off LED when WiFi is connected to save power
+//          }
+//          else
+//          {
+//              Serial.println("WiFi lost!");
+//          }
+//      }
  
-     // If WiFi is not connected, blink LED and skip Firestore tasks
-     if (!isWiFiConnected)
-     {
-         digitalWrite(LED_BUILTIN, HIGH);
-         delay(300);
-         digitalWrite(LED_BUILTIN, LOW);
-         delay(300);
-         return; // Skip the rest of loop
-     }
+//      // If WiFi is not connected, blink LED and skip Firestore tasks
+//      if (!isWiFiConnected)
+//      {
+//          digitalWrite(LED_BUILTIN, HIGH);
+//          delay(300);
+//          digitalWrite(LED_BUILTIN, LOW);
+//          delay(300);
+//          return; // Skip the rest of loop
+//      }
  
-     // If WiFi is connected, proceed as usual
-     unsigned long currentTime = millis();
+//      // If WiFi is connected, proceed as usual
+//      unsigned long currentTime = millis();
  
-     if (currentTime - lastPollTime >= pollInterval)
-     {
-         lastPollTime = currentTime;
-         BatchGetDocumentOptions options;
-         options.documents("users/FuduqA91EfdHhEA8JAQNJ3SwrRJ2");
-         options.mask(DocumentMask("isLocked,unlockedAck"));
-         batch_get_async(options);
-     }
+//      if (currentTime - lastPollTime >= pollInterval)
+//      {
+//          lastPollTime = currentTime;
+//          BatchGetDocumentOptions options;
+//          options.documents("users/FuduqA91EfdHhEA8JAQNJ3SwrRJ2");
+//          options.mask(DocumentMask("isLocked,unlockedAck"));
+//          batch_get_async(options);
+//      }
 
-     if (sendAck & unlockAck) {
-        sendAck = false;
-        unlockAck = false;
-        Serial.println("Sending Acknowledgement...");
-        sendUnlockAcknowledgment();
-     } else if (sendAck & lockAck) {
-        sendAck = false;
-        lockAck = false;
-        Serial.println("Sending Acknowledgement...");
-        sendLockAcknowledgement();
-     }
- }
+//       // Keypad Code starts here basicaly. Don't know if needs to be placed before or can be setup asynchronously
+//       char key = keypad.getKey();
+
+//       if (key) {
+//         Serial.println(key);
+//         inputBuffer[inputIndex] = key;
+//         inputIndex++;
+
+//         if (inputIndex == 4) {     // If 4 characters are collected
+//           inputBuffer[4] = '\0'; // Null-terminate the string
+//           Serial.println(inputBuffer); // Print the 4-character code
+//           clearBuffer(); // Reset buffer for next input
+//         }
+//       }
+//       // End Keypad Code Here
+
+//      if (sendAck & unlockAck) {
+//         sendAck = false;
+//         unlockAck = false;
+//         Serial.println("Sending Acknowledgement...");
+//         sendUnlockAcknowledgment();
+//      } else if (sendAck & lockAck) {
+//         sendAck = false;
+//         lockAck = false;
+//         Serial.println("Sending Acknowledgement...");
+//         sendLockAcknowledgement();
+//      }
+//  }
+
+//END ADAM CODE
+
+
+
+//NEW SIMPLIFIED CODE
+void loop() {
+    app.loop(); // Maintain async Firebase tasks
+
+    processKeypadInput();
+    checkWiFiConnection();
+    if (!isWiFiConnected) return; // Skip rest if no WiFi
+
+    pollFirestorePeriodically();
+    sendAcknowledgementIfNeeded();
+}
+
+//END SIMPLIFIED CODE
  
  void processData(AsyncResult &aResult)
  {
@@ -312,6 +370,13 @@
     Serial.println(unlockedAck);
 }
 
+void clearBuffer() {
+  for (int i = 0; i < 5; i++) {
+    inputBuffer[i] = '\0';
+  }
+  inputIndex = 0;
+}
+
 String getIsLocked() {
     if (!jsonValid) return "error";
 
@@ -375,3 +440,86 @@ void batch_write_await(Writes &writes)
     else
         Firebase.printf("Error, msg: %s, code: %d\n", aClient.lastError().message().c_str(), aClient.lastError().code());
 }
+
+//NEW SIMPLIFIED FUNCTIONS
+
+void checkWiFiConnection() {
+    bool currentWiFiStatus = (WiFi.status() == WL_CONNECTED);
+
+    if (currentWiFiStatus != isWiFiConnected) {
+        isWiFiConnected = currentWiFiStatus;
+        if (isWiFiConnected) {
+            Serial.println("WiFi reconnected!");
+            digitalWrite(LED_BUILTIN, LOW);
+        } else {
+            Serial.println("WiFi lost!");
+        }
+    }
+
+    if (!isWiFiConnected) {
+        digitalWrite(LED_BUILTIN, HIGH);
+        delay(300);
+        digitalWrite(LED_BUILTIN, LOW);
+        delay(300);
+    }
+}
+
+void pollFirestorePeriodically() {
+    unsigned long currentTime = millis();
+    if (currentTime - lastPollTime >= pollInterval) {
+        lastPollTime = currentTime;
+        BatchGetDocumentOptions options;
+        options.documents("users/FuduqA91EfdHhEA8JAQNJ3SwrRJ2");
+        options.mask(DocumentMask("isLocked,unlockedAck"));
+        batch_get_async(options);
+    }
+}
+
+void processKeypadInput() {
+    char key = keypad.getKey();
+
+    if (key) {
+        Serial.println(key);
+        inputBuffer[inputIndex] = key;
+        inputIndex++;
+
+        if (inputIndex == 4) {
+            inputBuffer[4] = '\0';
+            String enteredPIN = String(inputBuffer);
+            Serial.print("Entered PIN: ");
+            Serial.println(enteredPIN);
+
+            if (!pinQueue.empty() && enteredPIN == pinQueue.front()) {
+                Serial.println("Correct OTP PIN! Unlocking...");
+                digitalWrite(LED_LOCK, HIGH);
+                sendUnlockAcknowledgment();
+                pinQueue.pop_front(); // Remove used PIN
+                Serial.println("PIN consumed. Remaining count: " + String(pinQueue.size()));
+                delay(10000); // After ten seconds of a successful unlock, automatically lock the door
+                digitalWrite(LED_LOCK, LOW);
+            } else {
+                digitalWrite(LED_LOCK, LOW);
+                sendUnlockAcknowledgment();
+                Serial.println("Invalid or expired PIN.");
+            }
+
+            clearBuffer(); // Reset after 4 digits
+        }
+    }
+}
+
+
+void sendAcknowledgementIfNeeded() {
+    if (sendAck & unlockAck) {
+        sendAck = false;
+        unlockAck = false;
+        Serial.println("Sending Unlock Acknowledgement...");
+        sendUnlockAcknowledgment();
+    } else if (sendAck & lockAck) {
+        sendAck = false;
+        lockAck = false;
+        Serial.println("Sending Lock Acknowledgement...");
+        sendLockAcknowledgement();
+    }
+}
+// END SIMPLIFIED FUNCTIONS
