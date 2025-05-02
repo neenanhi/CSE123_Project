@@ -41,6 +41,8 @@
  #include <Arduino.h>
  #include <ArduinoJson.h>
  #include <FirebaseClient.h>
+ #include <SPIFFS.h>
+ #include <WiFiManager.h>
  #include "ExampleFunctions.h" // Provides the functions used in the examples.
  #include "secrets.h"          // Provides all the authentication
  #include <Keypad.h>
@@ -110,7 +112,34 @@ int inputIndex = 0;
      Serial.begin(115200);
      pinMode(LED_BUILTIN, OUTPUT);
      pinMode(LED_LOCK, OUTPUT);
+
+     WiFiManager wfm;           // wifi manager object
+     wfm.setDebugOutput(false); // suppressing debug info
+     wfm.resetSettings();       // removes previous network settings (for testing use)
+     WiFiManagerParameter custom_text_box("my_text", "Enter your string here", "default string", 50); // custom text box
+     wfm.addParameter(&custom_text_box);  // custom parameter
+     digitalWrite(LED_BUILTIN, HIGH);     // HIGH for not connected to wifi yet (first time setup)
+     if (!wfm.autoConnect("SmartLock AP", "12345678")) {
+        // Did not connect, print error message
+        Serial.println("failed to connect and hit timeout");
  
+        // Reset and try again
+        ESP.restart();
+        delay(1000);
+     }
+
+     // Connected!
+     digitalWrite(LED_BUILTIN, LOW);  // LOW for connected to wifi
+     Serial.println("WiFi connected");
+     Serial.print("IP address: ");
+     Serial.println(WiFi.localIP());
+     isWiFiConnected = true;
+
+     // Print out the custom text box value to serial monitor
+     Serial.print("Custom text box entry: ");
+     Serial.println(custom_text_box.getValue());
+ 
+     /* No need, use wifi Provisioning instead now
      WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
  
      Serial.print("Connecting to Wi-Fi");
@@ -127,8 +156,10 @@ int inputIndex = 0;
      Serial.print("Connected with IP: ");
      Serial.println(WiFi.localIP());
      Serial.println();
- 
      isWiFiConnected = true; // <- Set here after WiFi is confirmed!
+     */
+ 
+     
  
      Firebase.printf("Firebase Client v%s\n", FIREBASE_CLIENT_VERSION);
      clearBuffer();
