@@ -1,3 +1,8 @@
 SmartLock Demo Script
 Adam Wu, Jackson Kennedy, Neena Nguyen, and Nathaniel Laurente
 May 20, 2025
+
+Before the Demo
+- Prepare all text messages in advance to copy and paste during the demo.
+- All components should be powered by separate batteries, not the laptop.
+- The lock must be plugged into a 12V battery, not the laptop.
