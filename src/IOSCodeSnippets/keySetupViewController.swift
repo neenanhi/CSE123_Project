@@ -12,4 +12,16 @@ class keySetupViewController: UIViewController {
         	super.viewDidLoad()
     	}
 
+
+	@IBAction func setKeyUser(_ sender: Any) {
+        	guard let user = Auth.auth().currentUser else {
+            		return
+        	}
+        	
+		guard let accessKey = keyEntered.text, !accessKey.isEmpty else {
+            		return
+        	}
+
+
+	}
 }
