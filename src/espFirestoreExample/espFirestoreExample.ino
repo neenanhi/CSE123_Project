@@ -1,3 +1,5 @@
+// ADAM CODE
+
 /**
  * ABOUT:
  *
@@ -13,8 +15,8 @@
  #include <Arduino.h>
  #include <ArduinoJson.h>
  #include <FirebaseClient.h>
- #include <SPIFFS.h>
- #include <WiFiManager.h>
+// #include <SPIFFS.h>
+// #include <WiFiManager.h>
  #include "ExampleFunctions.h" // Provides the functions used in the examples.
  #include "secrets.h"          // Provides all the authentication
  #include <Keypad.h>
@@ -24,7 +26,12 @@
  #define COLUMN_NUM  4 // four columns
  #define LED_BUILTIN 1         // Using GPIO 1 for the LED lights
  #define LED_LOCK    7         // Using GPIO 7 for the built in LED (for Lock)
- 
+ #define MAX_USER_PINS 10
+ #define MAX_PIN_LENGTH 5  // 4 digits + null terminator
+
+ char storedPins[MAX_USER_PINS][MAX_PIN_LENGTH];
+ size_t storedPinCount = 0;
+
 std::deque<String> pinQueue = {"1111", "2222", "3333", "4444"};
 
 char keys[ROW_NUM][COLUMN_NUM] = {
@@ -80,6 +87,8 @@ int inputIndex = 0;
  bool lockAck = false;
  char** userPins = nullptr;
  size_t userPinCount = 0;
+
+ size_t permaIndex = 0;
  
  void setup()
  {
@@ -87,33 +96,33 @@ int inputIndex = 0;
      pinMode(LED_BUILTIN, OUTPUT);
      pinMode(LED_LOCK, OUTPUT);
 
-     WiFiManager wfm;           // wifi manager object
-     wfm.setDebugOutput(false); // suppressing debug info
-     wfm.resetSettings();       // removes previous network settings (for testing use)
-     WiFiManagerParameter custom_text_box("my_text", "Enter your string here", "default string", 50); // custom text box
-     wfm.addParameter(&custom_text_box);  // custom parameter
-     digitalWrite(LED_BUILTIN, HIGH);     // HIGH for not connected to wifi yet (first time setup)
-     if (!wfm.autoConnect("SmartLock AP", "12345678")) {
-        // Did not connect, print error message
-        Serial.println("failed to connect and hit timeout");
+    //  WiFiManager wfm;           // wifi manager object
+    //  wfm.setDebugOutput(false); // suppressing debug info
+    //  wfm.resetSettings();       // removes previous network settings (for testing use)
+    //  WiFiManagerParameter custom_text_box("my_text", "Enter your string here", "default string", 50); // custom text box
+    //  wfm.addParameter(&custom_text_box);  // custom parameter
+    //  digitalWrite(LED_BUILTIN, HIGH);     // HIGH for not connected to wifi yet (first time setup)
+    //  if (!wfm.autoConnect("SmartLock AP", "12345678")) {
+    //     // Did not connect, print error message
+    //     Serial.println("failed to connect and hit timeout");
  
-        // Reset and try again
-        ESP.restart();
-        delay(1000);
-     }
+    //     // Reset and try again
+    //     ESP.restart();
+    //     delay(1000);
+    //  }
 
-     // Connected!
-     digitalWrite(LED_BUILTIN, LOW);  // LOW for connected to wifi
-     Serial.println("WiFi connected");
-     Serial.print("IP address: ");
-     Serial.println(WiFi.localIP());
-     isWiFiConnected = true;
+    //  // Connected!
+    //  digitalWrite(LED_BUILTIN, LOW);  // LOW for connected to wifi
+    //  Serial.println("WiFi connected");
+    //  Serial.print("IP address: ");
+    //  Serial.println(WiFi.localIP());
+    //  isWiFiConnected = true;
 
-     // Print out the custom text box value to serial monitor
-     Serial.print("Custom text box entry: ");
-     Serial.println(custom_text_box.getValue());
+    //  // Print out the custom text box value to serial monitor
+    //  Serial.print("Custom text box entry: ");
+    //  Serial.println(custom_text_box.getValue());
  
-     /* No need, use wifi Provisioning instead now
+     // No need, use wifi Provisioning instead now
      WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
  
      Serial.print("Connecting to Wi-Fi");
@@ -131,7 +140,7 @@ int inputIndex = 0;
      Serial.println(WiFi.localIP());
      Serial.println();
      isWiFiConnected = true; // <- Set here after WiFi is confirmed!
-     */
+     
  
      
  
@@ -253,6 +262,7 @@ void loop() {
      }
  }
 
+
  void sendLockAcknowledgement() {
     /**
      * Sends to server false in the case the lock is (0)
@@ -338,6 +348,12 @@ void loop() {
     for (size_t i = 0; i < pinCount; ++i) {
         Serial.println(userPins[i]);
     }
+
+    for (size_t i = 0; i < pinCount && i < MAX_USER_PINS; ++i) {
+        strncpy(storedPins[i], userPins[i], MAX_PIN_LENGTH - 1);
+        storedPins[i][MAX_PIN_LENGTH - 1] = '\0';
+    }
+    storedPinCount = pinCount;
 
     for (size_t i = 0; i < pinCount; ++i) {
         delete[] userPins[i];
@@ -430,20 +446,41 @@ void processKeypadInput() {
             Serial.print("Entered PIN: ");
             Serial.println(enteredPIN);
 
-            if (!pinQueue.empty() && enteredPIN == pinQueue.front()) {
-                Serial.println("Correct OTP PIN! Unlocking...");
+
+// WORK HERE USE PINS FROM FIRESTORE
+
+  //Hard coded section
+            // if (!pinQueue.empty() && enteredPIN == pinQueue.front()) {
+            //     Serial.println("Correct OTP PIN! Unlocking...");
+            //     digitalWrite(LED_LOCK, HIGH);
+            //     sendUnlockAcknowledgment();
+            //     pinQueue.pop_front(); // Remove used PIN
+            //     Serial.println("PIN consumed. Remaining count: " + String(pinQueue.size()));
+            //     delay(10000); // After ten seconds of a successful unlock, automatically lock the door
+            //     digitalWrite(LED_LOCK, LOW);
+            // } else {
+            //     digitalWrite(LED_LOCK, LOW);
+            //     sendUnlockAcknowledgment();
+            //     Serial.println("Invalid or expired PIN.");
+            // }
+    // End hardcoded section
+
+    //Begin Firestore code part"
+            if (String(storedPins[permaIndex]) == enteredPIN) {
+                Serial.println(storedPins[permaIndex]);  // works!
+                //  sendArrayUpdate();
+                permaIndex++;
+                Serial.println("Number of Pins remaining: " + String(storedPinCount - permaIndex));
                 digitalWrite(LED_LOCK, HIGH);
                 sendUnlockAcknowledgment();
-                pinQueue.pop_front(); // Remove used PIN
-                Serial.println("PIN consumed. Remaining count: " + String(pinQueue.size()));
                 delay(10000); // After ten seconds of a successful unlock, automatically lock the door
                 digitalWrite(LED_LOCK, LOW);
+                sendLockAcknowledgement();
             } else {
                 digitalWrite(LED_LOCK, LOW);
-                sendUnlockAcknowledgment();
                 Serial.println("Invalid or expired PIN.");
             }
-
+            
             clearBuffer(); // Reset after 4 digits
         }
     }
