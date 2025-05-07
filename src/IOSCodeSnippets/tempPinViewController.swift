@@ -67,16 +67,33 @@ func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) ->
         }
     }
 	   
-    func loadUserPins2() {
+   func loadUserPins2() {
         guard let user = Auth.auth().currentUser else {
           
             return
         }
 
         let userRef = db.collection("users").document(user.uid)
-
-
-       }
+        
+        userRef.getDocument { (document, error) in
+            if let error = error {
+                //
+//
+                return
+            }
+            
+            if let document = document, document.exists {
+                if let pins = document.data()?["emergencyUserPins"] as? [String] {
+                    self.testData2 = pins
+                    self.pinTableView2.reloadData()
+                } else {
+                    print(".")
+                }
+            } else {
+                print(".")
+            }
+        }
+    }
 	
 
 
