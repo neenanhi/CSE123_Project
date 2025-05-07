@@ -27,3 +27,6 @@ Demonstrates quick remote unlock via app.
 6. Adam presses Lock.
 7. Repeat the unlock/lock flow to show reliability.
 8. Neena: “In the final version, we plan a notification system that alerts users if the door remains unlocked.”
+
+Scenario 2: Guest One-Time PIN
+Demonstrates one-time PIN functionality for visitors without app access.
