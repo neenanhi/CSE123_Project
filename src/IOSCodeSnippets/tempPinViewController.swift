@@ -100,8 +100,19 @@ func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) ->
             return
         }
 	}
+
+
+	 let userRef = db.collection("users").document(user.uid)
+        
+        listener?.remove()
+	
+   	listener = userRef.addSnapshotListener { [weak self] documentSnapshot, error in
+            guard let self = self else { return }
 	
 
+
+
+	}
 
 
 
