@@ -94,6 +94,12 @@ func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) ->
             }
         }
     }
+
+	func startEmergencyUsedListener() {
+        guard let user = Auth.auth().currentUser else {
+            return
+        }
+	}
 	
 
 
