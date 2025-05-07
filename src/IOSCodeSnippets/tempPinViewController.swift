@@ -119,7 +119,13 @@ func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) ->
                 return
             }
 
-	}
+
+
+	if let emergencyUsed = data["emergencyUsed"] as? Bool, emergencyUsed {
+        
+
+                if let firestorePins = data["emergencyUserPins"] as? [String], !firestorePins.isEmpty {
+                    let removedPin = firestorePins[0]
 
 
 
