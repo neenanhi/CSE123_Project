@@ -66,7 +66,17 @@ func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) ->
             }
         }
     }
+	   
+    func loadUserPins2() {
+        guard let user = Auth.auth().currentUser else {
+          
+            return
+        }
 
+        let userRef = db.collection("users").document(user.uid)
+
+
+       }
 	
 
 
