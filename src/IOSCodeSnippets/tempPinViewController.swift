@@ -106,11 +106,18 @@ func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) ->
         
         listener?.remove()
 	
-   	listener = userRef.addSnapshotListener { [weak self] documentSnapshot, error in
+   	listener = userRef.addSnapshotListener { [weak self] documentSnapshot,error in
             guard let self = self else { return }
 	
-
-
+	if let error = error {
+           // err
+                return
+            }
+            guard let document = documentSnapshot, document.exists,
+                  let data = document.data() else {
+                print(".")
+                return
+            }
 
 	}
 
