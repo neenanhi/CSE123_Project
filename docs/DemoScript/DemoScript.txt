@@ -34,3 +34,6 @@ Demonstrates one-time PIN functionality for visitors without app access.
 2. Jackson: “I just got to the house, how can I get in?”
 3. Adam: “I’ll generate a one-time PIN using the app and text it to Jackson.”
 4. Jackson inputs the code on the keypad.
+5. Neena: “The lock opens and will automatically re-lock in 10 seconds.”
+6. Jackson tries the code again — it fails.
+7. Neena: “This PIN has been used and is now invalid, but our database logs it. Our system logs all unlocks, lock commands, and Wi-Fi connection events.”
