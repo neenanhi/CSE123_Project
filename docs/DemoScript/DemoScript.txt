@@ -47,3 +47,6 @@ Demonstrates emergency PIN fallback when Wi-Fi is unavailable.
 5. Neena: “The lock opens for 10 seconds, then relocks. Once Wi-Fi is restored, the emergency PIN is blacklisted.”
 6. Nathaniel tries the same code again — it fails.
 7. Neena: “This ensures security even during Wi-Fi outages.”
+
+Scenario 4: First-Time Setup
+Demonstrates setting up the lock for the first time.
