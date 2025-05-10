@@ -37,3 +37,6 @@ Demonstrates one-time PIN functionality for visitors without app access.
 5. Neena: “The lock opens and will automatically re-lock in 10 seconds.”
 6. Jackson tries the code again — it fails.
 7. Neena: “This PIN has been used and is now invalid, but our database logs it. Our system logs all unlocks, lock commands, and Wi-Fi connection events.”
+
+Scenario 3: Wi-Fi Disconnected
+Demonstrates emergency PIN fallback when Wi-Fi is unavailable.
