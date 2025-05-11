@@ -56,4 +56,4 @@ Demonstrates setting up the lock for the first time.
 4. Adam: “During the initial installation when you first receive the product, setup instructions will be accessible via a QR code in the user manual.”
 
 Conclusion
-Nathaniel: “In the future, we plan to move away from Firebase to a more customizable backend using AWS and PostgreSQL for better control and scalability. 
+Nathaniel: “In the future, we plan to move away from Firebase to a more customizable backend using AWS and PostgreSQL for better control and scalability. We’re focused on improving the software reliability and access control features and intend on replacing the ESP32C3 module with a higher performing chip.”
