@@ -54,3 +54,5 @@ Demonstrates setting up the lock for the first time.
 2. Show the lock broadcasting its access point (AP).
 3. User connects to the AP and launches setup flow in the app.
 4. Adam: “During the initial installation when you first receive the product, setup instructions will be accessible via a QR code in the user manual.”
+
+Conclusion
