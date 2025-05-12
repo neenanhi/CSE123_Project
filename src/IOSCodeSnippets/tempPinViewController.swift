@@ -3,25 +3,27 @@ import FirebaseFirestore
 import FirebaseAuth
 
 class tempPinViewController: UIViewController, UITableViewDataSource {
-
-	let db = Firestore.firestore()
-    	var listener: ListenerRegistration?
+    
    
-    	@IBOutlet weak var newPinButton2: UIButton!
     
-    	@IBOutlet weak var pinTableView2: UITableView!
+    let db = Firestore.firestore()
+    var listener: ListenerRegistration?
     
-    	var accessKeyOverlay: UIView?
+    @IBOutlet weak var newPinButton2: UIButton!
+    
+    @IBOutlet weak var pinTableView2: UITableView!
+    
+    var accessKeyOverlay: UIView?
     
     
-   	 var testData2 = [""]
-
-	 func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    var testData2 = [""]
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        	return testData2.count
-    	}
-
-	 func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return testData2.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
      
         let cell = tableView.dequeueReusableCell(withIdentifier: "pinCell2", for: indexPath)
         cell.textLabel?.text = testData2[indexPath.row]
@@ -35,8 +37,8 @@ class tempPinViewController: UIViewController, UITableViewDataSource {
         
         return cell
     }
-	
-func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
     
@@ -45,11 +47,15 @@ func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) ->
         guard let user = Auth.auth().currentUser else {
             return
         }
-        // test allow
+        
         let allowedCharacters2 = ["0", "1", "2", "3", "7", "8", "9", "A", "C", "D"]
         var newPin2 = ""
 
-       // gen here
+        for _ in 0..<4 {
+            if let randomChar = allowedCharacters2.randomElement() {
+                newPin2.append(randomChar)
+            }
+        }
         
         testData2.append(newPin2)
         pinTableView2.reloadData()
@@ -60,14 +66,15 @@ func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) ->
             "emergencyUserPins": FieldValue.arrayUnion([newPin2])
         ]) { error in
             if let error = error {
-            //
+                print("\(error.localizedDescription)")
             } else {
                 print("added new PIN.")
             }
         }
     }
-	   
-   func loadUserPins2() {
+    
+    
+    func loadUserPins2() {
         guard let user = Auth.auth().currentUser else {
           
             return
@@ -77,8 +84,7 @@ func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) ->
         
         userRef.getDocument { (document, error) in
             if let error = error {
-                //
-//
+                print("\(error.localizedDescription)")
                 return
             }
             
@@ -94,7 +100,8 @@ func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) ->
             }
         }
     }
-func startEmergencyUsedListener() {
+   
+    func startEmergencyUsedListener() {
         guard let user = Auth.auth().currentUser else {
             return
         }
@@ -134,9 +141,6 @@ func startEmergencyUsedListener() {
                             self.loadUserPins2()
                         }
                     }
-                }
-
-                    }
                 } else {
               
 
@@ -150,6 +154,6 @@ func startEmergencyUsedListener() {
                 }
             }
         }
-
+    }
 
 }
