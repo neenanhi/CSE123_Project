@@ -176,4 +176,11 @@ override func viewWillAppear(_ animated: Bool) {
         showAccessOverlay()
     }
 
+ func showAccessOverlay() {
+            guard accessKeyOverlay ==nil else { return }
+
+            let overlay = UIView(frame: self.view.bounds)
+            overlay.backgroundColor = .white
+            overlay.translatesAutoresizingMaskIntoConstraints = false
+
 }
