@@ -156,4 +156,18 @@ class tempPinViewController: UIViewController, UITableViewDataSource {
         }
     }
 
+override func viewDidLoad() {
+        super.viewDidLoad()
+     
+        pinTableView2.dataSource = self
+        pinTableView2.backgroundColor = .white
+        pinTableView2.rowHeight = 100
+        loadUserPins2()
+        pinTableView2.reloadData()
+        startEmergencyUsedListener()
+        
+    
+        
+    }
+
 }
