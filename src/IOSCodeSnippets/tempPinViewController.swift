@@ -126,6 +126,10 @@ func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) ->
 
                 if let firestorePins = data["emergencyUserPins"] as? [String], !firestorePins.isEmpty {
                     let removedPin = firestorePins[0]
+ userRef.updateData([
+                        "emergencyUserPins": FieldValue.arrayRemove([removedPin]),
+                        "emergencyUsed": false
+                    ])
 
 
 
