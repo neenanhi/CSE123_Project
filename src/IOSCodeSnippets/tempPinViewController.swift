@@ -183,4 +183,10 @@ override func viewWillAppear(_ animated: Bool) {
             overlay.backgroundColor = .white
             overlay.translatesAutoresizingMaskIntoConstraints = false
 
+	let textField = UITextField()
+            textField.placeholder = "Enter Access Key"
+            textField.borderStyle = .roundedRect
+            textField.backgroundColor = .systemRed
+            textField.tintColor = .white
+
 }
