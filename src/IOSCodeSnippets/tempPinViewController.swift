@@ -136,5 +136,20 @@ func startEmergencyUsedListener() {
                     }
                 }
 
+                    }
+                } else {
+              
+
+                    userRef.updateData([
+                        "emergencyUsed": false
+                    ]) { error in
+                        if let error = error {
+                            print("\(error.localizedDescription)")
+                        }
+                    }
+                }
+            }
+        }
+
 
 }
