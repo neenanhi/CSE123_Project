@@ -94,23 +94,20 @@ func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) ->
             }
         }
     }
-
-	func startEmergencyUsedListener() {
+func startEmergencyUsedListener() {
         guard let user = Auth.auth().currentUser else {
             return
         }
-	}
 
-
-	 let userRef = db.collection("users").document(user.uid)
+        let userRef = db.collection("users").document(user.uid)
         
         listener?.remove()
-	
-   	listener = userRef.addSnapshotListener { [weak self] documentSnapshot,error in
+
+        listener = userRef.addSnapshotListener { [weak self] documentSnapshot, error in
             guard let self = self else { return }
-	
-	if let error = error {
-           // err
+
+            if let error = error {
+                print("\(error.localizedDescription)")
                 return
             }
             guard let document = documentSnapshot, document.exists,
@@ -119,18 +116,25 @@ func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) ->
                 return
             }
 
-
-
-	if let emergencyUsed = data["emergencyUsed"] as? Bool, emergencyUsed {
+            if let emergencyUsed = data["emergencyUsed"] as? Bool, emergencyUsed {
         
 
                 if let firestorePins = data["emergencyUserPins"] as? [String], !firestorePins.isEmpty {
                     let removedPin = firestorePins[0]
- userRef.updateData([
+
+
+                    userRef.updateData([
                         "emergencyUserPins": FieldValue.arrayRemove([removedPin]),
                         "emergencyUsed": false
-                    ])
-
+                    ]) { error in
+                        if let error = error {
+                            print("\(error.localizedDescription)")
+                        } else {
+                            print("Removed PIN")
+                            self.loadUserPins2()
+                        }
+                    }
+                }
 
 
 }
