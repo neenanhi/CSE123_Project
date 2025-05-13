@@ -24,7 +24,17 @@
  #define COLUMN_NUM  4 // four columns
  #define LED_BUILTIN 1         // Using GPIO 1 for the LED lights
  #define LED_LOCK    7         // Using GPIO 7 for the built in LED (for Lock)
- 
+ #define MAX_USER_PINS 10
+ #define MAX_PIN_LENGTH 5  // 4 digits + null terminator
+
+ char storedPins[MAX_USER_PINS][MAX_PIN_LENGTH];
+ size_t storedPinCount = 0;
+
+ bool noWifiPinUsed = false;
+
+ char otpStoredPins[MAX_USER_PINS][MAX_PIN_LENGTH];
+ size_t otpStoredPinCount = 0;
+
 std::deque<String> pinQueue = {"1111", "2222", "3333", "4444"};
 
 char keys[ROW_NUM][COLUMN_NUM] = {
@@ -49,10 +59,7 @@ int inputIndex = 0;
  void sendUnlockAcknowledgment();
  void sendLockAcknowledgement();
  String getIsLocked();
- bool createUserPins();
- char** getUserPins();
- size_t getUserPinsCount();
- void freeUserPins();
+
  
  // ServiceAuth is required for Google Cloud Functions functions.
  ServiceAuth sa_auth(FIREBASE_CLIENT_EMAIL, FIREBASE_PROJECT_ID, PRIVATE_KEY, 3000 /* expire period in seconds (<= 3600) */);
@@ -78,42 +85,19 @@ int inputIndex = 0;
  bool jsonValid = false;
  bool unlockAck = false;
  bool lockAck = false;
- char** userPins = nullptr;
+ char** emergencyUserPins = nullptr;
  size_t userPinCount = 0;
+
+ size_t permaIndex = 0;
+ size_t otpPermaIndex = 0;
  
  void setup()
  {
      Serial.begin(115200);
      pinMode(LED_BUILTIN, OUTPUT);
      pinMode(LED_LOCK, OUTPUT);
-
-     WiFiManager wfm;           // wifi manager object
-     wfm.setDebugOutput(false); // suppressing debug info
-     wfm.resetSettings();       // removes previous network settings (for testing use)
-     WiFiManagerParameter custom_text_box("my_text", "Enter your string here", "default string", 50); // custom text box
-     wfm.addParameter(&custom_text_box);  // custom parameter
-     digitalWrite(LED_BUILTIN, HIGH);     // HIGH for not connected to wifi yet (first time setup)
-     if (!wfm.autoConnect("SmartLock AP", "12345678")) {
-        // Did not connect, print error message
-        Serial.println("failed to connect and hit timeout");
  
-        // Reset and try again
-        ESP.restart();
-        delay(1000);
-     }
-
-     // Connected!
-     digitalWrite(LED_BUILTIN, LOW);  // LOW for connected to wifi
-     Serial.println("WiFi connected");
-     Serial.print("IP address: ");
-     Serial.println(WiFi.localIP());
-     isWiFiConnected = true;
-
-     // Print out the custom text box value to serial monitor
-     Serial.print("Custom text box entry: ");
-     Serial.println(custom_text_box.getValue());
- 
-     /* No need, use wifi Provisioning instead now
+     //No need, use wifi Provisioning instead now
      WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
  
      Serial.print("Connecting to Wi-Fi");
@@ -131,8 +115,7 @@ int inputIndex = 0;
      Serial.println(WiFi.localIP());
      Serial.println();
      isWiFiConnected = true; // <- Set here after WiFi is confirmed!
-     */
- 
+     
      
  
      Firebase.printf("Firebase Client v%s\n", FIREBASE_CLIENT_VERSION);
@@ -159,6 +142,10 @@ void loop() {
     checkWiFiConnection();
     if (!isWiFiConnected) return; // Skip rest if no WiFi
 
+    if (noWifiPinUsed) {
+      pinEmergencyUsed();
+      noWifiPinUsed = false;
+    }
     pollFirestorePeriodically();
     sendAcknowledgementIfNeeded();
 }
@@ -188,21 +175,6 @@ void loop() {
  
      if (aResult.available())
      {
-        //  Firebase.printf("task: %s, payload: %s\n", aResult.uid().c_str(), aResult.c_str());
-        //  String JsonString = aResult.c_str();
-        //  handleJsonStream(JsonString); // deubug checker, also helps with deserilization of JsonDoc
-         
-        //  String isLockedVal = getIsLocked();
-        //  Serial.println("isLocked value: " + getIsLocked());
-
-        //  if (isLockedVal == "1") {
-        //    // Unlock
-        //    digitalWrite(LED_LOCK, HIGH);
-        //    sendUnlockAcknowledgment();
-        //  } else {
-        //    // Lock
-        //    digitalWrite(LED_LOCK, LOW);
-        //  }
 
          if (aResult.uid() == "batchGetTask") {
             Serial.println("Processing batchGet result...");
@@ -210,9 +182,9 @@ void loop() {
             handleJsonStream(JsonString);
             String isLockedVal = getIsLocked();
 
-            // Start of getting userPins and checking if it works
-            if (createUserPins()) {
-                char** pins = getUserPins();
+            // Start of getting emergencyUserPins and checking if it works
+            if (createemergencyUserPins()) {
+                char** pins = getemergencyUserPins();
                 size_t count = getUserPinCount();
 
                 Serial.println("User Pins:");
@@ -225,10 +197,9 @@ void loop() {
                 // String enteredPin = "1234";
                 // bool valid = isPinValid(enteredPin); // If you write that helper
 
-                // ✅ Free memory after you're done using userPins
-                freeUserPins();
+                // ✅ Free memory after you're done using emergencyUserPins
             } else {
-                Serial.println("Failed to extract userPins.");
+                Serial.println("Failed to extract emergencyUserPins.");
             }
             //
 
@@ -252,6 +223,37 @@ void loop() {
          
      }
  }
+
+ void OTPUsed() {
+    /**
+     * Sends to server false in the case the lock is (0)
+    **/
+    Serial.println("OTP Pin used...");
+    String documentPath = "users/FuduqA91EfdHhEA8JAQNJ3SwrRJ2";
+    Document<Values::Value> updateDoc;
+    updateDoc.setName(documentPath);
+    updateDoc.add("otpPins", Values::Value(Values::BooleanValue(true)));
+    DocumentMask mask("otpPins");
+    Write write(mask, updateDoc, Precondition());
+    Writes writes(write);
+    batch_write_await(writes);
+ }
+
+ void pinEmergencyUsed() {
+    /**
+     * Sends to server false in the case the lock is (0)
+    **/
+    Serial.println("Emergency Pin used...");
+    String documentPath = "users/FuduqA91EfdHhEA8JAQNJ3SwrRJ2";
+    Document<Values::Value> updateDoc;
+    updateDoc.setName(documentPath);
+    updateDoc.add("emergencyUsed", Values::Value(Values::BooleanValue(true)));
+    DocumentMask mask("emergencyUsed");
+    Write write(mask, updateDoc, Precondition());
+    Writes writes(write);
+    batch_write_await(writes);
+ }
+
 
  void sendLockAcknowledgement() {
     /**
@@ -308,21 +310,22 @@ void loop() {
     const char* name = doc[0]["found"]["name"];
     const char* isLocked = doc[0]["found"]["fields"]["isLocked"]["integerValue"];
     bool unlockedAck = doc[0]["found"]["fields"]["unlockedAck"]["booleanValue"];
-    const size_t pinCount = doc[0]["found"]["fields"]["userPins"]["arrayValue"]["values"].size();
+    const size_t pinCount = doc[0]["found"]["fields"]["emergencyUserPins"]["arrayValue"]["values"].size();
+    
     
     if (pinCount == 0) {
-        Serial.println("No user PINs found.");
+        Serial.println("No emergency PINs found.");
         return;
     }
 
-    char** userPins = new char*[pinCount];
+    char** emergencyUserPins = new char*[pinCount];
 
     for (size_t i = 0; i < pinCount; ++i) {
-        const char* pin = doc[0]["found"]["fields"]["userPins"]["arrayValue"]["values"][i]["stringValue"];
+        const char* pin = doc[0]["found"]["fields"]["emergencyUserPins"]["arrayValue"]["values"][i]["stringValue"];
         size_t len = strlen(pin) + 1;
-        userPins[i] = new char[len];
-        strncpy(userPins[i], pin, len - 1);
-        userPins[i][len - 1] = '\0';
+        emergencyUserPins[i] = new char[len];
+        strncpy(emergencyUserPins[i], pin, len - 1);
+        emergencyUserPins[i][len - 1] = '\0';
     }
 
     Serial.print("Name: ");
@@ -334,15 +337,64 @@ void loop() {
     Serial.print("unlockedAck");
     Serial.println(unlockedAck ? "true": "false");
 
-    Serial.print("userPins: \n");
+
+    // EMERGENCY
+    for (size_t i = 0; i < pinCount && i < MAX_USER_PINS; ++i) {
+        strncpy(storedPins[i], emergencyUserPins[i], MAX_PIN_LENGTH - 1);
+        storedPins[i][MAX_PIN_LENGTH - 1] = '\0';
+    }
+    storedPinCount = pinCount;
+    permaIndex = 0;
+
+    Serial.println("And the emergency pins:");
     for (size_t i = 0; i < pinCount; ++i) {
-        Serial.println(userPins[i]);
+        Serial.println(storedPins[i]);
     }
 
-    for (size_t i = 0; i < pinCount; ++i) {
-        delete[] userPins[i];
+
+
+    // OTP //////////////////////////////////////////////////////////////////
+    const size_t otpPinCount = doc[0]["found"]["fields"]["userPins"]["arrayValue"]["values"].size();
+    
+    if (otpPinCount == 0) {
+        Serial.println("No otp PINs found.");
+        return;
+    }
+
+    char** otpEmergencyUserPins = new char*[otpPinCount];
+
+    for (size_t i = 0; i < otpPinCount; ++i) {
+        const char* pin = doc[0]["found"]["fields"]["userPins"]["arrayValue"]["values"][i]["stringValue"];
+        size_t len = strlen(pin) + 1;
+        otpEmergencyUserPins[i] = new char[len];
+        strncpy(otpEmergencyUserPins[i], pin, len - 1);
+        otpEmergencyUserPins[i][len - 1] = '\0';
+    }
+
+    for (size_t i = 0; i < otpPinCount && i < MAX_USER_PINS; ++i) {
+        strncpy(otpStoredPins[i], otpEmergencyUserPins[i], MAX_PIN_LENGTH - 1);
+        otpStoredPins[i][MAX_PIN_LENGTH - 1] = '\0';
+    }
+    
+    otpStoredPinCount = otpPinCount;
+    otpPermaIndex = 0;
+
+    Serial.println("We got the otp pins:");
+    for (size_t i = 0; i < otpPinCount; ++i) {
+        Serial.println(otpStoredPins[i]);
+    }
+
+    for (size_t i = 0; i < otpPinCount; ++i) {
+        delete[] otpEmergencyUserPins[i];
     }   
-    delete[] userPins;
+    delete[] otpEmergencyUserPins;
+    // END OTP //////////////////////////////////////////////////////////////
+
+
+    for (size_t i = 0; i < pinCount; ++i) {
+        delete[] emergencyUserPins[i];
+    }   
+    delete[] emergencyUserPins;
 }
 
 void clearBuffer() {
@@ -411,13 +463,23 @@ void pollFirestorePeriodically() {
         lastPollTime = currentTime;
         BatchGetDocumentOptions options;
         options.documents("users/FuduqA91EfdHhEA8JAQNJ3SwrRJ2");
-        options.mask(DocumentMask("isLocked,unlockedAck,userPins"));
+        options.mask(DocumentMask("isLocked,unlockedAck,emergencyUserPins,userPins,emergencyUsed,otpPins"));
         batch_get_async(options);
     }
 }
 
 void processKeypadInput() {
     char key = keypad.getKey();
+
+    if ((permaIndex + 1) > storedPinCount){
+      Serial.println("No More Available Emergency Pins");
+      return;
+    } else if (String(storedPins[permaIndex]) == "NULL"){
+      Serial.println("Permananent Pin Count: " + String(storedPinCount));
+      delay(200);
+      permaIndex++;
+      return;
+    }
 
     if (key) {
         Serial.println(key);
@@ -430,79 +492,33 @@ void processKeypadInput() {
             Serial.print("Entered PIN: ");
             Serial.println(enteredPIN);
 
-            if (!pinQueue.empty() && enteredPIN == pinQueue.front()) {
-                Serial.println("Correct OTP PIN! Unlocking...");
+            bool isMatched = false;
+
+            if (String(storedPins[permaIndex]) == enteredPIN) {
+                Serial.println(storedPins[permaIndex]);  // works!
+                //  sendArrayUpdate();
+                // pinEmergencyUsed();
+                permaIndex++;
+                Serial.println("Number of Pins remaining: " + String(storedPinCount - permaIndex));
                 digitalWrite(LED_LOCK, HIGH);
                 sendUnlockAcknowledgment();
-                pinQueue.pop_front(); // Remove used PIN
-                Serial.println("PIN consumed. Remaining count: " + String(pinQueue.size()));
+                noWifiPinUsed = true;
                 delay(10000); // After ten seconds of a successful unlock, automatically lock the door
                 digitalWrite(LED_LOCK, LOW);
+                sendLockAcknowledgement();
             } else {
                 digitalWrite(LED_LOCK, LOW);
                 sendUnlockAcknowledgment();
-                Serial.println("Invalid or expired PIN.");
             }
 
+            if (!isMatched) {
+                digitalWrite(LED_LOCK, LOW);
+                Serial.println("Invalid or expired PIN.");
+            }
+            
             clearBuffer(); // Reset after 4 digits
         }
     }
 }
 
-void sendAcknowledgementIfNeeded() {
-    if (sendAck & unlockAck) {
-        sendAck = false;
-        unlockAck = false;
-        Serial.println("Sending Unlock Acknowledgement...");
-        sendUnlockAcknowledgment();
-    } else if (sendAck & lockAck) {
-        sendAck = false;
-        lockAck = false;
-        Serial.println("Sending Lock Acknowledgement...");
-        sendLockAcknowledgement();
-    }
-}
 
-bool createUserPins() {
-    // Free any existing pins before creating new ones
-    freeUserPins();
-
-    if (!jsonValid) return false;
-
-    JsonArray values = doc[0]["found"]["fields"]["userPins"]["arrayValue"]["values"];
-    userPinCount = values.size();
-
-    if (userPinCount == 0) return false;
-
-    userPins = new char*[userPinCount];
-
-    for (size_t i = 0; i < userPinCount; ++i) {
-        const char* pin = values[i]["stringValue"];
-        size_t len = strlen(pin) + 1;
-        userPins[i] = new char[len];
-        strncpy(userPins[i], pin, len - 1);
-        userPins[i][len - 1] = '\0';  // null-terminate safely
-    }
-
-    return true;
-}
-
-char** getUserPins() {
-    return userPins;
-}
-
-size_t getUserPinCount() {
-    return userPinCount;
-}
-
-void freeUserPins() {
-    if (userPins != nullptr) {
-        for (size_t i = 0; i < userPinCount; ++i) {
-            delete[] userPins[i];
-        }
-        delete[] userPins;
-        userPins = nullptr;
-        userPinCount = 0;
-    }
-}
-// END SIMPLIFIED FUNCTIONS
