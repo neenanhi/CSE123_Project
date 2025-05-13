@@ -181,43 +181,46 @@ override func viewWillAppear(_ animated: Bool) {
 
             let overlay = UIView(frame: self.view.bounds)
             overlay.backgroundColor = .white
-            overlay.translatesAutoresizingMaskIntoConstraints = false
+            overlay.translatesAutoresizingMaskIntoConstraints =false
 
-	let textField = UITextField()
+            let textField = UITextField()
             textField.placeholder = "Enter Access Key"
             textField.borderStyle = .roundedRect
             textField.backgroundColor = .systemRed
             textField.tintColor = .white
-
-
-	textField.isSecureTextEntry = true
+        
+            textField.isSecureTextEntry = true
             textField.translatesAutoresizingMaskIntoConstraints = false
 
             let button = UIButton(type: .system)
             button.setTitle("Unlock", for: .normal)
             button.setTitleColor(.white, for: .normal)
-button.backgroundColor = UIColor.init(red: 228/255, green: 105/255, blue: 76/255, alpha: 1)//
+            button.backgroundColor = UIColor.init(red: 228/255, green:105/255, blue: 76/255, alpha: 1)//
             button.layer.cornerRadius = 6
             button.translatesAutoresizingMaskIntoConstraints = false
             button.addTarget(self, action: #selector(checkAccessKey), for: .touchUpInside)
 
- overlay.addSubview(textField)
+            overlay.addSubview(textField)
             overlay.addSubview(button)
             view.addSubview(overlay)
 
- NSLayoutConstraint.activate([
+            NSLayoutConstraint.activate([
                 overlay.topAnchor.constraint(equalTo: view.topAnchor),
                 overlay.bottomAnchor.constraint(equalTo: view.bottomAnchor),
                 overlay.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 overlay.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-textField.centerXAnchor.constraint(equalTo:overlay.centerXAnchor),
-                textField.centerYAnchor.constraint(equalTo: overlay.centerYAnchor,constant: -40),
+                textField.centerXAnchor.constraint(equalTo:overlay.centerXAnchor),
+                textField.centerYAnchor.constraint(equalTo:overlay.centerYAnchor, constant: -40),
                 textField.widthAnchor.constraint(equalToConstant: 250),
                 textField.heightAnchor.constraint(equalToConstant: 44),
-button.centerXAnchor.constraint(equalTo: overlay.centerXAnchor),
+
+                button.centerXAnchor.constraint(equalTo:overlay.centerXAnchor),
                 button.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 20),
                 button.widthAnchor.constraint(equalTo: textField.widthAnchor),
                 button.heightAnchor.constraint(equalToConstant: 44)
-])
+            ])
+            textField.tag = 1001
+            accessKeyOverlay = overlay
+        }
 
 }
