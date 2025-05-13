@@ -34,6 +34,6 @@
 1. [4x4 Matrix Keypad](https://www.mouser.com/ProductDetail/Adafruit/3844?qs=qSfuJ%252Bfl%2Fd6WS5%252BJGim1hw%3D%3D&utm_source=electronicwings&utm_medium=referral&utm_campaign=mouser-componentlisting&_gl=1*1l8bxhz*_ga*MTcxNDc3NzEzMS4xNzQzNjM2NTI1*_ga_15W4STQT4T*MTc0MzYzNjUyNC4xLjEuMTc0MzYzNjUzOS40NS4wLjA.) x 1
 2. [DC 12V Solenoid Lock](https://www.amazon.com/dp/B0D8BD6R35?&linkCode=sl1&tag=zlufy-20&linkId=2d5df078eda52bfc049c2a2ee22b0b35&language=en_US&ref_=as_li_ss_tl) x 1
 3. [ESP32-C3](https://www.espressif.com/en/products/devkits) x 1
-4. [IZRF44N Mosfet](chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://www.infineon.com/dgdl/Infineon-IRFZ44N-DataSheet-v01_01-EN.pdf?fileId=5546d462533600a40153563b3a9f220d) x 1
+4. [IRFZ44N Mosfet](chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://www.infineon.com/dgdl/Infineon-IRFZ44N-DataSheet-v01_01-EN.pdf?fileId=5546d462533600a40153563b3a9f220d) x 1
 5. Jumper wires x 20 (approx)
 6. Small LEDs x 1
