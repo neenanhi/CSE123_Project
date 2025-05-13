@@ -231,4 +231,11 @@ override func viewWillAppear(_ animated: Bool) {
                 return
             }
 
+		 let userRef = db.collection("users").document(user.uid)
+            userRef.getDocument {[weak self] snapshot, error in
+                guard let self = self else { return }
+                if let error = error {
+                    return
+                }
+
 }
