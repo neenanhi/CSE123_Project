@@ -205,4 +205,11 @@ button.backgroundColor = UIColor.init(red: 228/255, green: 105/255, blue: 76/255
             overlay.addSubview(button)
             view.addSubview(overlay)
 
+ NSLayoutConstraint.activate([
+                overlay.topAnchor.constraint(equalTo: view.topAnchor),
+                overlay.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                overlay.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                overlay.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+])
+
 }
