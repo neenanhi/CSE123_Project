@@ -28,7 +28,7 @@
 3. Replace all definitions with credentials necessary to access your firestore cloud. (Including the Private Key)
 4. Rename your "secrets.h.example" to "secrets.h".
 5. Upload sketch and observe in the 115200 baud monitor the status of your esp.
-6. Once the sketch uploads and the 11500 opens, the ESP will connect to Wi-Fi, then fetch the lock status from Firestore and display either "locked" or "unlocked."
+6. Once the sketch uploads and the 115200 monitor opens, the ESP will connect to Wi-Fi, then fetch the lock status from Firestore and display either "locked" or "unlocked."
 
 ### Hardware Materials requirements
 1. [4x4 Matrix Keypad](https://www.mouser.com/ProductDetail/Adafruit/3844?qs=qSfuJ%252Bfl%2Fd6WS5%252BJGim1hw%3D%3D&utm_source=electronicwings&utm_medium=referral&utm_campaign=mouser-componentlisting&_gl=1*1l8bxhz*_ga*MTcxNDc3NzEzMS4xNzQzNjM2NTI1*_ga_15W4STQT4T*MTc0MzYzNjUyNC4xLjEuMTc0MzYzNjUzOS40NS4wLjA.) x 1
