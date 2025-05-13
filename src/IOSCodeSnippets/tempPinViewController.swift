@@ -201,4 +201,8 @@ button.backgroundColor = UIColor.init(red: 228/255, green: 105/255, blue: 76/255
             button.translatesAutoresizingMaskIntoConstraints = false
             button.addTarget(self, action: #selector(checkAccessKey), for: .touchUpInside)
 
+ overlay.addSubview(textField)
+            overlay.addSubview(button)
+            view.addSubview(overlay)
+
 }
