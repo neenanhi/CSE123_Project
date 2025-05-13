@@ -189,4 +189,12 @@ override func viewWillAppear(_ animated: Bool) {
             textField.backgroundColor = .systemRed
             textField.tintColor = .white
 
+
+	textField.isSecureTextEntry = true
+            textField.translatesAutoresizingMaskIntoConstraints = false
+
+            let button = UIButton(type: .system)
+            button.setTitle("Unlock", for: .normal)
+            button.setTitleColor(.white, for: .normal)
+
 }
