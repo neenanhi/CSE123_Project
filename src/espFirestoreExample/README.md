@@ -37,3 +37,4 @@
 4. [IRFZ44N Mosfet](chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://www.infineon.com/dgdl/Infineon-IRFZ44N-DataSheet-v01_01-EN.pdf?fileId=5546d462533600a40153563b3a9f220d) x 1
 5. Jumper wires x 20 (approx)
 6. Small LEDs x 1
+7. USB C cable x 1
