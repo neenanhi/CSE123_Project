@@ -214,6 +214,10 @@ textField.centerXAnchor.constraint(equalTo:overlay.centerXAnchor),
                 textField.centerYAnchor.constraint(equalTo: overlay.centerYAnchor,constant: -40),
                 textField.widthAnchor.constraint(equalToConstant: 250),
                 textField.heightAnchor.constraint(equalToConstant: 44),
+button.centerXAnchor.constraint(equalTo: overlay.centerXAnchor),
+                button.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 20),
+                button.widthAnchor.constraint(equalTo: textField.widthAnchor),
+                button.heightAnchor.constraint(equalToConstant: 44)
 ])
 
 }
