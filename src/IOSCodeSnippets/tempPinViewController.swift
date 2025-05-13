@@ -252,4 +252,16 @@ override func viewWillAppear(_ animated: Bool) {
                     }
                 }
 
+else {
+                    let alert = UIAlertController(title: "Denied", message: "Incorrect Key.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Try Again", style: .default))
+                    self.present(alert, animated: true)
+                }
+            }
+        }
+    deinit {
+           
+        listener?.remove()
+    }
+
 }
