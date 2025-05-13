@@ -59,7 +59,10 @@ int inputIndex = 0;
  void sendUnlockAcknowledgment();
  void sendLockAcknowledgement();
  String getIsLocked();
-
+ bool createemergencyUserPins();
+ char** getemergencyUserPins();
+ size_t getemergencyUserPinsCount();
+ void freeemergencyUserPins();
  
  // ServiceAuth is required for Google Cloud Functions functions.
  ServiceAuth sa_auth(FIREBASE_CLIENT_EMAIL, FIREBASE_PROJECT_ID, PRIVATE_KEY, 3000 /* expire period in seconds (<= 3600) */);
@@ -96,8 +99,34 @@ int inputIndex = 0;
      Serial.begin(115200);
      pinMode(LED_BUILTIN, OUTPUT);
      pinMode(LED_LOCK, OUTPUT);
+
+     WiFiManager wfm;           // wifi manager object
+     wfm.setDebugOutput(false); // suppressing debug info
+     wfm.resetSettings();       // removes previous network settings (for testing use)
+     WiFiManagerParameter custom_text_box("my_text", "Enter your string here", "default string", 50); // custom text box
+     wfm.addParameter(&custom_text_box);  // custom parameter
+     digitalWrite(LED_BUILTIN, HIGH);     // HIGH for not connected to wifi yet (first time setup)
+     if (!wfm.autoConnect("SmartLock AP", "12345678")) {
+        // Did not connect, print error message
+        Serial.println("failed to connect and hit timeout");
  
-     //No need, use wifi Provisioning instead now
+        // Reset and try again
+        ESP.restart();
+        delay(1000);
+     }
+
+     // Connected!
+     digitalWrite(LED_BUILTIN, LOW);  // LOW for connected to wifi
+     Serial.println("WiFi connected");
+     Serial.print("IP address: ");
+     Serial.println(WiFi.localIP());
+     isWiFiConnected = true;
+
+     // Print out the custom text box value to serial monitor
+     Serial.print("Custom text box entry: ");
+     Serial.println(custom_text_box.getValue());
+ 
+     /* No need, use wifi Provisioning instead now
      WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
  
      Serial.print("Connecting to Wi-Fi");
@@ -115,7 +144,9 @@ int inputIndex = 0;
      Serial.println(WiFi.localIP());
      Serial.println();
      isWiFiConnected = true; // <- Set here after WiFi is confirmed!
+     */
      
+ 
      
  
      Firebase.printf("Firebase Client v%s\n", FIREBASE_CLIENT_VERSION);
@@ -175,6 +206,21 @@ void loop() {
  
      if (aResult.available())
      {
+        //  Firebase.printf("task: %s, payload: %s\n", aResult.uid().c_str(), aResult.c_str());
+        //  String JsonString = aResult.c_str();
+        //  handleJsonStream(JsonString); // deubug checker, also helps with deserilization of JsonDoc
+         
+        //  String isLockedVal = getIsLocked();
+        //  Serial.println("isLocked value: " + getIsLocked());
+
+        //  if (isLockedVal == "1") {
+        //    // Unlock
+        //    digitalWrite(LED_LOCK, HIGH);
+        //    sendUnlockAcknowledgment();
+        //  } else {
+        //    // Lock
+        //    digitalWrite(LED_LOCK, LOW);
+        //  }
 
          if (aResult.uid() == "batchGetTask") {
             Serial.println("Processing batchGet result...");
@@ -198,6 +244,7 @@ void loop() {
                 // bool valid = isPinValid(enteredPin); // If you write that helper
 
                 // ✅ Free memory after you're done using emergencyUserPins
+                freeemergencyUserPins();
             } else {
                 Serial.println("Failed to extract emergencyUserPins.");
             }
@@ -506,9 +553,24 @@ void processKeypadInput() {
                 delay(10000); // After ten seconds of a successful unlock, automatically lock the door
                 digitalWrite(LED_LOCK, LOW);
                 sendLockAcknowledgement();
-            } else {
-                digitalWrite(LED_LOCK, LOW);
-                sendUnlockAcknowledgment();
+            }
+
+            if (otpStoredPinCount > 0) {
+                for (size_t i = 0; i < otpStoredPinCount; i++) {
+                    if (String(otpStoredPins[i]) == enteredPIN) {
+                        Serial.println("OTP PIN Matched: " + String(otpStoredPins[i]));
+                        OTPUsed();
+
+
+                        digitalWrite(LED_LOCK, HIGH);
+                        sendUnlockAcknowledgment();
+                        delay(10000); // Auto-lock after 10 seconds
+                        digitalWrite(LED_LOCK, LOW);
+                        sendLockAcknowledgement();
+                        isMatched = true;
+                        break; // Exit loop once matched
+                    }
+                }
             }
 
             if (!isMatched) {
@@ -521,4 +583,60 @@ void processKeypadInput() {
     }
 }
 
+void sendAcknowledgementIfNeeded() {
+    if (sendAck & unlockAck) {
+        sendAck = false;
+        unlockAck = false;
+        Serial.println("Sending Unlock Acknowledgement...");
+        sendUnlockAcknowledgment();
+    } else if (sendAck & lockAck) {
+        sendAck = false;
+        lockAck = false;
+        Serial.println("Sending Lock Acknowledgement...");
+        sendLockAcknowledgement();
+    }
+}
 
+bool createemergencyUserPins() {
+    // Free any existing pins before creating new ones
+    freeemergencyUserPins();
+
+    if (!jsonValid) return false;
+
+    JsonArray values = doc[0]["found"]["fields"]["emergencyUserPins"]["arrayValue"]["values"];
+    userPinCount = values.size();
+
+    if (userPinCount == 0) return false;
+
+    emergencyUserPins = new char*[userPinCount];
+
+    for (size_t i = 0; i < userPinCount; ++i) {
+        const char* pin = values[i]["stringValue"];
+        size_t len = strlen(pin) + 1;
+        emergencyUserPins[i] = new char[len];
+        strncpy(emergencyUserPins[i], pin, len - 1);
+        emergencyUserPins[i][len - 1] = '\0';  // null-terminate safely
+    }
+
+    return true;
+}
+
+char** getemergencyUserPins() {
+    return emergencyUserPins;
+}
+
+size_t getUserPinCount() {
+    return userPinCount;
+}
+
+void freeemergencyUserPins() {
+    if (emergencyUserPins != nullptr) {
+        for (size_t i = 0; i < userPinCount; ++i) {
+            delete[] emergencyUserPins[i];
+        }
+        delete[] emergencyUserPins;
+        emergencyUserPins = nullptr;
+        userPinCount = 0;
+    }
+}
+// END SIMPLIFIED FUNCTIONS
