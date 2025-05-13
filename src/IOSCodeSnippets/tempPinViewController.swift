@@ -223,4 +223,12 @@ override func viewWillAppear(_ animated: Bool) {
             accessKeyOverlay = overlay
         }
 
+@objc func checkAccessKey() {
+            guard let overlay = accessKeyOverlay,
+                  let textField = overlay.viewWithTag(1001) as? UITextField,
+                  let input = textField.text,
+                  let user = Auth.auth().currentUser else {
+                return
+            }
+
 }
