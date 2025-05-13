@@ -196,5 +196,9 @@ override func viewWillAppear(_ animated: Bool) {
             let button = UIButton(type: .system)
             button.setTitle("Unlock", for: .normal)
             button.setTitleColor(.white, for: .normal)
+button.backgroundColor = UIColor.init(red: 228/255, green: 105/255, blue: 76/255, alpha: 1)//
+            button.layer.cornerRadius = 6
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.addTarget(self, action: #selector(checkAccessKey), for: .touchUpInside)
 
 }
