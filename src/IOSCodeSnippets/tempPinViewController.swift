@@ -238,4 +238,18 @@ override func viewWillAppear(_ animated: Bool) {
                     return
                 }
 
+	guard let data = snapshot?.data(),
+                      let storedKey = data["accessKey"] as? String else {
+                    return
+                }
+
+                if (input == storedKey) {
+                    UIView.animate(withDuration: 0.3) {
+                        overlay.alpha = 0
+                    } completion: { _ in
+                        overlay.removeFromSuperview()
+                        self.accessKeyOverlay = nil
+                    }
+                }
+
 }
