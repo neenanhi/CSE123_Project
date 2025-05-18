@@ -1,0 +1,58 @@
+\documentclass{article}
+\usepackage{array}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\title{Pin Access Testing Record}
+\author{Nathaniel Laurente}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Introduction}
+This document lists the testing activities for pin access on the ESP32C3. Each test was performed on specific components to check for functionality, stability, and performance. The following sections provide a simple overview of what was tested, how it was tested, and what issues were found.
+
+\section*{Test Summary}
+\begin{tabular}{| l | l | l | l |}
+\hline
+\textbf{Date} & \textbf{Test \#} & \textbf{Component} & \textbf{Status} \\
+\hline
+April 7, 2025 & Test 1 & Firebase Data Sync & Passed \\
+April 9, 2025 & Test 2 & Keypad Input Buffer & Passed \\
+April 10, 2025 & Test 3 & ESP32 Power Management & Failed \\
+April 12, 2025 & Test 4 & LCD1602 Display & Failed \\
+
+
+\hline
+\end{tabular}
+
+\section*{Detailed Test Descriptions}
+
+\subsection*{Test 1: Firebase Data Sync (April 7, 2025)}
+Goal: Check if data from ESP32 updates properly in Firebase.
+Method: Sent test data to Firebase and checked if it matched the received data.
+Result: Data synced correctly without any issues. Also added a new test to check if the data was updated in the Firebase database.
+Problems: None.
+
+\subsection*{Test 2: Keypad Input Buffer (April 9, 2025)}
+Goal: See if the keypad input buffer can handle multiple key presses quickly.
+Method: Pressed multiple keys rapidly to check how many were recorded.
+Result: Some key presses were missed.
+Problems: Buffer size may be too small or not processing inputs fast enough.
+Details: Keypad had to saudered to the jumper pins to work properly. The keypad was not working properly and was not able to record the key presses. The keypad was not able to record the key presses because it was not connected to the jumper pins. 
+
+\subsection*{Test 3: ESP32 Power Management (April 10, 2025)}
+Goal: Measure power usage in sleep and active modes.
+Method: Checked current with a fuel gauge to determine the life span given 2 AA batteries.
+Result: Battery fuel gauge was unable to give an accurate reading of the battery life.
+Problems: None.
+Details: The battery fuel gauge was not able to give an accurate reading of the battery life due to the source of current we were using. Discarding the use of the battery fuel gauge for prototype, but will be included in final design.
+
+\subsection*{Test 4: LCD1602 Display (April 12, 2025)}
+Goal: Confirm that the display shows characters correctly.
+Method: Sent strings and special characters to the display.
+Result: All characters appeared correctly. But it takes too much storage space in the ESP32 along with Wifi and Firebase libraries.
+Problems: Not enough memory to store library on the ESP32.
+
+\end{document}
