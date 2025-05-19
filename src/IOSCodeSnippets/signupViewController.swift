@@ -53,4 +53,9 @@ guard let user = authResult?.user else { return }
         
     }
 
+@IBAction func signupButtonToLogin(_ sender: Any) {
+        self.performSegue(withIdentifier: "signUpToLogin", sender: self)
+        
+    }
+
 }
