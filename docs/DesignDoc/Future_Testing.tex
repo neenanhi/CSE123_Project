@@ -48,6 +48,28 @@
     \item Observe for a visible or audible signal.
     \item Confirm that \texttt{LOCKOUT\_COUNT} has risen and \texttt{LOCK\_STATE} is still 0 (locked).
 \end{itemize}
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Keypad flashes red and/or beeps immediately after the \textbf{third} wrong entry.
+      \item No further PINs are accepted for the lockout period (default: 60 s).
+      \item Mobile app log shows “3 invalid PIN attempts – lock is temporarily disabled” within 5 s.
+      \item Firestore records \texttt{LOCKOUT\_COUNT = 3} and \texttt{LOCK\_STATE = 0}.\\
+    \end{itemize}
+    \end{minipage} \\ 
+  \hline
+  \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\ 
+  \hline
+\end{tabular}
+\end{center}
+\vspace{0.5em}
+
 
 \subsection*{4. OTP Entry Test}
 \subparagraph{Test Goals and Purpose}
