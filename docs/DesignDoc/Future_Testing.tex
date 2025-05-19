@@ -17,7 +17,20 @@
         \item Look for updates to the (\texttt{LOCK\_STATE}) value in Firestore.
     \end{enumerate}
     
-    
+    \textbf{Expectations of Test}
+    \begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      PASS & Bolt retracts within \textless{}0.5\,s; \texttt{LOCK\_STATE}=1; Firestore log entry \emph{success}. \\
+      \hline
+      FAIL & Any deviation from the above timing, state, or logging behaviour. \\
+      \hline
+    \end{tabular}
+    \end{center}
+\end{samepage}
+
 \subsection*{4. OTP Entry Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
