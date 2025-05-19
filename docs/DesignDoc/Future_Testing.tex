@@ -79,6 +79,11 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \begin{samepage}
     \subsection*{3. Emergency PIN Test}
     \subparagraph{Test Goals and Purpose}
+    \begin{itemize}
+        \item Verify that a designated emergency PIN can override an active lockout state.
+        \item Ensure that using the emergency PIN resets lockout counters and restores normal operation.
+        \item Confirm the system logs the emergency unlock event.
+    \end{itemize}
     
 
 \subsection*{4. OTP Entry Test}
