@@ -18,4 +18,13 @@ class signupViewController: UIViewController {
         super.viewDidLoad()
     }
 
+@IBAction func signUpClicked(_ sender: Any) {
+        guard let email = emailTxtField.text, !email.isEmpty,
+        let password = pwdTxtField.text,!password.isEmpty else {
+        let alert = UIAlertController(title: "err", message: "All fields must be filled out", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "", style: .default, handler: nil))
+        present(alert, animated: true)
+            return
+        }
+
 }
