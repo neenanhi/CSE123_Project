@@ -9,6 +9,14 @@
         \item Verify that a recognized 4-digit PIN unlocks the door without unnecessary delay.
         \item Check that the system logs this event as a successful access in Firestore.
     \end{itemize}
+    \subparagraph{How We Test It}
+    \begin{enumerate}
+        \item Select a PIN known to be valid from the internal list.
+        \item Enter the PIN once on the keypad.
+        \item Observe the system's response, checking for physical bolt movement and UI changes on the mobile application.
+        \item Look for updates to the (\texttt{LOCK\_STATE}) value in Firestore.
+    \end{enumerate}
+    
     
 \subsection*{4. OTP Entry Test}
 \subparagraph{Test Goals and Purpose}
