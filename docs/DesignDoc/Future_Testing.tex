@@ -1,5 +1,406 @@
 \newpage
 \begin{samepage}
+    \section{Manufactured Product Testing}
+    \subsection{Common Scenarios (Tests 1–10)}
+% ---------------------------- Test 1 --------------------------------
+    \subsection*{1. Valid PIN Entry Test}
+    \subparagraph{Test Goals and Purpose}
     
-\end{samepage}
+
+\subsection*{4. OTP Entry Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Confirm that an app-generated one-time password (OTP) grants access as expected.
+    \item Ensure the OTP mechanism is time-bound and secure against reuse.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Request a 5-minute valid OTP from the app.
+    \item Enter the OTP using the keypad.
+    \item Monitor the system and database for changes.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Firestore captures the OTP with a clear expiry time.
+    \item Valid OTPs allow immediate unlock.
+    \item Expired or incorrect OTPs are properly rejected with no unlock attempt.
+\end{itemize}
+
+\subsection*{5. OTP Expiry Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure expired OTPs don’t grant access, even if they were once valid.
+    \item Confirm that users are informed clearly when an OTP is no longer usable.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Generate an OTP and wait for the full 5-minute window to pass.
+    \item Attempt to use the expired code via the keypad.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Lock remains unchanged and secure—no movement or unlock occurs.
+    \item Firestore logs the expired OTP attempt explicitly.
+    \item App and/or interface display an "OTP expired" notification.
+\end{itemize}
+
+\subsection*{6. Rapid Wrong PIN Alarm Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure multiple fast wrong PIN entries trigger audible alarm.
+    \item Verify lock does not unlock after wrong entries.
+    \item Check alarm stops after timeout or correct PIN.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Enter 5 wrong PINs within 10s.
+    \item Observe alarm sound and LOCK\_STATE remains 0.
+    \item Attempt correct PIN after alarm to confirm reset.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Alarm beeps continuously for spec duration (e.g., 30s).
+    \item Bolt remains locked (LOCK\_STATE = 0).
+    \item Firestore logs each failed attempt and alarm event.
+    \item Correct PIN after alarm silences alarm and unlocks door.
+\end{itemize}
+
+\subsection*{7. Concurrent Unlock Command Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify two family phones sending unlock at once doesn't confuse the system.
+    \item Ensure only one actuation happens.
+    \item Confirm both requests are logged.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item From two phones, send unlock API calls within 100 ms.
+    \item Watch bolt movement and LOCK\_STATE.
+    \item Check Firestore for two event entries.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Bolt retracts only once.
+    \item LOCK\_STATE = 1 after first command.
+    \item Both commands logged with timestamps.
+    \item No errors or retries triggered.
+\end{itemize}
+
+\subsection*{8. Offline Fallback PIN Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure local PIN entry still works if Wi-Fi drops.
+    \item Verify lock uses cached PIN list.
+    \item Confirm Firestore syncs later.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Disable Wi-Fi on ESP32, enter valid PIN.
+    \item Observe bolt movement and local log.
+    \item Re-enable Wi-Fi and check Firestore sync.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Door unlocks locally (LOCK\_STATE = 1 locally).
+    \item Event cached and later pushed to Firestore.
+    \item No user-perceived delay in unlocking.
+    \item Sync event marked with “offline” flag.
+\end{itemize}
+
+\subsection*{9. Low-Battery Notification Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Check notification when battery falls below 10 %.
+    \item Ensure unlock still works at low battery.
+    \item Verify UI warning persists until charge.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Drain battery to 9 %.
+    \item Press unlock PIN and observe behavior.
+    \item Check mobile app for low-battery alert.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Door still unlocks (LOCK\_STATE = 1).
+    \item App shows persistent “Low Battery” message.
+    \item Firestore logs battery level event.
+    \item Warning clears only when battery > 20 %.
+\end{itemize}
+
+\subsection*{10. Battery Fully Drained Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify lock fails to actuate when battery is dead.
+    \item Ensure system logs failure and alerts user.
+    \item Confirm physical key still works.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Let battery drop to 0\%.
+    \item Enter valid PIN and observe no bolt movement.
+    \item Try physical key override.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Bolt does not move on electronic command.
+    \item Firestore logs “Battery Depleted” error.
+    \item Physical key unlocks door.
+    \item App advises “Replace Battery” notification.
+\end{itemize}
+
+
+\subsection*{11. Battery Fully Drained Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify lock fails to actuate when battery is dead.
+    \item Ensure system logs failure and alerts user.
+    \item Confirm physical key still works.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Let battery drop to 0 \%.
+    \item Enter valid PIN and observe no bolt movement.
+    \item Try physical key override.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Bolt does not move on electronic command.
+    \item Firestore logs “Battery Depleted” error.
+    \item Physical key unlocks door.
+    \item App advises “Replace Battery” notification.
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+\subsection{Less Common Scenarios (Tests 31–40)}
+
+\subsection*{31. Multi-factor Auth Proximity Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Confirm the system requires both a valid PIN and Bluetooth proximity to unlock.
+    \item Observe behavior if Bluetooth disconnects mid-process.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Start PIN entry and slowly move the paired phone out of Bluetooth range.
+    \item Review logs to see how the system treats incomplete multi-factor input.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Door only unlocks when both factors are simultaneously validated.
+    \item Firestore logs clearly show whether it was the PIN or BLE that failed.
+\end{itemize}
+
+\subsection*{32. Time-zone Mismatch Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that timing-sensitive operations work properly despite device time mismatches.
+    \item Verify that scheduled actions and OTPs remain aligned regardless of local time zones.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Set the phone to Pacific Time and the lock to Coordinated Universal Time.
+    \item Generate and use an OTP, and observe if the mismatch causes issues.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item OTPs still work during their intended validity window.
+    \item Scheduled events (e.g., auto-lock) trigger based on synchronized absolute times.
+\end{itemize}
+
+\subsection*{33. DST Transition Auto-lock Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Confirm that daylight saving time transitions don't disrupt automated locking.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Schedule an auto-lock event for 2:00 AM on the day of the DST shift.
+    \item Observe actual lock behavior before, during, and after the transition.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Only one auto-lock event occurs, even with the clock shift.
+    \item No skipped or duplicated scheduling happens.
+\end{itemize}
+
+\subsection*{34. Admin vs. Guest Role Change Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Validate that role-based access control takes effect immediately after role changes.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Change a user's role (e.g., from guest to admin) directly in Firestore.
+    \item Attempt access under both roles shortly after the change.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item The new role is honored without requiring system restart or delay.
+    \item Access permissions align with the updated role instantly.
+\end{itemize}
+
+\subsection*{35. BLE Range Boundary Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Determine the Bluetooth unlocking behavior at different physical distances.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Gradually move the phone away from the lock in 0.5-meter steps, from 1 m up to 6 m.
+    \item Test unlocking at each position and note the results.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Unlocks reliably at closer distances.
+    \item Fails gracefully beyond Bluetooth’s effective range.
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
+\subsection{Rare Scenarios (Tests 61–65)}
+
+\subsection*{61. Cosmic Ray Bit-Flip Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Evaluate the system’s resilience to random memory errors, such as those caused by cosmic rays.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Use a simulator to inject random bit flips into RAM and flash every 10 seconds.
+    \item Observe system behavior over an extended period.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item System detects and handles bit errors—either by correcting or isolating them.
+    \item No persistent crashes or loss of functionality.
+\end{itemize}
+
+\subsection*{62. Lightning Surge Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Assess whether the hardware can tolerate sudden electrical surges.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Apply a 1-kV spike to the 12V input for a 1 microsecond duration using a surge generator.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item No hardware is permanently damaged.
+    \item System recovers and operates normally after the surge event.
+\end{itemize}
+
+\subsection*{63. Seismic Vibration Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify the lock’s mechanical and electronic components withstand prolonged shaking.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Subject the device to a vibration range of 5–50 Hz at 0.5 g for 10 minutes.
+    \item Check for loosening, noise, or malfunction.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item All parts remain in place and fully operational.
+    \item Sensors continue to function accurately post-test.
+\end{itemize}
+
+\subsection*{64. Extreme Cold Operation Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Confirm functionality in severe cold conditions down to -40 °C.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Place the lock in a chamber set to -40 °C for 2 hours.
+    \item Perform 10 complete lock/unlock cycles.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Mechanism operates without freezing or delay.
+    \item No cracking or material degradation.
+    \item Battery and electronics remain reliable.
+\end{itemize}
+
+\subsection*{65. Extreme Heat Operation Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Test device reliability when exposed to 85 °C for extended periods.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Place the lock in a heat chamber at 85 °C.
+    \item Execute a lock/unlock cycle every 5 minutes over 2 hours.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item No thermal shutdown or malfunctions.
+    \item MCU and storage remain intact and responsive.
+\end{itemize}
 
