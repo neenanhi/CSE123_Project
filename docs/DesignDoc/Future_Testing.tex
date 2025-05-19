@@ -33,8 +33,53 @@
 
 
 % ---------------------------- Test 2 --------------------------------
+\newpage
+\subsection*{2. Invalid PIN Lockout Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure the system prevents further PIN attempts after multiple consecutive failures.
+    \item Lock should be shut down for a short expiration period.
+    \item Confirm some form of lockout indication is presented, such as a light or warning beep.
+    \item Owner's phoone should receive an alert about the failed attempts.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Enter three clearly incorrect PINs in under 30 seconds.
+    \item Observe for a visible or audible signal.
+    \item Confirm that \texttt{LOCKOUT\_COUNT} has risen and \texttt{LOCK\_STATE} is still 0 (locked).
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Keypad flashes red and/or beeps immediately after the \textbf{third} wrong entry.
+      \item No further PINs are accepted for the lockout period (default: 60 s).
+      \item Mobile app log shows “3 invalid PIN attempts – lock is temporarily disabled” within 5 s.
+      \item Firestore records \texttt{LOCKOUT\_COUNT = 3} and \texttt{LOCK\_STATE = 0}.\\
+    \end{itemize}
+    \end{minipage} \\ 
+  \hline
+  \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\ 
+  \hline
+\end{tabular}
+\end{center}
+\vspace{0.5em}
+
+\noindent\textbf{Reset after the test:}  
+Either wait for the lockout timer to expire or enter an admin PIN to clear the lockout so the next test starts from a clean state.\\
 
 
+% ---------------------------- Test 3 --------------------------------
+\newpage
+\begin{samepage}
+    \subsection*{3. Emergency PIN Test}
+    \subparagraph{Test Goals and Purpose}
+    
 
 \subsection*{4. OTP Entry Test}
 \subparagraph{Test Goals and Purpose}
