@@ -42,6 +42,12 @@
     \item Confirm some form of lockout indication is presented, such as a light or warning beep.
     \item Owner's phoone should receive an alert about the failed attempts.
 \end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Enter three clearly incorrect PINs in under 30 seconds.
+    \item Observe for a visible or audible signal.
+    \item Confirm that \texttt{LOCKOUT\_COUNT} has risen and \texttt{LOCK\_STATE} is still 0 (locked).
+\end{itemize}
 
 \subsection*{4. OTP Entry Test}
 \subparagraph{Test Goals and Purpose}
