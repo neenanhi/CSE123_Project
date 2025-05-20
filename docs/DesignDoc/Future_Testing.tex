@@ -84,8 +84,12 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \item Ensure that using the emergency PIN resets lockout counters and restores normal operation.
         \item Confirm the system logs the emergency unlock event.
     \end{itemize}
-    
-
+    \subparagraph{How We Test It}
+    \begin{itemize}
+        \item Trigger a lockout by intentionally inputting three incorrect PIN entries.
+        \item Confirm after each incorrect PIN attempt (\texttt{LOCK\_STATE} = 1).
+        \item Immediately enter the emergency PIN once the lockout state is active.
+        
 \subsection*{4. OTP Entry Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
