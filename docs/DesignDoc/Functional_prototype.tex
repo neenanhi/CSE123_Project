@@ -11,5 +11,7 @@ For our functional prototype, we used the ESP32-C3 microcontroller, solenoid loc
 
 The functional prototype of the app currently uses the Swift language. This is what we wanted especially for native IOS apps, and in our manufactured design we plan to use the same language. Though we also would like to produce the same app on other non IOS devices as well. The app currently is able to allow users to sign in and sign up, unlock and lock the door, generating one time pins, accessing emergency pins, and logging out. 
 
+\subsection{Cloud infrastructure}
 
+Our current cloud infrastructure uses firestore database from firebase. Firebase was the easiest to use for our prototyping, and allowed us to quickly made the project functional. Though for the production system, we plan to use Amazon Web Services (AWS) along side Postgres so that we have more control on our database.  The current structure of our database only have a user controlling a lock, while we plan to update our cloud structure to have a many to many relationship. 
 
