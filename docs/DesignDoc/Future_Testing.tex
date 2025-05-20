@@ -89,7 +89,15 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \item Trigger a lockout by intentionally inputting three incorrect PIN entries.
         \item Confirm after each incorrect PIN attempt (\texttt{LOCK\_STATE} = 1).
         \item Immediately enter the emergency PIN once the lockout state is active.
-        
+        \item Observe the lock mechanism (it should retract).
+        \item Monitor Firestore to verify an EMERGENCY\_UNLOCK entry is created.
+        \item Owner's phone should be notified and the mobile application should display that the emergency PIN was used.
+        \item In Firestore, confirm that \texttt{LOCKOUT\_COUNT} resets to 0 and \texttt{LOCK\_STATE} becomes 1.
+    \end{itemize}
+    
+
+
+
 \subsection*{4. OTP Entry Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
