@@ -94,7 +94,33 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \item Owner's phone should be notified and the mobile application should display that the emergency PIN was used.
         \item In Firestore, confirm that \texttt{LOCKOUT\_COUNT} resets to 0 and \texttt{LOCK\_STATE} becomes 1.
     \end{itemize}
+    \subparagraph{Expectations of Test}
+    \begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Door unlocks immediately upon entering the emergency PIN.
+          \item \texttt{LOCKOUT\_COUNT} is reset to 0 and \texttt{LOCK\_STATE = 1} in Firestore.
+          \item Mobile app shows “Emergency unlock used” notification within 5 s.
+          \item Firestore contains a new \texttt{EMERGENCY\_UNLOCK} event entry. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
     
+    \vspace{0.5em}
+    
+    \noindent\textbf{Reset after the test:}  
+    Re-lock the door with a valid standard PIN to prepare for the next test.\\
+    
+\end{samepage}
 
 
 
