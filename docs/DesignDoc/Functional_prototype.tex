@@ -30,3 +30,21 @@ Our current cloud infrastructure uses firestore database from firebase. Firebase
 \subsection{Results}
 
 Our functional prototype was able to unlock and lock a door when asked to from the phone app. It can also generate pin codes that is for one time use, and the pin will be removed once the pin is used. Lastly we have an emergency pin that is used when the wifi is down. Once the emergency pin is used and the door lock is reconnected to wifi, it will remove the pin that is used. Compared to our manufactured product, we have a pin code to unlock the door but we did not have the feature of adding in how long the pin code lasts (having expiration on codes). As for the setup of the door lock, we used wifi provisioning instead of bluetooth since it seemed easier to create on ESP32-C3. Below we will have a figure of our final prototype and if you would like to see the demo of our prototype, the link is \href{https://youtu.be/XbD7zrFxasE?si=83Vg6o0KJSXbOtdF}{here}.
+
+\begin{figure}[!ht]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.7\linewidth]{img/prototypeInside.png}
+  \caption{inside of prototype}
+  \label{fig:prototypeInside}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.7\linewidth]{img/prototypeOutside.png}
+  \caption{outside of prototype}
+  \label{fig:prototypeOutside}
+\end{subfigure}
+\caption{Functional prototype result}
+\label{fig:test}
+\end{figure}
