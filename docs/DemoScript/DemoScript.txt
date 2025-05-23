@@ -19,3 +19,6 @@ Nathaniel: “For the prototype, we’re using a 12V power supply, but our actua
 
 Scenario 1: Quick Remote Unlock
 Demonstrates quick remote unlock via app.
+1. Neena: “Nathaniel is coming home and forgot his keys. Adam plays the dad who’s at work.”
+2. Nathaniel: “I forgot my keys, can you unlock the door for me?”
+3. Adam: “I just got the text and will press Unlock on the app.”
