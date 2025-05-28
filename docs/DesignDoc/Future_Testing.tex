@@ -1,7 +1,7 @@
 \newpage
 \section{Manufactured Product Testing}
 
-\subsection*{Common Scenarios (Tests 1–10)}
+\subsection{Common Scenarios (Tests 1–10)}
 
 \subsection*{1. Valid PIN Entry Test}
 \subparagraph{Test Goals and Purpose}
@@ -16,12 +16,24 @@
     \item Look for updates to the LOCK\_STATE value in Firestore.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item The bolt should retract within roughly half a second (this might vary slightly).
-    \item LOCK\_STATE is set to 1 in Firestore upon unlock.
-    \item There are no anomalies or unexpected entries in the logs.
-\end{itemize}
 
+\begin{center}
+\begin{tabular}{ | m{6.5em} | m{10cm} |} 
+  \hline
+  PASS or FAIL & Conditions For Passing or Failing \\ 
+  \hline
+  PASS & The bolt retracts within half a second, LOCK\_STATE is 1, and logs are clean \\ 
+  \hline
+  FAIL & Otherwise \\ 
+  \hline
+\end{tabular}
+\end{center}
+
+
+
+
+
+\newpage
 \subsection*{2. Invalid PIN Lockout Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -34,12 +46,21 @@
     \item Check the LOCKOUT\_COUNT value and observe for a visible or audible signal.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item PIN entries are blocked for about 60 seconds following the third failure.
-    \item Lockout state is visually or audibly indicated (could be LED or buzzer).
-    \item Firestore logs each incorrect attempt, along with the lockout status.
-\end{itemize}
+\begin{center}
+\begin{tabular}{ | m{6.5em} | m{10cm} |} 
+  \hline
+  PASS or FAIL & Conditions For Passing or Failing \\ 
+  \hline
+  PASS & The system successfully locks out further PIN attempts and indicates this state clearly. Notifies owner on mobile device of failed attempt. \\ 
+  \hline
+  FAIL &  Doesn't satisfy conditions above.\\ 
+  \hline
+\end{tabular}
+\end{center}
 
+
+
+\newpage
 \subsection*{3. Emergency PIN Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -53,11 +74,19 @@
     \item Monitor Firestore to verify an EMERGENCY\_UNLOCK entry is created.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item The door should unlock immediately, without hesitation.
-    \item Firestore logs the use of the emergency PIN distinctly.
-    \item The system clears any active lockout status to resume normal operation.
-\end{itemize}
+\begin{center}
+\begin{tabular}{ | m{6.5em} | m{10cm} |} 
+  \hline
+  PASS or FAIL & Conditions For Passing or Failing \\ 
+  \hline
+  PASS & Door should unlock immediately, and notify user about the use of an emergency pin. Logs use of the pin in cloud database.\\ 
+  \hline
+  FAIL &  Doesn't satisfy conditions above.\\ 
+  \hline
+\end{tabular}
+\end{center}
+
+
 
 \subsection*{4. OTP Entry Test}
 \subparagraph{Test Goals and Purpose}
@@ -189,7 +218,29 @@
 \end{itemize}
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Let battery drop to 0 %.
+    \item Let battery drop to 0\%.
+    \item Enter valid PIN and observe no bolt movement.
+    \item Try physical key override.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{itemize}
+    \item Bolt does not move on electronic command.
+    \item Firestore logs “Battery Depleted” error.
+    \item Physical key unlocks door.
+    \item App advises “Replace Battery” notification.
+\end{itemize}
+
+
+\subsection*{11. Battery Fully Drained Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify lock fails to actuate when battery is dead.
+    \item Ensure system logs failure and alerts user.
+    \item Confirm physical key still works.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Let battery drop to 0 \%.
     \item Enter valid PIN and observe no bolt movement.
     \item Try physical key override.
 \end{itemize}
@@ -222,8 +273,11 @@
 
 
 
+
+
+
 \newpage
-\subsection*{Less Common Scenarios (Tests 31–40)}
+\subsection{Less Common Scenarios (Tests 31–40)}
 
 \subsection*{31. Multi-factor Auth Proximity Test}
 \subparagraph{Test Goals and Purpose}
@@ -349,7 +403,7 @@
 
 
 \newpage
-\subsection*{Rare Scenarios (Tests 61–65)}
+\subsection{Rare Scenarios (Tests 61–65)}
 
 \subsection*{61. Cosmic Ray Bit-Flip Test}
 \subparagraph{Test Goals and Purpose}
@@ -430,3 +484,4 @@
     \item No thermal shutdown or malfunctions.
     \item MCU and storage remain intact and responsive.
 \end{itemize}
+
