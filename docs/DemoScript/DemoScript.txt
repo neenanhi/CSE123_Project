@@ -61,3 +61,4 @@ Nathaniel: “In the future, we plan to move away from Firebase to a more custom
 “Our goal was to create a working prototype that demonstrates core features: remote lock/unlock, one-time PINs, emergency offline access, and basic setup. We’ve met those goals, and we’re excited about continuing to iterate on this foundation.”
 
 test
+test commits
