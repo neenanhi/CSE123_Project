@@ -919,6 +919,45 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+\subsection*{26. SSL Certificate Expiration Handling Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that the smart lock firmware correctly detects and handles HTTPS connection failures due to an expired SSL certificate.
+    \item Ensure the device does not connect to an insecure or unverified server.
+    \item Confirm the system logs the certificate error and avoids attempting unsafe retries.
+    \item Protect against man-in-the-middle (MITM) attacks due to expired or invalid SSL credentials.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Deploy a test cloud server with an expired SSL certificate.
+    \item Configure the smart lock to connect to this server via HTTPS.
+    \item Observe the connection attempt and firmware response.
+    \item Monitor log output, retry logic, and whether any unsafe fallback behavior occurs.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Smart lock rejects the connection due to SSL expiration.
+          \item Connection attempt fails securely with no data transmitted.
+          \item Logs clearly indicate certificate expiration or validation error.
+          \item Firmware does not retry continuously or bypass security checks.
+          \item Optional: User is notified of the connectivity issue.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
 
 % End for Common Scenarios (Tests 1 - 20)
 
