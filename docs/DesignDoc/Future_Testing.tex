@@ -272,12 +272,26 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Re-enable Wi-Fi and check Firestore sync.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Door unlocks locally (LOCK\_STATE = 1 locally).
-    \item Event cached and later pushed to Firestore.
-    \item No user-perceived delay in unlocking.
-    \item Sync event marked with “offline” flag.
-\end{itemize}
+
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Door unlocks locally (LOCK\_STATE = 1 locally).
+          \item Event cached and later pushed to Firestore.
+          \item No user-perceived delay in unlocking.
+          \item Sync event marked with “offline” flag. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
 
 \subsection*{9. Low-Battery Notification Test}
 \subparagraph{Test Goals and Purpose}
@@ -293,12 +307,26 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Check mobile app for low-battery alert.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Door still unlocks (LOCK\_STATE = 1).
-    \item App shows persistent “Low Battery” message.
-    \item Firestore logs battery level event.
-    \item Warning clears only when battery > 20 %.
-\end{itemize}
+
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Door still unlocks (LOCK\_STATE = 1).
+          \item App shows persistent “Low Battery” message.
+          \item Firestore logs battery level event.
+          \item Warning clears only when battery > 20\% \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
 
 \subsection*{10. Battery Fully Drained Test}
 \subparagraph{Test Goals and Purpose}
@@ -314,58 +342,27 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Try physical key override.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Bolt does not move on electronic command.
-    \item Firestore logs “Battery Depleted” error.
-    \item Physical key unlocks door.
-    \item App advises “Replace Battery” notification.
-\end{itemize}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Bolt does not move on electronic command.
+          \item Firestore logs “Battery Depleted” error.
+          \item Physical key unlocks door.
+          \item App advises “Replace Battery” notification. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
 
-
-\subsection*{11. Battery Fully Drained Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Verify lock fails to actuate when battery is dead.
-    \item Ensure system logs failure and alerts user.
-    \item Confirm physical key still works.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Let battery drop to 0 \%.
-    \item Enter valid PIN and observe no bolt movement.
-    \item Try physical key override.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Bolt does not move on electronic command.
-    \item Firestore logs “Battery Depleted” error.
-    \item Physical key unlocks door.
-    \item App advises “Replace Battery” notification.
-\end{itemize}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+% End for Common Scenarios (Tests 1 - 10)
 
 \newpage
 \subsection{Less Common Scenarios (Tests 31–40)}
