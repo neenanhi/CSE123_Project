@@ -124,7 +124,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 
 
 
-\subsection*{4. OTP Entry Test}
+\subsection*{4. One Time Pin Entry Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
     \item Confirm that an app-generated one-time password (OTP) grants access as expected.
@@ -137,11 +137,27 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Monitor the system and database for changes.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Firestore captures the OTP with a clear expiry time.
-    \item Valid OTPs allow immediate unlock.
-    \item Expired or incorrect OTPs are properly rejected with no unlock attempt.
-\end{itemize}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Valid OTPs allow immediate unlock
+          \item \texttt{LOCK\_STATE = 1} in Firestore.
+          \item Door automatically locks itself after 10 s
+          \item Mobile app shows "OTP unlock used” notification within 5 s.
+          \item Firestore captures the OTP with a clear expiry time.
+          \item Expired or incorrect OTPs are properly rejected with no unlock attempt. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
 
 \subsection*{5. OTP Expiry Test}
 \subparagraph{Test Goals and Purpose}
