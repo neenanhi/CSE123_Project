@@ -958,6 +958,44 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+\subsection*{27. JWT Expiration and Cloud Authentication Rejection Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure the smart lock properly handles expired JWT tokens used for cloud authentication.
+    \item Confirm that cloud services reject expired tokens and deny command execution.
+    \item Verify that the firmware identifies the expired token and requests a valid replacement.
+    \item Prevent unauthorized or unintended command execution with stale credentials.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Allow the JWT token to expire naturally or use a deliberately expired token.
+    \item Attempt to send a command (e.g., unlock or status update) to the cloud using the expired token.
+    \item Observe the response from the cloud (e.g., HTTP 401 Unauthorized).
+    \item Check the smart lock’s behavior for error handling, re-authentication attempts, and retry logic.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Cloud rejects commands using the expired JWT with an appropriate error.
+          \item Firmware identifies the expired token and requests a new one.
+          \item Token renewal succeeds and command is retried with valid credentials.
+          \item No unauthorized access or unintended behavior occurs.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
 
 % End for Common Scenarios (Tests 1 - 20)
 
