@@ -1,7 +1,7 @@
 \newpage
 \begin{samepage}
     \section{Manufactured Product Testing}
-    \subsection{Common Scenarios (Tests 1–10)}
+    \subsection{Common Scenarios (Tests 1–20)}
     % ---------------------------- Test 1 --------------------------------
     \subsection*{1. Valid PIN Entry Test}
     \subparagraph{Test Goals and Purpose}
@@ -362,7 +362,373 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
     \end{center}
 
-% End for Common Scenarios (Tests 1 - 10)
+\subsection*{11. Power Surge Resilience Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure the ESP32 safely handles sudden voltage spikes or drops (brown-out conditions).
+    \item Verify that the system resets safely without hardware damage.
+    \item Confirm that the device automatically resumes correct operation after reset.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Connect the device to a programmable power supply.
+    \item Apply a rapid voltage increase (e.g., spike to 4.5V) or decrease (e.g., drop below 3.0V) to simulate surge or brown-out.
+    \item Observe if the ESP32 performs a brown-out reset.
+    \item Monitor recovery behavior and system logs.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item ESP32 performs a brown-out reset when voltage is out of range.
+          \item No permanent hardware damage occurs.
+          \item Device reconnects to Wi-Fi and Firestore automatically.
+          \item System resumes normal operation within 10 seconds of recovery. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
+
+\subsection*{12. Mid-Unlock Reboot Recovery Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that the smart lock can recover from an unexpected reboot during the unlock cycle.
+    \item Ensure no mechanical or software errors occur due to mid-cycle interruption.
+    \item Confirm that the system safely resumes to a consistent and correct lock state.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Initiate an unlock operation by entering a valid PIN or triggering via Firestore.
+    \item While the lock bolt is actuating (in motion), manually reboot the ESP32 (e.g., press reset button).
+    \item After reboot, observe the behavior of the lock and system logs.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Device reboots without hardware fault.
+          \item Lock resumes to the correct and safe final position (locked or unlocked).
+          \item State in Firestore is updated accurately post-recovery.
+          \item System logs include a reboot event and status report.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{13. Duplicate Cloud Command Handling Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that the smart lock ignores repeated unlock commands with the same intent.
+    \item Prevent mechanical wear or electrical issues from unnecessary double-actuation.
+    \item Confirm that the system properly logs and handles duplicate commands.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Send an unlock command via Firestore with a known state change (e.g., `isLocked: false`).
+    \item Observe that the lock successfully unlocks on first command.
+    \item Without changing the command value (keep `isLocked: false`), trigger a second Firestore write with the same content.
+    \item Monitor system behavior, actuator activity, and system logs.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Lock actuates only once for the initial command.
+          \item Second duplicate message is ignored safely.
+          \item System logs indicate duplicate command was received and skipped.
+          \item No mechanical movement or audible actuation occurs on duplicate.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{14. Solenoid Jam Detection Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that the system detects when the solenoid fails to complete its movement due to physical obstruction.
+    \item Ensure that the system does not enter an unsafe or unknown state.
+    \item Confirm that the system times out the unlock operation and alerts the user appropriately.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Manually obstruct the solenoid or insert debris to simulate a jam in the latch.
+    \item Send an unlock command via keypad or Firestore.
+    \item Observe whether the solenoid attempts to actuate, fails, and triggers timeout logic.
+    \item Check system logs, app notifications, and Firestore status.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Solenoid attempt is detected and terminated within a defined timeout window (e.g., 3 seconds).
+          \item System logs a “Mechanical Jam Detected” or similar error.
+          \item Firestore reflects failure or stuck status.
+          \item App displays a warning to the user (e.g., “Unlock Failed – Check Lock Mechanism”).
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{15. Physical Key Override While Powered Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that the lock can be manually overridden with a physical key even when the electronic system is powered.
+    \item Confirm that the system detects the physical override and updates its internal state accordingly.
+    \item Prevent any mechanical or electrical conflicts between the solenoid and manual actuation.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Power on the smart lock system normally.
+    \item Use the physical key to manually unlock or lock the door.
+    \item Observe system behavior (e.g., sensors, logs, Firestore sync).
+    \item Attempt an electronic command (lock/unlock) immediately afterward to verify proper system alignment.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Manual override is mechanically smooth and does not interfere with solenoid.
+          \item System detects state change via sensor (e.g., magnetic or position feedback).
+          \item Firestore and app update to reflect new lock state.
+          \item Subsequent electronic commands work normally without misalignment.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{16. Hall-Sensor Noise Rejection Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that the system correctly interprets magnetic sensor signals despite electrical noise or transient spikes.
+    \item Prevent false positives (e.g., reporting "locked" when bolt hasn't reached the lock position).
+    \item Ensure the lock status reported to the app and Firestore is accurate and trustworthy.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Simulate magnetic noise or signal fluctuations near the Hall-effect sensor using a signal generator or nearby magnet source.
+    \item Observe whether the system falsely detects a "locked" or "unlocked" state.
+    \item Compare physical bolt position with system status shown in Firestore and app.
+    \item Repeat under normal operation and edge cases (e.g., during solenoid movement).
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item System does not falsely report "locked" or "unlocked" due to magnetic interference.
+          \item Lock state in Firestore matches actual bolt position.
+          \item App accurately reflects the physical lock status.
+          \item Optional: Sensor readings are filtered or debounced in software to ignore noise.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{17. I²C Temperature Sensor Fault Tolerance Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify the system handles brief communication errors or invalid data from the temperature sensor gracefully.
+    \item Ensure no crashes, system hangs, or misleading readings are shown to the user.
+    \item Confirm that erroneous data is filtered or flagged appropriately.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Emulate an I²C fault using a glitch generator, cable disturbance, or by temporarily disconnecting the sensor.
+    \item Allow the sensor to resume normal operation after 1–2 cycles.
+    \item Observe system logs, display/app data, and Firestore fields related to temperature.
+    \item Confirm whether system handles retry logic or flags invalid reads.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item System does not crash, hang, or misbehave when invalid data is received.
+          \item Invalid temperature readings are ignored or marked as “error” in logs.
+          \item Firestore/app either retains last valid value or displays "unavailable".
+          \item Normal readings resume once sensor stabilizes.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{18. RTC Drift Test After Offline Period}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Measure the time drift of the ESP32’s RTC after prolonged offline operation (e.g., one week without network time synchronization).
+    \item Assess whether the RTC accuracy meets system requirements for timestamping events and logs.
+    \item Determine if corrective measures (e.g., periodic NTP sync) are necessary.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Synchronize the ESP32’s RTC to accurate time (e.g., via NTP).
+    \item Disconnect the device from the network and keep powered for one week.
+    \item After one week, compare the ESP32 RTC time against a reference clock (e.g., atomic clock, smartphone).
+    \item Record the time difference (drift) in minutes.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item RTC drift is less than or equal to 1 minute after one week offline.
+          \item System logs reflect consistent and accurate timestamps.
+          \item No significant impact on event timing or logging accuracy.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{19. High Temperature Operation Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify the smart lock’s ability to operate correctly when internal temperature exceeds 80 °C.
+    \item Ensure system stability, sensor accuracy, and safe operation under elevated temperature conditions.
+    \item Identify any thermal shutdown, degradation, or failure modes.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Place the smart lock in an environmental chamber or attic-like setup where temperature can be controlled.
+    \item Gradually increase ambient temperature to exceed 80 °C inside the lock enclosure.
+    \item Monitor system behavior, including lock/unlock commands, sensor readings, and logs.
+    \item Record any faults, error messages, or abnormal operation.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Lock operates normally without unexpected resets or malfunctions.
+          \item Temperature sensor accurately reports temperature exceeding 80 °C.
+          \item System logs thermal condition and, if applicable, triggers thermal protection or warnings.
+          \item No permanent damage or degradation to components.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{20. Low Temperature Operation Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify the smart lock operates correctly at low temperatures down to -10 °C.
+    \item Ensure mechanical components (solenoid, bolt, physical key) function without freezing or sticking.
+    \item Confirm electronic components, sensors, and battery performance remain stable.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Place the smart lock in a controlled environmental chamber set to -10 °C.
+    \item Perform locking and unlocking operations electronically and via physical key.
+    \item Monitor system responsiveness, sensor readings, battery voltage, and any error logs.
+    \item Repeat test cycles to simulate typical usage during cold conditions.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Lock and unlock commands execute successfully without delay or mechanical failure.
+          \item Sensors and electronic systems operate within specified parameters.
+          \item Battery performance supports normal operation at low temperature.
+          \item No freezing, sticking, or damage to mechanical components.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+% End for Common Scenarios (Tests 1 - 20)
 
 \newpage
 \subsection{Less Common Scenarios (Tests 31–40)}
