@@ -238,12 +238,25 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Check Firestore for two event entries.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Bolt retracts only once.
-    \item LOCK\_STATE = 1 after first command.
-    \item Both commands logged with timestamps.
-    \item No errors or retries triggered.
-\end{itemize}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Bolt retracts only once.
+          \item LOCK\_STATE = 1 after first command.
+          \item Both commands logged with timestamps.
+          \item No errors or retries triggered. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
 
 \subsection*{8. Offline Fallback PIN Test}
 \subparagraph{Test Goals and Purpose}
