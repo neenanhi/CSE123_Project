@@ -728,6 +728,198 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+\subsection*{21. High Humidity and Condensation Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify the smart lock’s PCB and electronics withstand prolonged exposure to high humidity and condensation.
+    \item Ensure no corrosion, shorts, or malfunctions occur due to moisture.
+    \item Confirm system stability and proper operation during and after moisture exposure.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Place the smart lock inside a humidity chamber set to high relative humidity (e.g., 90\% RH) at ambient temperature.
+    \item Introduce temperature cycling to induce condensation on PCB surfaces.
+    \item Operate the lock during and after exposure to monitor functionality.
+    \item Inspect PCB visually for corrosion or moisture damage.
+    \item Perform electrical continuity and insulation resistance tests post-exposure.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Smart lock operates normally during and after humidity exposure.
+          \item No electrical shorts or intermittent failures occur.
+          \item No visible corrosion or damage on PCB or components.
+          \item Insulation resistance and continuity tests remain within specifications.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{22. GPIO Pin Short to Ground Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify system behavior and fault tolerance when a GPIO pin connected to the LED circuit is shorted to ground.
+    \item Ensure no permanent damage occurs to the ESP32 or associated circuitry.
+    \item Confirm the system continues normal operation despite LED failure.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Intentionally short the GPIO pin controlling the LED to ground.
+    \item Power the system and observe behavior of the LED circuit and overall system.
+    \item Monitor for signs of damage such as overheating, crashes, or erratic behavior.
+    \item Check system logs and responses to LED control commands.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item No damage to the ESP32 or LED circuitry.
+          \item System continues to operate normally without resets or faults.
+          \item LED fails to light as expected due to the short.
+          \item System logs indicate LED malfunction or fault if applicable.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{23. OTA Firmware Update Success Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Confirm that the OTA firmware update process completes successfully on the first attempt.
+    \item Ensure the smart lock remains operational and stable during and after the update.
+    \item Verify that the new firmware version is correctly installed and running.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Initiate an OTA firmware update with a known stable firmware build.
+    \item Monitor the update progress for any errors or interruptions.
+    \item After completion, verify the firmware version and system functionality.
+    \item Perform standard lock/unlock operations to confirm normal behavior.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item OTA update completes without errors or retries.
+          \item Smart lock boots into new firmware version successfully.
+          \item Normal operation resumes immediately after update.
+          \item No data loss or configuration resets occur.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{24. OTA Update Failure and Rollback Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that the smart lock safely handles OTA update interruptions during mid-download.
+    \item Confirm the system automatically rolls back to the prior stable firmware version.
+    \item Ensure no corruption or bricking occurs, maintaining device operability.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Initiate an OTA firmware update.
+    \item Simulate failure by interrupting the download mid-transfer (e.g., disconnect network or power).
+    \item Power cycle the device and observe boot behavior.
+    \item Verify the device boots the previous firmware version without errors.
+    \item Test normal lock/unlock functionality after rollback.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Device detects incomplete or corrupted OTA update.
+          \item Automatically rolls back to the previous firmware version.
+          \item Device boots successfully without entering a bricked state.
+          \item Lock functions correctly with prior firmware after rollback.
+          \item System logs the failed update and rollback event.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{25. API Rate Limiting and HTTP 429 Handling Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify the system correctly handles HTTP 429 (Too Many Requests) responses from the cloud API.
+    \item Ensure the smart lock firmware gracefully responds to rate limiting without crashing or excessive retries.
+    \item Confirm that the system backs off and retries after appropriate delay.
+    \item Prevent denial of service or degraded performance due to API flooding.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Simulate flooding the API with a high volume of status poll requests from the homeowner’s app or device.
+    \item Monitor cloud API to confirm it returns HTTP 429 responses when rate limit exceeded.
+    \item Observe smart lock’s firmware handling of HTTP 429 errors.
+    \item Verify backoff and retry logic in firmware triggers correctly.
+    \item Check logs for proper error handling and user notifications if applicable.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Smart lock detects HTTP 429 responses and throttles request rate accordingly.
+          \item Firmware implements exponential backoff or delay before retrying.
+          \item System maintains stability without crashes or excessive resource use.
+          \item Logs reflect rate limiting events and retry attempts.
+          \item User experience remains smooth with appropriate notifications if needed.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+
 % End for Common Scenarios (Tests 1 - 20)
 
 \newpage
