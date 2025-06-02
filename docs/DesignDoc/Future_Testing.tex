@@ -1,90 +1,126 @@
 \newpage
-\section{Manufactured Product Testing}
+\begin{samepage}
+    \section{Manufactured Product Testing}
+    \subsection{Common Scenarios (Tests 1–10)}
+    % ---------------------------- Test 1 --------------------------------
+    \subsection*{1. Valid PIN Entry Test}
+    \subparagraph{Test Goals and Purpose}
+    \begin{itemize}
+        \item Verify that a recognized 4-digit PIN unlocks the door without unnecessary delay.
+        \item Check that the system logs this event as a successful access in Firestore.
+    \end{itemize}
+    \subparagraph{How We Test It}
+    \begin{enumerate}
+        \item Select a PIN known to be valid from the internal list.
+        \item Enter the PIN once on the keypad.
+        \item Observe the system's response, checking for physical bolt movement and UI changes on the mobile application.
+        \item Look for updates to the (\texttt{LOCK\_STATE}) value in Firestore.
+    \end{enumerate}
+    
+    \textbf{Expectations of Test}
+    \begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      PASS & Bolt retracts within \textless{}0.5\,s; \texttt{LOCK\_STATE}=1; Firestore log entry \emph{success}. \\
+      \hline
+      FAIL & Any deviation from the above timing, state, or logging behaviour. \\
+      \hline
+    \end{tabular}
+    \end{center}
+\end{samepage}
 
-\subsection{Common Scenarios (Tests 1–10)}
 
-\subsection*{1. Valid PIN Entry Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Verify that a recognized 4-digit PIN unlocks the door without unnecessary delay.
-    \item Check that the system logs this event as a successful access in Firestore.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Select a PIN known to be valid from the internal list.
-    \item Enter it once and observe the system's response, both physical and digital.
-    \item Look for updates to the LOCK\_STATE value in Firestore.
-\end{itemize}
-\subparagraph{Expectations of Test}
-
-\begin{center}
-\begin{tabular}{ | m{6.5em} | m{10cm} |} 
-  \hline
-  PASS or FAIL & Conditions For Passing or Failing \\ 
-  \hline
-  PASS & The bolt retracts within half a second, LOCK\_STATE is 1, and logs are clean \\ 
-  \hline
-  FAIL & Otherwise \\ 
-  \hline
-\end{tabular}
-\end{center}
-
-
-
-
-
+% ---------------------------- Test 2 --------------------------------
 \newpage
 \subsection*{2. Invalid PIN Lockout Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
     \item Ensure the system prevents further PIN attempts after multiple consecutive failures.
-    \item Confirm some form of lockout indication is presented, such as a light or alarm.
+    \item Lock should be shut down for a short expiration period.
+    \item Confirm some form of lockout indication is presented, such as a light or warning beep.
+    \item Owner's phoone should receive an alert about the failed attempts.
 \end{itemize}
 \subparagraph{How We Test It}
 \begin{itemize}
     \item Enter three clearly incorrect PINs in under 30 seconds.
-    \item Check the LOCKOUT\_COUNT value and observe for a visible or audible signal.
+    \item Observe for a visible or audible signal.
+    \item Confirm that \texttt{LOCKOUT\_COUNT} has risen and \texttt{LOCK\_STATE} is still 0 (locked).
 \end{itemize}
 \subparagraph{Expectations of Test}
 \begin{center}
-\begin{tabular}{ | m{6.5em} | m{10cm} |} 
+\begin{tabular}{|c|p{10cm}|}
   \hline
-  PASS or FAIL & Conditions For Passing or Failing \\ 
+  \textbf{Result} & \textbf{Conditions} \\
   \hline
-  PASS & The system successfully locks out further PIN attempts and indicates this state clearly. Notifies owner on mobile device of failed attempt. \\ 
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Keypad flashes red and/or beeps immediately after the \textbf{third} wrong entry.
+      \item No further PINs are accepted for the lockout period (default: 60 s).
+      \item Mobile app log shows “3 invalid PIN attempts – lock is temporarily disabled” within 5 s.
+      \item Firestore records \texttt{LOCKOUT\_COUNT = 3} and \texttt{LOCK\_STATE = 0}.\\
+    \end{itemize}
+    \end{minipage} \\ 
   \hline
-  FAIL &  Doesn't satisfy conditions above.\\ 
+  \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\ 
   \hline
 \end{tabular}
 \end{center}
+\vspace{0.5em}
+
+\noindent\textbf{Reset after the test:}  
+Either wait for the lockout timer to expire or enter an admin PIN to clear the lockout so the next test starts from a clean state.\\
 
 
-
+% ---------------------------- Test 3 --------------------------------
 \newpage
-\subsection*{3. Emergency PIN Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Test whether a designated emergency PIN can override a lockout state.
-    \item Ensure that using the emergency PIN resets the system's lockout logic.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Trigger a lockout by intentionally failing three PIN entries.
-    \item Once lockout is active, input the emergency PIN.
-    \item Monitor Firestore to verify an EMERGENCY\_UNLOCK entry is created.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{center}
-\begin{tabular}{ | m{6.5em} | m{10cm} |} 
-  \hline
-  PASS or FAIL & Conditions For Passing or Failing \\ 
-  \hline
-  PASS & Door should unlock immediately, and notify user about the use of an emergency pin. Logs use of the pin in cloud database.\\ 
-  \hline
-  FAIL &  Doesn't satisfy conditions above.\\ 
-  \hline
-\end{tabular}
-\end{center}
+\begin{samepage}
+    \subsection*{3. Emergency PIN Test}
+    \subparagraph{Test Goals and Purpose}
+    \begin{itemize}
+        \item Verify that a designated emergency PIN can override an active lockout state.
+        \item Ensure that using the emergency PIN resets lockout counters and restores normal operation.
+        \item Confirm the system logs the emergency unlock event.
+    \end{itemize}
+    \subparagraph{How We Test It}
+    \begin{itemize}
+        \item Trigger a lockout by intentionally inputting three incorrect PIN entries.
+        \item Confirm after each incorrect PIN attempt (\texttt{LOCK\_STATE} = 1).
+        \item Immediately enter the emergency PIN once the lockout state is active.
+        \item Observe the lock mechanism (it should retract).
+        \item Monitor Firestore to verify an EMERGENCY\_UNLOCK entry is created.
+        \item Owner's phone should be notified and the mobile application should display that the emergency PIN was used.
+        \item In Firestore, confirm that \texttt{LOCKOUT\_COUNT} resets to 0 and \texttt{LOCK\_STATE} becomes 1.
+    \end{itemize}
+    \subparagraph{Expectations of Test}
+    \begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Door unlocks immediately upon entering the emergency PIN.
+          \item \texttt{LOCKOUT\_COUNT} is reset to 0 and \texttt{LOCK\_STATE = 1} in Firestore.
+          \item Mobile app shows “Emergency unlock used” notification within 5 s.
+          \item Firestore contains a new \texttt{EMERGENCY\_UNLOCK} event entry. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
+    
+    \vspace{0.5em}
+    
+    \noindent\textbf{Reset after the test:}  
+    Re-lock the door with a valid standard PIN to prepare for the next test.\\
+    
+\end{samepage}
 
 
 
