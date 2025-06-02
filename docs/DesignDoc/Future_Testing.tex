@@ -996,6 +996,44 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+\subsection*{28. SPI Flash Corruption and Boot Configuration Error Handling Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify the system can detect and handle corrupted SPI flash data.
+    \item Ensure the device fails gracefully and does not enter an unstable or undefined state.
+    \item Confirm that the firmware provides recovery options, such as default fallback config or safe mode.
+    \item Prevent bricking or incorrect behavior due to unreadable configuration data.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Intentionally corrupt the configuration section of the SPI flash (e.g., overwrite with invalid or random data).
+    \item Reboot the smart lock and observe its behavior during initialization.
+    \item Check system logs and debug output for detection and reporting of the corruption.
+    \item Evaluate whether the system uses fallback defaults or enters a known safe state.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Firmware detects SPI flash corruption during boot.
+          \item Lock enters safe mode or loads default configuration.
+          \item Device does not crash, freeze, or act unpredictably.
+          \item Logs include clear error message for corrupted config.
+          \item Optional: App or user is notified to reconfigure settings.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
 
 % End for Common Scenarios (Tests 1 - 20)
 
