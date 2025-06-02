@@ -171,11 +171,24 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Attempt to use the expired code via the keypad.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Lock remains unchanged and secure—no movement or unlock occurs.
-    \item Firestore logs the expired OTP attempt explicitly.
-    \item App and/or interface display an "OTP expired" notification.
-\end{itemize}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Lock remains unchanged and secure—no movement or unlock occurs.
+          \item Firestore logs the expired OTP attempt explicitly.
+          \item App and/or interface display an "OTP expired" notification. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
 
 \subsection*{6. Rapid Wrong PIN Alarm Test}
 \subparagraph{Test Goals and Purpose}
