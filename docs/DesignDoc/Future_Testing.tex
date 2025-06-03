@@ -1035,6 +1035,46 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+\subsection*{29. Flash Storage Full During OTA Update Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that the smart lock correctly handles a full flash partition when attempting to download a new OTA firmware image.
+    \item Prevent partial or corrupted firmware installs due to insufficient storage.
+    \item Confirm that the system preserves the current working firmware without entering an unstable state.
+    \item Provide user/system feedback about the failure and recovery options.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Fill the OTA or update-designated flash partition with dummy data until it is full.
+    \item Initiate an OTA firmware update.
+    \item Monitor the download process, system logs, and error handling behavior.
+    \item Observe whether the current firmware remains operational and the device remains in a known-safe state.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item OTA image download fails cleanly due to lack of space.
+          \item System logs indicate "insufficient storage" or related error.
+          \item Current firmware remains untouched and fully functional.
+          \item No reboot, crash, or undefined behavior occurs.
+          \item Optional: User/app is notified of the failed update and reason.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+
 % End for Common Scenarios (Tests 1 - 20)
 
 \newpage
