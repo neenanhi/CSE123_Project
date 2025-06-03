@@ -175,3 +175,136 @@
 \end{samepage}
 
 
+
+% 47
+
+\newpage
+\begin{samepage}
+\subsection*{47. Battery Swapping Time Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Make sure that a depleted battery can be swapped out quickly and safely by the user.
+    \item Confirm the lock system operates normally and immediately after a fresh battery.
+    \item Check that no errors or abnormal behavior occur during or after the swap.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Simulate battery depletion until the lock no longer responds.
+    \item Swap in a fully charged battery, measuring the time until lock operates again.
+    \item Verify the lock can accept PIN entry and respond to app commands immediately.
+    \item Check Postgres or local logs for “POWER\_RESTORED” event and normal lock state.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Fresh battery swap is completed within 10 seconds.
+      \item Lock accepts valid PIN entry and responds to app commands immediately after swap.
+      \item No errors, resets, or abnormal delays are observed.
+      \item Postgres or system logs event with correct timestamp.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any of the PASS conditions are not met, or lock remains unresponsive after swap. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 48
+
+
+\newpage
+\begin{samepage}
+\subsection*{48. Battery Cycle Life Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Assess how many charge/discharge cycles the battery can endure before significant capacity loss occurs.
+    \item Confirm the battery meets lifespan expectations for typical usage scenarios.
+    \item Evaluate any system degradation from aging batteries.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Fully charge the battery and measure its capacity (e.g., using a battery analyzer or capacity measurement tool).
+    \item Discharge the battery completely through fast discharge source.
+    \item Repeat this charge-discharge cycle 300 times (or manufacturer’s recommended cycle count).
+    \item After 300 cycles, measure the battery capacity again and compare to initial measurement.
+    \item Observe lock performance during and after these cycles.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Battery retains at least 80\% of its original capacity after 300 cycles.
+      \item No lock performance degradation or instability occurs during normal operation.
+      \item Post-test capacity and logs indicate continued reliable operation.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Capacity drops below 80\% or lock experiences malfunctions during or after cycling. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 49
+
+
+
+\newpage
+\subsection*{49. RTC Drift Test After Offline Period}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Measure the time drift of the ESP32’s RTC after prolonged offline operation (e.g., one week without network time synchronization).
+    \item Assess whether the RTC accuracy meets system requirements for timestamping events and logs.
+    \item Determine if corrective measures (e.g., periodic NTP sync) are necessary.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Synchronize the ESP32’s RTC to accurate time (e.g., via NTP).
+    \item Disconnect the device from the network and keep powered for one week.
+    \item After one week, compare the ESP32 RTC time against a reference clock (e.g., atomic clock, smartphone).
+    \item Record the time difference (drift) in minutes.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item RTC drift is less than or equal to 1 minute after one week offline.
+          \item System logs reflect consistent and accurate timestamps.
+          \item No significant impact on event timing or logging accuracy.\\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+
+
