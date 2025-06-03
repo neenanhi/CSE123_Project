@@ -1,7 +1,7 @@
 \newpage
 \begin{samepage}
     \section{Manufactured Product Testing}
-    \subsection{Common Scenarios (Tests 1–10)}
+    \subsection{Common Scenarios (Tests 1–30)}
     % ---------------------------- Test 1 --------------------------------
     \subsection*{1. Valid PIN Entry Test}
     \subparagraph{Test Goals and Purpose}
@@ -124,7 +124,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 
 
 
-\subsection*{4. OTP Entry Test}
+\subsection*{4. One Time Pin Entry Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
     \item Confirm that an app-generated one-time password (OTP) grants access as expected.
@@ -137,11 +137,27 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Monitor the system and database for changes.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Firestore captures the OTP with a clear expiry time.
-    \item Valid OTPs allow immediate unlock.
-    \item Expired or incorrect OTPs are properly rejected with no unlock attempt.
-\end{itemize}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Valid OTPs allow immediate unlock
+          \item \texttt{LOCK\_STATE = 1} in Firestore.
+          \item Door automatically locks itself after 10 s
+          \item Mobile app shows "OTP unlock used” notification within 5 s.
+          \item Firestore captures the OTP with a clear expiry time.
+          \item Expired or incorrect OTPs are properly rejected with no unlock attempt. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
 
 \subsection*{5. OTP Expiry Test}
 \subparagraph{Test Goals and Purpose}
@@ -155,11 +171,24 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Attempt to use the expired code via the keypad.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Lock remains unchanged and secure—no movement or unlock occurs.
-    \item Firestore logs the expired OTP attempt explicitly.
-    \item App and/or interface display an "OTP expired" notification.
-\end{itemize}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Lock remains unchanged and secure—no movement or unlock occurs.
+          \item Firestore logs the expired OTP attempt explicitly.
+          \item App and/or interface display an "OTP expired" notification. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
 
 \subsection*{6. Rapid Wrong PIN Alarm Test}
 \subparagraph{Test Goals and Purpose}
@@ -175,12 +204,25 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Attempt correct PIN after alarm to confirm reset.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Alarm beeps continuously for spec duration (e.g., 30s).
-    \item Bolt remains locked (LOCK\_STATE = 0).
-    \item Firestore logs each failed attempt and alarm event.
-    \item Correct PIN after alarm silences alarm and unlocks door.
-\end{itemize}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Alarm beeps continuously for spec duration (e.g., 30s).
+          \item Bolt remains locked (LOCK\_STATE = 0).
+          \item Firestore logs each failed attempt and alarm event.
+          \item Correct PIN after alarm silences alarm and unlocks door. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
 
 \subsection*{7. Concurrent Unlock Command Test}
 \subparagraph{Test Goals and Purpose}
@@ -196,12 +238,25 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Check Firestore for two event entries.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Bolt retracts only once.
-    \item LOCK\_STATE = 1 after first command.
-    \item Both commands logged with timestamps.
-    \item No errors or retries triggered.
-\end{itemize}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Bolt retracts only once.
+          \item LOCK\_STATE = 1 after first command.
+          \item Both commands logged with timestamps.
+          \item No errors or retries triggered. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
 
 \subsection*{8. Offline Fallback PIN Test}
 \subparagraph{Test Goals and Purpose}
@@ -217,12 +272,26 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Re-enable Wi-Fi and check Firestore sync.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Door unlocks locally (LOCK\_STATE = 1 locally).
-    \item Event cached and later pushed to Firestore.
-    \item No user-perceived delay in unlocking.
-    \item Sync event marked with “offline” flag.
-\end{itemize}
+
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Door unlocks locally (LOCK\_STATE = 1 locally).
+          \item Event cached and later pushed to Firestore.
+          \item No user-perceived delay in unlocking.
+          \item Sync event marked with “offline” flag. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
 
 \subsection*{9. Low-Battery Notification Test}
 \subparagraph{Test Goals and Purpose}
@@ -238,12 +307,26 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Check mobile app for low-battery alert.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Door still unlocks (LOCK\_STATE = 1).
-    \item App shows persistent “Low Battery” message.
-    \item Firestore logs battery level event.
-    \item Warning clears only when battery > 20 %.
-\end{itemize}
+
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Door still unlocks (LOCK\_STATE = 1).
+          \item App shows persistent “Low Battery” message.
+          \item Firestore logs battery level event.
+          \item Warning clears only when battery > 20\% \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
 
 \subsection*{10. Battery Fully Drained Test}
 \subparagraph{Test Goals and Purpose}
@@ -259,58 +342,777 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Try physical key override.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Bolt does not move on electronic command.
-    \item Firestore logs “Battery Depleted” error.
-    \item Physical key unlocks door.
-    \item App advises “Replace Battery” notification.
-\end{itemize}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Bolt does not move on electronic command.
+          \item Firestore logs “Battery Depleted” error.
+          \item Physical key unlocks door.
+          \item App advises “Replace Battery” notification. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
 
-
-\subsection*{11. Battery Fully Drained Test}
+\subsection*{11. Power Surge Resilience Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Verify lock fails to actuate when battery is dead.
-    \item Ensure system logs failure and alerts user.
-    \item Confirm physical key still works.
+    \item Ensure the ESP32 safely handles sudden voltage spikes or drops (brown-out conditions).
+    \item Verify that the system resets safely without hardware damage.
+    \item Confirm that the device automatically resumes correct operation after reset.
 \end{itemize}
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Let battery drop to 0 \%.
-    \item Enter valid PIN and observe no bolt movement.
-    \item Try physical key override.
+    \item Connect the device to a programmable power supply.
+    \item Apply a rapid voltage increase (e.g., spike to 4.5V) or decrease (e.g., drop below 3.0V) to simulate surge or brown-out.
+    \item Observe if the ESP32 performs a brown-out reset.
+    \item Monitor recovery behavior and system logs.
 \end{itemize}
 \subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item ESP32 performs a brown-out reset when voltage is out of range.
+          \item No permanent hardware damage occurs.
+          \item Device reconnects to Wi-Fi and Firestore automatically.
+          \item System resumes normal operation within 10 seconds of recovery. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}
+
+\subsection*{12. Mid-Unlock Reboot Recovery Test}
+\subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Bolt does not move on electronic command.
-    \item Firestore logs “Battery Depleted” error.
-    \item Physical key unlocks door.
-    \item App advises “Replace Battery” notification.
+    \item Verify that the smart lock can recover from an unexpected reboot during the unlock cycle.
+    \item Ensure no mechanical or software errors occur due to mid-cycle interruption.
+    \item Confirm that the system safely resumes to a consistent and correct lock state.
 \end{itemize}
 
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Initiate an unlock operation by entering a valid PIN or triggering via Firestore.
+    \item While the lock bolt is actuating (in motion), manually reboot the ESP32 (e.g., press reset button).
+    \item After reboot, observe the behavior of the lock and system logs.
+\end{itemize}
 
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Device reboots without hardware fault.
+          \item Lock resumes to the correct and safe final position (locked or unlocked).
+          \item State in Firestore is updated accurately post-recovery.
+          \item System logs include a reboot event and status report.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
 
+\subsection*{13. Duplicate Cloud Command Handling Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that the smart lock ignores repeated unlock commands with the same intent.
+    \item Prevent mechanical wear or electrical issues from unnecessary double-actuation.
+    \item Confirm that the system properly logs and handles duplicate commands.
+\end{itemize}
 
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Send an unlock command via Firestore with a known state change (e.g., `isLocked: false`).
+    \item Observe that the lock successfully unlocks on first command.
+    \item Without changing the command value (keep `isLocked: false`), trigger a second Firestore write with the same content.
+    \item Monitor system behavior, actuator activity, and system logs.
+\end{itemize}
 
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Lock actuates only once for the initial command.
+          \item Second duplicate message is ignored safely.
+          \item System logs indicate duplicate command was received and skipped.
+          \item No mechanical movement or audible actuation occurs on duplicate.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
 
+\subsection*{14. Solenoid Jam Detection Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that the system detects when the solenoid fails to complete its movement due to physical obstruction.
+    \item Ensure that the system does not enter an unsafe or unknown state.
+    \item Confirm that the system times out the unlock operation and alerts the user appropriately.
+\end{itemize}
 
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Manually obstruct the solenoid or insert debris to simulate a jam in the latch.
+    \item Send an unlock command via keypad or Firestore.
+    \item Observe whether the solenoid attempts to actuate, fails, and triggers timeout logic.
+    \item Check system logs, app notifications, and Firestore status.
+\end{itemize}
 
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Solenoid attempt is detected and terminated within a defined timeout window (e.g., 3 seconds).
+          \item System logs a “Mechanical Jam Detected” or similar error.
+          \item Firestore reflects failure or stuck status.
+          \item App displays a warning to the user (e.g., “Unlock Failed – Check Lock Mechanism”).
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
 
+\subsection*{15. Physical Key Override While Powered Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that the lock can be manually overridden with a physical key even when the electronic system is powered.
+    \item Confirm that the system detects the physical override and updates its internal state accordingly.
+    \item Prevent any mechanical or electrical conflicts between the solenoid and manual actuation.
+\end{itemize}
 
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Power on the smart lock system normally.
+    \item Use the physical key to manually unlock or lock the door.
+    \item Observe system behavior (e.g., sensors, logs, Firestore sync).
+    \item Attempt an electronic command (lock/unlock) immediately afterward to verify proper system alignment.
+\end{itemize}
 
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Manual override is mechanically smooth and does not interfere with solenoid.
+          \item System detects state change via sensor (e.g., magnetic or position feedback).
+          \item Firestore and app update to reflect new lock state.
+          \item Subsequent electronic commands work normally without misalignment.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
 
+\subsection*{16. Hall-Sensor Noise Rejection Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that the system correctly interprets magnetic sensor signals despite electrical noise or transient spikes.
+    \item Prevent false positives (e.g., reporting "locked" when bolt hasn't reached the lock position).
+    \item Ensure the lock status reported to the app and Firestore is accurate and trustworthy.
+\end{itemize}
 
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Simulate magnetic noise or signal fluctuations near the Hall-effect sensor using a signal generator or nearby magnet source.
+    \item Observe whether the system falsely detects a "locked" or "unlocked" state.
+    \item Compare physical bolt position with system status shown in Firestore and app.
+    \item Repeat under normal operation and edge cases (e.g., during solenoid movement).
+\end{itemize}
 
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item System does not falsely report "locked" or "unlocked" due to magnetic interference.
+          \item Lock state in Firestore matches actual bolt position.
+          \item App accurately reflects the physical lock status.
+          \item Optional: Sensor readings are filtered or debounced in software to ignore noise.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
 
+\subsection*{17. I²C Temperature Sensor Fault Tolerance Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify the system handles brief communication errors or invalid data from the temperature sensor gracefully.
+    \item Ensure no crashes, system hangs, or misleading readings are shown to the user.
+    \item Confirm that erroneous data is filtered or flagged appropriately.
+\end{itemize}
 
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Emulate an I²C fault using a glitch generator, cable disturbance, or by temporarily disconnecting the sensor.
+    \item Allow the sensor to resume normal operation after 1–2 cycles.
+    \item Observe system logs, display/app data, and Firestore fields related to temperature.
+    \item Confirm whether system handles retry logic or flags invalid reads.
+\end{itemize}
 
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item System does not crash, hang, or misbehave when invalid data is received.
+          \item Invalid temperature readings are ignored or marked as “error” in logs.
+          \item Firestore/app either retains last valid value or displays "unavailable".
+          \item Normal readings resume once sensor stabilizes.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
 
+\subsection*{18. RTC Drift Test After Offline Period}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Measure the time drift of the ESP32’s RTC after prolonged offline operation (e.g., one week without network time synchronization).
+    \item Assess whether the RTC accuracy meets system requirements for timestamping events and logs.
+    \item Determine if corrective measures (e.g., periodic NTP sync) are necessary.
+\end{itemize}
 
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Synchronize the ESP32’s RTC to accurate time (e.g., via NTP).
+    \item Disconnect the device from the network and keep powered for one week.
+    \item After one week, compare the ESP32 RTC time against a reference clock (e.g., atomic clock, smartphone).
+    \item Record the time difference (drift) in minutes.
+\end{itemize}
 
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item RTC drift is less than or equal to 1 minute after one week offline.
+          \item System logs reflect consistent and accurate timestamps.
+          \item No significant impact on event timing or logging accuracy.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
 
+\subsection*{19. High Temperature Operation Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify the smart lock’s ability to operate correctly when internal temperature exceeds 80 °C.
+    \item Ensure system stability, sensor accuracy, and safe operation under elevated temperature conditions.
+    \item Identify any thermal shutdown, degradation, or failure modes.
+\end{itemize}
 
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Place the smart lock in an environmental chamber or attic-like setup where temperature can be controlled.
+    \item Gradually increase ambient temperature to exceed 80 °C inside the lock enclosure.
+    \item Monitor system behavior, including lock/unlock commands, sensor readings, and logs.
+    \item Record any faults, error messages, or abnormal operation.
+\end{itemize}
 
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Lock operates normally without unexpected resets or malfunctions.
+          \item Temperature sensor accurately reports temperature exceeding 80 °C.
+          \item System logs thermal condition and, if applicable, triggers thermal protection or warnings.
+          \item No permanent damage or degradation to components.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
 
+\subsection*{20. Low Temperature Operation Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify the smart lock operates correctly at low temperatures down to -10 °C.
+    \item Ensure mechanical components (solenoid, bolt, physical key) function without freezing or sticking.
+    \item Confirm electronic components, sensors, and battery performance remain stable.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Place the smart lock in a controlled environmental chamber set to -10 °C.
+    \item Perform locking and unlocking operations electronically and via physical key.
+    \item Monitor system responsiveness, sensor readings, battery voltage, and any error logs.
+    \item Repeat test cycles to simulate typical usage during cold conditions.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Lock and unlock commands execute successfully without delay or mechanical failure.
+          \item Sensors and electronic systems operate within specified parameters.
+          \item Battery performance supports normal operation at low temperature.
+          \item No freezing, sticking, or damage to mechanical components.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{21. High Humidity and Condensation Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify the smart lock’s PCB and electronics withstand prolonged exposure to high humidity and condensation.
+    \item Ensure no corrosion, shorts, or malfunctions occur due to moisture.
+    \item Confirm system stability and proper operation during and after moisture exposure.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Place the smart lock inside a humidity chamber set to high relative humidity (e.g., 90\% RH) at ambient temperature.
+    \item Introduce temperature cycling to induce condensation on PCB surfaces.
+    \item Operate the lock during and after exposure to monitor functionality.
+    \item Inspect PCB visually for corrosion or moisture damage.
+    \item Perform electrical continuity and insulation resistance tests post-exposure.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Smart lock operates normally during and after humidity exposure.
+          \item No electrical shorts or intermittent failures occur.
+          \item No visible corrosion or damage on PCB or components.
+          \item Insulation resistance and continuity tests remain within specifications.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{22. GPIO Pin Short to Ground Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify system behavior and fault tolerance when a GPIO pin connected to the LED circuit is shorted to ground.
+    \item Ensure no permanent damage occurs to the ESP32 or associated circuitry.
+    \item Confirm the system continues normal operation despite LED failure.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Intentionally short the GPIO pin controlling the LED to ground.
+    \item Power the system and observe behavior of the LED circuit and overall system.
+    \item Monitor for signs of damage such as overheating, crashes, or erratic behavior.
+    \item Check system logs and responses to LED control commands.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item No damage to the ESP32 or LED circuitry.
+          \item System continues to operate normally without resets or faults.
+          \item LED fails to light as expected due to the short.
+          \item System logs indicate LED malfunction or fault if applicable.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{23. OTA Firmware Update Success Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Confirm that the OTA firmware update process completes successfully on the first attempt.
+    \item Ensure the smart lock remains operational and stable during and after the update.
+    \item Verify that the new firmware version is correctly installed and running.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Initiate an OTA firmware update with a known stable firmware build.
+    \item Monitor the update progress for any errors or interruptions.
+    \item After completion, verify the firmware version and system functionality.
+    \item Perform standard lock/unlock operations to confirm normal behavior.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item OTA update completes without errors or retries.
+          \item Smart lock boots into new firmware version successfully.
+          \item Normal operation resumes immediately after update.
+          \item No data loss or configuration resets occur.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{24. OTA Update Failure and Rollback Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that the smart lock safely handles OTA update interruptions during mid-download.
+    \item Confirm the system automatically rolls back to the prior stable firmware version.
+    \item Ensure no corruption or bricking occurs, maintaining device operability.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Initiate an OTA firmware update.
+    \item Simulate failure by interrupting the download mid-transfer (e.g., disconnect network or power).
+    \item Power cycle the device and observe boot behavior.
+    \item Verify the device boots the previous firmware version without errors.
+    \item Test normal lock/unlock functionality after rollback.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Device detects incomplete or corrupted OTA update.
+          \item Automatically rolls back to the previous firmware version.
+          \item Device boots successfully without entering a bricked state.
+          \item Lock functions correctly with prior firmware after rollback.
+          \item System logs the failed update and rollback event.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{25. API Rate Limiting and HTTP 429 Handling Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify the system correctly handles HTTP 429 (Too Many Requests) responses from the cloud API.
+    \item Ensure the smart lock firmware gracefully responds to rate limiting without crashing or excessive retries.
+    \item Confirm that the system backs off and retries after appropriate delay.
+    \item Prevent denial of service or degraded performance due to API flooding.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Simulate flooding the API with a high volume of status poll requests from the homeowner’s app or device.
+    \item Monitor cloud API to confirm it returns HTTP 429 responses when rate limit exceeded.
+    \item Observe smart lock’s firmware handling of HTTP 429 errors.
+    \item Verify backoff and retry logic in firmware triggers correctly.
+    \item Check logs for proper error handling and user notifications if applicable.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Smart lock detects HTTP 429 responses and throttles request rate accordingly.
+          \item Firmware implements exponential backoff or delay before retrying.
+          \item System maintains stability without crashes or excessive resource use.
+          \item Logs reflect rate limiting events and retry attempts.
+          \item User experience remains smooth with appropriate notifications if needed.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{26. SSL Certificate Expiration Handling Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that the smart lock firmware correctly detects and handles HTTPS connection failures due to an expired SSL certificate.
+    \item Ensure the device does not connect to an insecure or unverified server.
+    \item Confirm the system logs the certificate error and avoids attempting unsafe retries.
+    \item Protect against man-in-the-middle (MITM) attacks due to expired or invalid SSL credentials.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Deploy a test cloud server with an expired SSL certificate.
+    \item Configure the smart lock to connect to this server via HTTPS.
+    \item Observe the connection attempt and firmware response.
+    \item Monitor log output, retry logic, and whether any unsafe fallback behavior occurs.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Smart lock rejects the connection due to SSL expiration.
+          \item Connection attempt fails securely with no data transmitted.
+          \item Logs clearly indicate certificate expiration or validation error.
+          \item Firmware does not retry continuously or bypass security checks.
+          \item Optional: User is notified of the connectivity issue.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{27. JWT Expiration and Cloud Authentication Rejection Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure the smart lock properly handles expired JWT tokens used for cloud authentication.
+    \item Confirm that cloud services reject expired tokens and deny command execution.
+    \item Verify that the firmware identifies the expired token and requests a valid replacement.
+    \item Prevent unauthorized or unintended command execution with stale credentials.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Allow the JWT token to expire naturally or use a deliberately expired token.
+    \item Attempt to send a command (e.g., unlock or status update) to the cloud using the expired token.
+    \item Observe the response from the cloud (e.g., HTTP 401 Unauthorized).
+    \item Check the smart lock’s behavior for error handling, re-authentication attempts, and retry logic.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Cloud rejects commands using the expired JWT with an appropriate error.
+          \item Firmware identifies the expired token and requests a new one.
+          \item Token renewal succeeds and command is retried with valid credentials.
+          \item No unauthorized access or unintended behavior occurs.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{28. SPI Flash Corruption and Boot Configuration Error Handling Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify the system can detect and handle corrupted SPI flash data.
+    \item Ensure the device fails gracefully and does not enter an unstable or undefined state.
+    \item Confirm that the firmware provides recovery options, such as default fallback config or safe mode.
+    \item Prevent bricking or incorrect behavior due to unreadable configuration data.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Intentionally corrupt the configuration section of the SPI flash (e.g., overwrite with invalid or random data).
+    \item Reboot the smart lock and observe its behavior during initialization.
+    \item Check system logs and debug output for detection and reporting of the corruption.
+    \item Evaluate whether the system uses fallback defaults or enters a known safe state.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Firmware detects SPI flash corruption during boot.
+          \item Lock enters safe mode or loads default configuration.
+          \item Device does not crash, freeze, or act unpredictably.
+          \item Logs include clear error message for corrupted config.
+          \item Optional: App or user is notified to reconfigure settings.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{29. Flash Storage Full During OTA Update Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that the smart lock correctly handles a full flash partition when attempting to download a new OTA firmware image.
+    \item Prevent partial or corrupted firmware installs due to insufficient storage.
+    \item Confirm that the system preserves the current working firmware without entering an unstable state.
+    \item Provide user/system feedback about the failure and recovery options.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Fill the OTA or update-designated flash partition with dummy data until it is full.
+    \item Initiate an OTA firmware update.
+    \item Monitor the download process, system logs, and error handling behavior.
+    \item Observe whether the current firmware remains operational and the device remains in a known-safe state.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item OTA image download fails cleanly due to lack of space.
+          \item System logs indicate "insufficient storage" or related error.
+          \item Current firmware remains untouched and fully functional.
+          \item No reboot, crash, or undefined behavior occurs.
+          \item Optional: User/app is notified of the failed update and reason.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+\subsection*{30. MQTT Message Checksum Error Handling Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure the smart lock firmware verifies the integrity of received MQTT messages.
+    \item Confirm that messages with invalid checksums are rejected and not processed.
+    \item Prevent unauthorized or malformed data from causing undesired system behavior.
+    \item Maintain communication security and device stability.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Simulate an MQTT message with an intentionally altered payload or corrupted checksum.
+    \item Send the malformed message to the smart lock via its subscribed MQTT topic.
+    \item Monitor whether the message is ignored or improperly processed.
+    \item Check logs or debug output for validation failures or dropped-message indicators.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Message is dropped without triggering any action.
+          \item Log entry or internal handler flags checksum mismatch.
+          \item Device state remains unchanged and stable.
+          \item No crash, hang, or unintended execution occurs.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+% End for Common Scenarios (Tests 1 - 30)
 
 \newpage
 \subsection{Less Common Scenarios (Tests 31–40)}
