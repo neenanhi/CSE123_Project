@@ -1074,8 +1074,45 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+\subsection*{30. MQTT Message Checksum Error Handling Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure the smart lock firmware verifies the integrity of received MQTT messages.
+    \item Confirm that messages with invalid checksums are rejected and not processed.
+    \item Prevent unauthorized or malformed data from causing undesired system behavior.
+    \item Maintain communication security and device stability.
+\end{itemize}
 
-% End for Common Scenarios (Tests 1 - 20)
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Simulate an MQTT message with an intentionally altered payload or corrupted checksum.
+    \item Send the malformed message to the smart lock via its subscribed MQTT topic.
+    \item Monitor whether the message is ignored or improperly processed.
+    \item Check logs or debug output for validation failures or dropped-message indicators.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Message is dropped without triggering any action.
+          \item Log entry or internal handler flags checksum mismatch.
+          \item Device state remains unchanged and stable.
+          \item No crash, hang, or unintended execution occurs.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+% End for Common Scenarios (Tests 1 - 30)
 
 \newpage
 \subsection{Less Common Scenarios (Tests 31–40)}
