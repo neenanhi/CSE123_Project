@@ -1,42 +1,5 @@
 \newpage
 \begin{samepage}
-\subsection*{61. Cosmic Ray Bit-Flip Test}
-
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Evaluate the system’s resilience to random memory errors caused by cosmic ray-induced bit flips.
-    \item Ensure no critical system failures occur due to single-event upsets.
-\end{itemize}
-
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Use a software simulator to inject random bit flips into RAM and flash every 10 seconds.
-    \item Observe the system for stability and recovery behavior over a 24-hour period.
-\end{itemize}
-
-\subparagraph{Expectations of Test}
-\begin{center}
-\begin{tabular}{|c|p{10cm}|}
-  \hline
-  \textbf{Result} & \textbf{Conditions} \\
-  \hline
-  \textbf{PASS} &
-    \begin{minipage}[t]{\linewidth}
-    \begin{itemize}
-      \item System detects, corrects, or isolates bit errors without crashing.
-      \item No data corruption in critical areas.
-      \item Normal operation resumes automatically after error correction.\\
-    \end{itemize}
-    \end{minipage} \\
-  \hline
-  \textbf{FAIL} & Persistent system crashes, lockouts, or permanent data corruption. \\
-  \hline
-\end{tabular}
-\end{center}
-\end{samepage}
-
-\newpage
-\begin{samepage}
 \subsection*{62. Lightning Surge Test}
 
 \subparagraph{Test Goals and Purpose}
@@ -182,3 +145,175 @@
 \end{tabular}
 \end{center}
 \end{samepage}
+
+\newpage
+\begin{samepage}
+\subsection*{66. Cosmic Ray Bit-Flip Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Evaluate the system’s resilience to random memory errors caused by cosmic ray-induced bit flips.
+    \item Ensure no critical system failures occur due to single-event upsets.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Use a software simulator to inject random bit flips into RAM and flash every 10 seconds.
+    \item Observe the system for stability and recovery behavior over a 24-hour period.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item System detects, corrects, or isolates bit errors without crashing.
+      \item No data corruption in critical areas.
+      \item Normal operation resumes automatically after error correction.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Persistent system crashes, lockouts, or permanent data corruption. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 67
+
+
+\newpage
+\begin{samepage}
+\subsection*{67. Wiring Pinch or Stress During Installation Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Check if wires or cables get pinched or bent during installation on different doors.
+    \item Make sure wiring stress doesn’t cause problems later.
+    \item See if cable protection or strain relief features are needed.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Install the lock on several types of doors (wood, metal, composite).
+    \item Watch how wires are positioned and if they get pinched or caught.
+    \item Test lock function after installation to see if any wires are damaged or loose.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Wires are not pinched, cut, or stressed during installation.
+      \item Lock works normally after install, with no random resets or signal errors.
+      \item Cables are neat and protected from sharp edges.
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Wires are pinched or damaged during install, causing random errors or no unlock function. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+
+% 68
+
+
+\newpage
+\begin{samepage}
+\subsection*{68. Internal Temperature Rise Under Heavy Use Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Confirm that repeated usage of the lock does not cause overheating.
+    \item Check that sensors and electronics keep working properly even when it’s warm inside the lock.
+    \item See if adding software-based limits (like usage pauses) could be useful to avoid issues.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item In a warm room, repeatedly unlock and lock the system 20 times in a row.
+    \item Use a temperature sensor or thermal camera to watch internal temperatures.
+    \item Look for delayed responses, sensor errors, or other abnormal behavior.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Internal temperature stays within safe range (e.g., below 60 degrees Celsius).
+      \item Lock still unlocks and sensors report correctly.
+      \item No errors or auto-shutdown triggered.
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Internal temperature gets too high and lock malfunctions, sensors report wrong data, or unlocks slow down. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 69
+
+
+\newpage
+\begin{samepage}
+\subsection*{69. Battery Voltage Sag Under Load Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Check how the lock’s electronics handle a temporary battery voltage drop during heavy use.
+    \item Make sure there are no false “low battery” warnings or unexpected resets when the solenoid or motor is active.
+    \item See if a voltage filter or hardware change could help improve reliability.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Fully charge the battery, then simulate repeated unlock commands to put load on the solenoid.
+    \item Measure voltage at the battery terminals while activating the lock.
+    \item Watch for system behavior: false warnings, resets, or unlock failures.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item System ignores short-lived voltage drops and keeps working normally.
+      \item No low-battery warning triggers unless battery is truly low.
+      \item No resets, crashes, or unlock failures happen during high current draw.
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & System triggers false low-battery alerts, resets, or fails to unlock when battery voltage dips briefly. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+
+
+
