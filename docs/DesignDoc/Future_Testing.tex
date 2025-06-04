@@ -533,42 +533,45 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \end{center}
 
 \newpage
-\subsection*{14. Solenoid Jam Detection Test}
+\begin{samepage}
+\subsection*{14. Installation on Different Standard Doors Test}
+
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Verify that the system detects when the solenoid fails to complete its movement due to physical obstruction.
-    \item Ensure that the system does not enter an unsafe or unknown state.
-    \item Confirm that the system times out the unlock operation and alerts the user appropriately.
+    \item Make sure the lock can be easily installed on different common door types.
+    \item Check that the lock works well on both wood and metal doors of standard sizes.
+    \item Confirm that the lock stays secure and works normally after installation.
 \end{itemize}
 
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Manually obstruct the solenoid or insert debris to simulate a jam in the latch.
-    \item Send an unlock command via keypad or Postgres.
-    \item Observe whether the solenoid attempts to actuate, fails, and triggers timeout logic.
-    \item Check system logs, app notifications, and Postgres status.
+    \item Pick three types of doors (e.g., solid wood, metal, composite) with standard thickness (e.g., 1.75 inches).
+    \item Follow the installation instructions to attach the lock to each door.
+    \item Test if the lock works (lock/unlock) after installation on each door type.
+    \item Look for gaps, loose fittings, or any mechanical issues.
 \end{itemize}
 
 \subparagraph{Expectations of Test}
 \begin{center}
-    \begin{tabular}{|c|p{10cm}|}
-      \hline
-      \textbf{Result} & \textbf{Conditions} \\
-      \hline
-      \textbf{PASS} & 
-        \begin{minipage}[t]{\linewidth}
-        \begin{itemize}
-          \item Solenoid attempt is detected and terminated within a defined timeout window (e.g., 3 seconds).
-          \item System logs a “Mechanical Jam Detected” or similar error.
-          \item Postgres reflects failure or stuck status.
-          \item App displays a warning to the user (e.g., “Unlock Failed – Check Lock Mechanism”).\\
-        \end{itemize}
-        \end{minipage} \\
-      \hline
-      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
-      \hline
-    \end{tabular}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Lock installs securely on all tested door types.
+      \item Lock and unlock functions work without sticking or misalignment.
+      \item No gaps, wobbles, or looseness in the lock after installation.
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any one of the PASS conditions is missing or if the lock cannot be securely mounted. \\
+  \hline
+\end{tabular}
 \end{center}
+\end{samepage}
+
 
 
 \newpage
@@ -690,42 +693,42 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 
 
 \newpage
-\subsection*{18. RTC Drift Test After Offline Period}
+\begin{samepage}
+\subsection*{18. Break Lock Casing by Hand Test}
+
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Measure the time drift of the ESP32’s RTC after prolonged offline operation (e.g., one week without network time synchronization).
-    \item Assess whether the RTC accuracy meets system requirements for timestamping events and logs.
-    \item Determine if corrective measures (e.g., periodic NTP sync) are necessary.
+    \item Check if the lock casing can withstand someone trying to break it by hand.
+    \item Make sure the casing protects the lock’s inner parts and doesn’t break easily.
 \end{itemize}
 
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Synchronize the ESP32’s RTC to accurate time (e.g., via NTP).
-    \item Disconnect the device from the network and keep powered for one week.
-    \item After one week, compare the ESP32 RTC time against a reference clock (e.g., atomic clock, smartphone).
-    \item Record the time difference (drift) in minutes.
+    \item Try to pull, bend, or twist the lock casing with normal hand strength.
+    \item Use only hands—no tools or extra force.
+    \item Check for cracks, breaks, or anything that makes the lock easier to tamper with.
 \end{itemize}
 
 \subparagraph{Expectations of Test}
 \begin{center}
-    \begin{tabular}{|c|p{10cm}|}
-      \hline
-      \textbf{Result} & \textbf{Conditions} \\
-      \hline
-      \textbf{PASS} & 
-        \begin{minipage}[t]{\linewidth}
-        \begin{itemize}
-          \item RTC drift is less than or equal to 1 minute after one week offline.
-          \item System logs reflect consistent and accurate timestamps.
-          \item No significant impact on event timing or logging accuracy.\\
-        \end{itemize}
-        \end{minipage} \\
-      \hline
-      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
-      \hline
-    \end{tabular}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Casing stays solid and does not crack or break.
+      \item Lock keeps working as normal after the test.
+      \item No gaps or looseness appear in the casing.
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Casing cracks, bends out of shape, or the lock stops working right after the test. \\
+  \hline
+\end{tabular}
 \end{center}
-
+\end{samepage}
 
 \newpage
 \subsection*{19. High Temperature Operation Test}
@@ -1663,29 +1666,6 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \end{samepage}
 
 \input{43_and_beyond.tex}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 \input{Rare_Scenarios.tex}
