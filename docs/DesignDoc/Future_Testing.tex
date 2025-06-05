@@ -332,6 +332,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
     \end{center}
 
+
+    \newpage
 \subsection*{10. Battery Fully Drained Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -366,6 +368,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
     \end{center}
 
+
+\newpage
 \subsection*{11. Power Surge Resilience Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -401,6 +405,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
     \end{center}
 
+\newpage
 \subsection*{12. Mid-Unlock Reboot Recovery Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -428,7 +433,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item Device reboots without hardware fault.
           \item Lock resumes to the correct and safe final position (locked or unlocked).
           \item State in Firestore is updated accurately post-recovery.
-          \item System logs include a reboot event and status report.
+          \item System logs include a reboot event and status report.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -437,6 +442,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+\newpage
 \subsection*{13. Duplicate Cloud Command Handling Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -465,7 +471,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item Lock actuates only once for the initial command.
           \item Second duplicate message is ignored safely.
           \item System logs indicate duplicate command was received and skipped.
-          \item No mechanical movement or audible actuation occurs on duplicate.
+          \item No mechanical movement or audible actuation occurs on duplicate.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -474,6 +480,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+\newpage
 \subsection*{14. Solenoid Jam Detection Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -502,7 +509,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item Solenoid attempt is detected and terminated within a defined timeout window (e.g., 3 seconds).
           \item System logs a “Mechanical Jam Detected” or similar error.
           \item Firestore reflects failure or stuck status.
-          \item App displays a warning to the user (e.g., “Unlock Failed – Check Lock Mechanism”).
+          \item App displays a warning to the user (e.g., “Unlock Failed – Check Lock Mechanism”).\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -511,6 +518,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+
+\newpage
 \subsection*{15. Physical Key Override While Powered Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -539,7 +548,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item Manual override is mechanically smooth and does not interfere with solenoid.
           \item System detects state change via sensor (e.g., magnetic or position feedback).
           \item Firestore and app update to reflect new lock state.
-          \item Subsequent electronic commands work normally without misalignment.
+          \item Subsequent electronic commands work normally without misalignment.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -548,6 +557,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+\newpage
 \subsection*{16. Hall-Sensor Noise Rejection Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -585,6 +595,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+\newpage
 \subsection*{17. I²C Temperature Sensor Fault Tolerance Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -613,7 +624,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item System does not crash, hang, or misbehave when invalid data is received.
           \item Invalid temperature readings are ignored or marked as “error” in logs.
           \item Firestore/app either retains last valid value or displays "unavailable".
-          \item Normal readings resume once sensor stabilizes.
+          \item Normal readings resume once sensor stabilizes.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -622,6 +633,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+
+\newpage
 \subsection*{18. RTC Drift Test After Offline Period}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -649,7 +662,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \begin{itemize}
           \item RTC drift is less than or equal to 1 minute after one week offline.
           \item System logs reflect consistent and accurate timestamps.
-          \item No significant impact on event timing or logging accuracy.
+          \item No significant impact on event timing or logging accuracy.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -658,6 +671,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+
+\newpage
 \subsection*{19. High Temperature Operation Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -686,7 +701,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item Lock operates normally without unexpected resets or malfunctions.
           \item Temperature sensor accurately reports temperature exceeding 80 °C.
           \item System logs thermal condition and, if applicable, triggers thermal protection or warnings.
-          \item No permanent damage or degradation to components.
+          \item No permanent damage or degradation to components.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -695,6 +710,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+
+\newpage
 \subsection*{20. Low Temperature Operation Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -723,7 +740,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item Lock and unlock commands execute successfully without delay or mechanical failure.
           \item Sensors and electronic systems operate within specified parameters.
           \item Battery performance supports normal operation at low temperature.
-          \item No freezing, sticking, or damage to mechanical components.
+          \item No freezing, sticking, or damage to mechanical components.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -732,6 +749,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+
+\newpage
 \subsection*{21. High Humidity and Condensation Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -761,7 +780,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item Smart lock operates normally during and after humidity exposure.
           \item No electrical shorts or intermittent failures occur.
           \item No visible corrosion or damage on PCB or components.
-          \item Insulation resistance and continuity tests remain within specifications.
+          \item Insulation resistance and continuity tests remain within specifications.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -770,6 +789,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+
+\newpage
 \subsection*{22. GPIO Pin Short to Ground Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -798,7 +819,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item No damage to the ESP32 or LED circuitry.
           \item System continues to operate normally without resets or faults.
           \item LED fails to light as expected due to the short.
-          \item System logs indicate LED malfunction or fault if applicable.
+          \item System logs indicate LED malfunction or fault if applicable.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -807,6 +828,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+
+\newpage
 \subsection*{23. OTA Firmware Update Success Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -835,7 +858,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item OTA update completes without errors or retries.
           \item Smart lock boots into new firmware version successfully.
           \item Normal operation resumes immediately after update.
-          \item No data loss or configuration resets occur.
+          \item No data loss or configuration resets occur.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -844,6 +867,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+
+\newpage
 \subsection*{24. OTA Update Failure and Rollback Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -874,7 +899,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item Automatically rolls back to the previous firmware version.
           \item Device boots successfully without entering a bricked state.
           \item Lock functions correctly with prior firmware after rollback.
-          \item System logs the failed update and rollback event.
+          \item System logs the failed update and rollback event.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -883,6 +908,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+
+\newpage
 \subsection*{25. API Rate Limiting and HTTP 429 Handling Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -914,7 +941,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item Firmware implements exponential backoff or delay before retrying.
           \item System maintains stability without crashes or excessive resource use.
           \item Logs reflect rate limiting events and retry attempts.
-          \item User experience remains smooth with appropriate notifications if needed.
+          \item User experience remains smooth with appropriate notifications if needed.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -923,6 +950,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+
+\newpage
 \subsection*{26. SSL Certificate Expiration Handling Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -953,7 +982,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item Connection attempt fails securely with no data transmitted.
           \item Logs clearly indicate certificate expiration or validation error.
           \item Firmware does not retry continuously or bypass security checks.
-          \item Optional: User is notified of the connectivity issue.
+          \item Optional: User is notified of the connectivity issue.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -962,6 +991,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+
+\newpage
 \subsection*{27. JWT Expiration and Cloud Authentication Rejection Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -991,7 +1022,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item Cloud rejects commands using the expired JWT with an appropriate error.
           \item Firmware identifies the expired token and requests a new one.
           \item Token renewal succeeds and command is retried with valid credentials.
-          \item No unauthorized access or unintended behavior occurs.
+          \item No unauthorized access or unintended behavior occurs.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -1000,6 +1031,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+
+\newpage
 \subsection*{28. SPI Flash Corruption and Boot Configuration Error Handling Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -1030,7 +1063,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item Lock enters safe mode or loads default configuration.
           \item Device does not crash, freeze, or act unpredictably.
           \item Logs include clear error message for corrupted config.
-          \item Optional: App or user is notified to reconfigure settings.
+          \item Optional: App or user is notified to reconfigure settings.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -1039,6 +1072,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+
+\newpage
 \subsection*{29. Flash Storage Full During OTA Update Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -1069,7 +1104,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item System logs indicate "insufficient storage" or related error.
           \item Current firmware remains untouched and fully functional.
           \item No reboot, crash, or undefined behavior occurs.
-          \item Optional: User/app is notified of the failed update and reason.
+          \item Optional: User/app is notified of the failed update and reason.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -1078,6 +1113,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
+
+\newpage
 \subsection*{30. MQTT Message Checksum Error Handling Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -1107,7 +1144,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
           \item Message is dropped without triggering any action.
           \item Log entry or internal handler flags checksum mismatch.
           \item Device state remains unchanged and stable.
-          \item No crash, hang, or unintended execution occurs.
+          \item No crash, hang, or unintended execution occurs.\\
         \end{itemize}
         \end{minipage} \\
       \hline
