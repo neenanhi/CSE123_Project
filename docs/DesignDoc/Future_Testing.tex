@@ -664,7 +664,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Command the ESP32 to toggle the solenoid relay 500 times rapidly (like 1 Hz or faster).
+    \item Command the ESP32 to toggle the solenoid relay 500 times rapidly (like 1 Hz or faster).
     \item Watch for stuck relay, missed commands, or system resets.
     \item Confirm the lock still functions normally after the stress test.
 \end{itemize}
@@ -928,46 +928,43 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
-
 \newpage
 \begin{samepage}
-\subsection*{24. OTA Update Failure and Rollback Test}
+\subsection*{24. Data Logging Consistency Test}
+
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Verify that the smart lock safely handles OTA update interruptions during mid-download.
-    \item Confirm the system automatically rolls back to the prior stable firmware version.
-    \item Ensure no corruption or bricking occurs, maintaining device operability.
+    \item Make sure every unlock and lock event is properly recorded in the logs or Postgres.
+    \item Check for missing or duplicated log entries.
 \end{itemize}
 
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Initiate an OTA firmware update.
-    \item Simulate failure by interrupting the download mid-transfer (e.g., disconnect network or power).
-    \item Power cycle the device and observe boot behavior.
-    \item Verify the device boots the previous firmware version without errors.
-    \item Test normal lock/unlock functionality after rollback.
+    \item Perform 10 unlock/lock cycles in a row.
+    \item Use a valid PIN for each cycle.
+    \item Use invalid PINs to test rejection.
+    \item Compare physical lock state changes to the logs in Postgres.
+    \item Check timestamps and event types.
 \end{itemize}
 
 \subparagraph{Expectations of Test}
 \begin{center}
-    \begin{tabular}{|c|p{10cm}|}
-      \hline
-      \textbf{Result} & \textbf{Conditions} \\
-      \hline
-      \textbf{PASS} & 
-        \begin{minipage}[t]{\linewidth}
-        \begin{itemize}
-          \item Device detects incomplete or corrupted OTA update.
-          \item Automatically rolls back to the previous firmware version.
-          \item Device boots successfully without entering a bricked state.
-          \item Lock functions correctly with prior firmware after rollback.
-          \item System logs the failed update and rollback event.\\
-        \end{itemize}
-        \end{minipage} \\
-      \hline
-      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
-      \hline
-    \end{tabular}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Every physical event has a matching log entry.
+      \item No duplicated or missing log entries.
+      \item Timestamps align with real-world event timing.
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Logs are missing events, have duplicates, or show wrong timestamps. \\
+  \hline
+\end{tabular}
 \end{center}
 \end{samepage}
 
@@ -1104,47 +1101,41 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \end{center}
 \end{samepage}
 
-
 \newpage
 \begin{samepage}
+\subsection*{28. App Command Rejection for Wrong Lock State Test}
 
-\subsection*{28. SPI Flash Corruption and Boot Configuration Error Handling Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Verify the system can detect and handle corrupted SPI flash data.
-    \item Ensure the device fails gracefully and does not enter an unstable or undefined state.
-    \item Confirm that the firmware provides recovery options, such as default fallback config or safe mode.
-    \item Prevent bricking or incorrect behavior due to unreadable configuration data.
+    \item Ensure that the lock does not try to unlock if already unlocked, or lock again if already locked.
+    \item Prevent wasted power and mechanical wear from unnecessary commands.
 \end{itemize}
 
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Intentionally corrupt the configuration section of the SPI flash (e.g., overwrite with invalid or random data).
-    \item Reboot the smart lock and observe its behavior during initialization.
-    \item Check system logs and debug output for detection and reporting of the corruption.
-    \item Evaluate whether the system uses fallback defaults or enters a known safe state.
+    \item Manually set the lock to the unlocked state.
+    \item From the app, send an unlock command while it’s already unlocked.
+    \item Observe lock behavior and check logs.
 \end{itemize}
 
 \subparagraph{Expectations of Test}
 \begin{center}
-    \begin{tabular}{|c|p{10cm}|}
-      \hline
-      \textbf{Result} & \textbf{Conditions} \\
-      \hline
-      \textbf{PASS} & 
-        \begin{minipage}[t]{\linewidth}
-        \begin{itemize}
-          \item Firmware detects SPI flash corruption during boot.
-          \item Lock enters safe mode or loads default configuration.
-          \item Device does not crash, freeze, or act unpredictably.
-          \item Logs include clear error message for corrupted config.
-          \item Optional: App or user is notified to reconfigure settings.\\
-        \end{itemize}
-        \end{minipage} \\
-      \hline
-      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
-      \hline
-    \end{tabular}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Lock ignores duplicate commands for the current state.
+      \item No duplicate mechanical actuation happens.
+      \item Logs show the duplicate command was rejected safely.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Lock tries to unlock again, wasting power or causing errors. \\
+  \hline
+\end{tabular}
 \end{center}
 \end{samepage}
 
