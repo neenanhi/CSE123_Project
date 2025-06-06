@@ -1,0 +1,177 @@
+\newpage
+\begin{samepage}
+\subsection*{43. Water Resistance Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that the lock's outer case and electronics remain operational when exposed to rain or moisture.
+    \item Ensure that no short circuits or corrosion occur during or after water exposure.
+    \item Confirm that the lock can still perform basic functions like unlocking and status reporting.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Simulate light rain by spraying water evenly over the lock case for 5 minutes.
+    \item Observe lock functionality during and immediately after spraying:
+    \begin{itemize}
+        \item Check that the lock can still unlock using a valid PIN.
+        \item Ensure no error messages or power resets occur.
+    \end{itemize}
+    \item After drying, inspect the internal electronics for any signs of water damage or corrosion.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Lock remains fully functional during and after water exposure.
+      \item No electrical shorts, corrosion, or reset events occur.
+      \item All mechanical and electronic components remain dry internally.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any sign of malfunction during rain simulation (e.g., lock won’t open, short circuits, or visible internal corrosion). \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 44
+
+\newpage
+\begin{samepage}
+\subsection*{44. Shock and Vibration Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure the lock case and internal electronics can withstand physical shocks and vibrations from door slams or impacts.
+    \item Verify no functional or cosmetic damage occurs after simulated impacts.
+    \item Confirm the lock can still unlock and report status accurately.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Apply mechanical shocks by gently striking the door or lock case with a rubber mallet.
+    \item Simulate door vibration by rapidly opening and closing the door multiple times.
+    \item Observe lock operation before, during, and after the tests:
+    \begin{itemize}
+        \item Enter a valid PIN and check if the lock unlocks.
+        \item Look for physical cracks or alignment issues.
+    \end{itemize}
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item No damage to lock case or internal parts.
+      \item Lock unlocks normally with correct PIN after shocks and vibrations.
+      \item No rattling or misalignment in case parts.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any malfunction or visible damage (e.g., broken parts, misalignment, or failed unlock test). \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 45
+
+\newpage
+\begin{samepage}
+\subsection*{45. Tamper Detection Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Confirm that the lock’s tamper detection mechanism functions properly.
+    \item Verify that tamper attempts (like partially opening the case) trigger the correct alerts.
+    \item Ensure no false triggers during normal operation.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Slightly loosen or pry the case to simulate forced access.
+    \item Observe lock behavior during and after this attempt:
+    \begin{itemize}
+        \item Check if LED indicator blinks or an alarm sounds.
+        \item Verify that a “tamper event” is logged in Firestore if online.
+    \end{itemize}
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Tamper detection is triggered immediately when the case is pried.
+      \item Alarm or LED indicator responds as intended.
+      \item Event logged in Firestore if Wi-Fi is available.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & No alarm, no LED blink, or no Firestore log during tamper simulation. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+% 46
+
+
+\newpage
+\begin{samepage}
+\subsection*{46. EMI (Electromagnetic Interference) Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that the lock continues to operate normally when exposed to common sources of RF noise.
+    \item Ensure no false unlocking or failures occur due to nearby electromagnetic fields.
+    \item Test for overall robustness in environments like commercial buildings with many RF devices.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Place RF devices (like a Wi-Fi router, handheld radio, or microwave) near the lock while it’s running.
+    \item Enter a valid PIN and observe lock behavior for delays or malfunctions.
+    \item Test communication with Firestore (if Wi-Fi is available) to ensure no RF interference.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item No changes in lock response time or behavior.
+      \item Lock still unlocks with valid PIN.
+      \item Communication with Firestore (if available) remains stable.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Lock fails to respond, false unlocks, or data issues during RF exposure. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
