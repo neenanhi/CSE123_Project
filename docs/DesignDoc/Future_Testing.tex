@@ -7,14 +7,14 @@
     \subparagraph{Test Goals and Purpose}
     \begin{itemize}
         \item Verify that a recognized 4-digit PIN unlocks the door without unnecessary delay.
-        \item Check that the system logs this event as a successful access in Firestore.
+        \item Check that the system logs this event as a successful access in Postgres.
     \end{itemize}
     \subparagraph{How We Test It}
     \begin{enumerate}
         \item Select a PIN known to be valid from the internal list.
         \item Enter the PIN once on the keypad.
         \item Observe the system's response, checking for physical bolt movement and UI changes on the mobile application.
-        \item Look for updates to the (\texttt{LOCK\_STATE}) value in Firestore.
+        \item Look for updates to the (\texttt{LOCK\_STATE}) value in Postgres.
     \end{enumerate}
     
     \textbf{Expectations of Test}
@@ -23,7 +23,7 @@
       \hline
       \textbf{Result} & \textbf{Conditions} \\
       \hline
-      PASS & Bolt retracts within \textless{}0.5\,s; \texttt{LOCK\_STATE}=1; Firestore log entry \emph{success}. \\
+      PASS & Bolt retracts within \textless{}0.5\,s; \texttt{LOCK\_STATE}=1; Postgres log entry \emph{success}. \\
       \hline
       FAIL & Any deviation from the above timing, state, or logging behaviour. \\
       \hline
@@ -60,7 +60,7 @@
       \item Keypad flashes red and/or beeps immediately after the \textbf{third} wrong entry.
       \item No further PINs are accepted for the lockout period (default: 60 s).
       \item Mobile app log shows “3 invalid PIN attempts – lock is temporarily disabled” within 5 s.
-      \item Firestore records \texttt{LOCKOUT\_COUNT = 3} and \texttt{LOCK\_STATE = 0}.\\
+      \item Postgres records \texttt{LOCKOUT\_COUNT = 3} and \texttt{LOCK\_STATE = 0}.\\
     \end{itemize}
     \end{minipage} \\ 
   \hline
@@ -90,9 +90,9 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \item Confirm after each incorrect PIN attempt (\texttt{LOCK\_STATE} = 1).
         \item Immediately enter the emergency PIN once the lockout state is active.
         \item Observe the lock mechanism (it should retract).
-        \item Monitor Firestore to verify an EMERGENCY\_UNLOCK entry is created.
+        \item Monitor Postgres to verify an EMERGENCY\_UNLOCK entry is created.
         \item Owner's phone should be notified and the mobile application should display that the emergency PIN was used.
-        \item In Firestore, confirm that \texttt{LOCKOUT\_COUNT} resets to 0 and \texttt{LOCK\_STATE} becomes 1.
+        \item In Postgres, confirm that \texttt{LOCKOUT\_COUNT} resets to 0 and \texttt{LOCK\_STATE} becomes 1.
     \end{itemize}
     \subparagraph{Expectations of Test}
     \begin{center}
@@ -104,9 +104,9 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \begin{minipage}[t]{\linewidth}
         \begin{itemize}
           \item Door unlocks immediately upon entering the emergency PIN.
-          \item \texttt{LOCKOUT\_COUNT} is reset to 0 and \texttt{LOCK\_STATE = 1} in Firestore.
+          \item \texttt{LOCKOUT\_COUNT} is reset to 0 and \texttt{LOCK\_STATE = 1} in Postgres.
           \item Mobile app shows “Emergency unlock used” notification within 5 s.
-          \item Firestore contains a new \texttt{EMERGENCY\_UNLOCK} event entry. \\
+          \item Postgres contains a new \texttt{EMERGENCY\_UNLOCK} event entry. \\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -146,10 +146,10 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \begin{minipage}[t]{\linewidth}
         \begin{itemize}
           \item Valid OTPs allow immediate unlock
-          \item \texttt{LOCK\_STATE = 1} in Firestore.
+          \item \texttt{LOCK\_STATE = 1} in Postgres.
           \item Door automatically locks itself after 10 s
           \item Mobile app shows "OTP unlock used” notification within 5 s.
-          \item Firestore captures the OTP with a clear expiry time.
+          \item Postgres captures the OTP with a clear expiry time.
           \item Expired or incorrect OTPs are properly rejected with no unlock attempt. \\
         \end{itemize}
         \end{minipage} \\
@@ -180,7 +180,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \begin{minipage}[t]{\linewidth}
         \begin{itemize}
           \item Lock remains unchanged and secure—no movement or unlock occurs.
-          \item Firestore logs the expired OTP attempt explicitly.
+          \item Postgres logs the expired OTP attempt explicitly.
           \item App and/or interface display an "OTP expired" notification. \\
         \end{itemize}
         \end{minipage} \\
@@ -215,7 +215,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \begin{itemize}
           \item Alarm beeps continuously for spec duration (e.g., 30s).
           \item Bolt remains locked (LOCK\_STATE = 0).
-          \item Firestore logs each failed attempt and alarm event.
+          \item Postgres logs each failed attempt and alarm event.
           \item Correct PIN after alarm silences alarm and unlocks door. \\
         \end{itemize}
         \end{minipage} \\
@@ -237,7 +237,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \begin{itemize}
     \item From two phones, send unlock API calls within 100 ms.
     \item Watch bolt movement and LOCK\_STATE.
-    \item Check Firestore for two event entries.
+    \item Check Postgres for two event entries.
 \end{itemize}
 \subparagraph{Expectations of Test}
 \begin{center}
@@ -260,113 +260,165 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
     \end{center}
 
+% ---------------------------- Test 8 --------------------------------
+
 \newpage
+\begin{samepage}
 \subsection*{8. Offline Fallback PIN Test}
+
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Ensure local PIN entry still works if Wi-Fi drops.
-    \item Verify lock uses cached PIN list.
-    \item Confirm Firestore syncs later.
+    \item Verify that the lock accepts a locally cached valid PIN when Wi-Fi is unavailable.
+    \item Ensure the lock unlocks immediately (no network delay) using the onboard PIN list.
+    \item Confirm that, once Wi-Fi returns, the locally recorded event syncs up to Firestore with an “offline” flag.
 \end{itemize}
+
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Disable Wi-Fi on ESP32, enter valid PIN.
-    \item Observe bolt movement and local log.
-    \item Re-enable Wi-Fi and check Firestore sync.
+    \item Disable Wi-Fi on the ESP32 module.
+    \item Enter a valid PIN on the keypad. The bolt should retract instantly.
+    \item Re-enable Wi-Fi, then check Firestore:
+    \begin{itemize}
+        \item A new unlock event appears, marked with “offline”: true.
+        \item \texttt{LOCK\_STATE} becomes 1 in the cloud.
+    \end{itemize}
 \end{itemize}
+
 \subparagraph{Expectations of Test}
-
 \begin{center}
-    \begin{tabular}{|c|p{10cm}|}
-      \hline
-      \textbf{Result} & \textbf{Conditions} \\
-      \hline
-      \textbf{PASS} &
-        \begin{minipage}[t]{\linewidth}
-        \begin{itemize}
-          \item Door unlocks locally (LOCK\_STATE = 1 locally).
-          \item Event cached and later pushed to Firestore.
-          \item No user-perceived delay in unlocking.
-          \item Sync event marked with “offline” flag. \\
-        \end{itemize}
-        \end{minipage} \\
-      \hline
-      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
-      \hline
-    \end{tabular}
-    \end{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Lock opens locally when Wi-Fi is off, and \texttt{LOCK\_STATE} stays 1 locally.
+      \item Upon Wi-Fi restoration, Firestore shows an “OFFLINE\_UNLOCK” event and \texttt{LOCK\_STATE = 1}.
+      \item No undue delay is observed by the user during offline use.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any PASS condition is missing: either the lock doesn’t open offline, or the cloud log never syncs. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
 
-    \newpage
+% ---------------------------- Test 9 --------------------------------
+\newpage
+\begin{samepage}
 \subsection*{9. Low-Battery Notification Test}
+
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Check notification when battery falls below 10 %.
-    \item Ensure unlock still works at low battery.
-    \item Verify UI warning persists until charge.
+    \item Verify that when the lock’s internal battery drops below 10\%, the system issues a clear low-battery alert.
+    \item Ensure that at low battery ( \(\ge 5\%\) but $<10\%$), normal electronic unlocking still functions without interruption.
+    \item Confirm that the alert persists on the mobile app and/or keypad display until the battery is above 20\%.
+    \item Check that a “LOW\_BATTERY” event, with the correct battery percentage, is logged in Firestore.
 \end{itemize}
+
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Drain battery to 9 %.
-    \item Press unlock PIN and observe behavior.
-    \item Check mobile app for low-battery alert.
+    \item Gradually drain the lock’s battery until the charge indicator reads 9\% (or the system automatically reports “Battery below 10\%”).
+    \item Attempt to unlock the door using a valid PIN. Observe that the bolt still retracts normally.
+    \item Open the mobile app (or check the keypad display) to verify that a “Low Battery” warning is shown.
+    \item In Firestore (or your logging dashboard), confirm that:
+    \begin{itemize}
+        \item A “LOW\_BATTERY” event appears, showing battery level = 9\% (or whatever the actual percentage is when the alert triggered).
+        \item \texttt{LOCK\_STATE} changes to 1 when you entered the valid PIN.
+    \end{itemize}
+    \item Keep operating the lock for multiple cycles (lock/unlock) at low battery to ensure no intermittent failures occur.
+    \item Charge the battery above 20\% (either remove and swap batteries or use a charger). Verify that the “Low Battery” warning clears from the app and keypad.
 \end{itemize}
+\end{samepage}
+
+
+\newpage
+
 \subparagraph{Expectations of Test}
-
 \begin{center}
-    \begin{tabular}{|c|p{10cm}|}
-      \hline
-      \textbf{Result} & \textbf{Conditions} \\
-      \hline
-      \textbf{PASS} &
-        \begin{minipage}[t]{\linewidth}
-        \begin{itemize}
-          \item Door still unlocks (LOCK\_STATE = 1).
-          \item App shows persistent “Low Battery” message.
-          \item Firestore logs battery level event.
-          \item Warning clears only when battery > 20\% \\
-        \end{itemize}
-        \end{minipage} \\
-      \hline
-      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
-      \hline
-    \end{tabular}
-    \end{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item When the battery reaches 9\%, the system immediately displays a “Low Battery” warning on the app/keypad.
+      \item Valid PIN entries at 9\% all cause the bolt to retract (i.e., \texttt{LOCK\_STATE = 1}).
+      \item Firestore logs a “LOW\_BATTERY” event with the correct battery percentage.
+      \item The “Low Battery” alert remains active until the battery charge is above 20\%.
+      \item After charging above 20\%, the warning disappears from both the app and keypad.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any of the following occurs:
+    \begin{itemize}
+      \item No “Low Battery” warning appears when battery $<10\%$.  
+      \item Lock fails to unlock with a valid PIN at 9\% battery.  
+      \item Firestore does not record a “LOW\_BATTERY” event or records an incorrect percentage.  
+      \item Warning does not clear after charging above 20\%.  
+    \end{itemize} \\
+  \hline
+\end{tabular}
+\end{center}
 
 
-    \newpage
+% ---------------------------- Test 10 --------------------------------
+\newpage
 \subsection*{10. Battery Fully Drained Test}
+
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Verify lock fails to actuate when battery is dead.
-    \item Ensure system logs failure and alerts user.
-    \item Confirm physical key still works.
+    \item Verify that when the battery is completely drained (0\%), the electronic unlocking mechanism fails to actuate.
+    \item Ensure the system logs a “Battery Depleted” error event in Firestore.
+    \item Confirm that the physical key override still functions to unlock the door.
+    \item Check that the mobile app displays a clear “Replace Battery” notification.
 \end{itemize}
+
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Let battery drop to 0\%.
-    \item Enter valid PIN and observe no bolt movement.
-    \item Try physical key override.
+    \item Allow the lock’s battery to discharge down to 0\% (watch the low‐battery indicator until it reads “0\%” or shuts off).
+    \item At the keypad, enter a valid 4-digit PIN. Observe that the bolt does not move and the door remains locked.
+    \item Open the mobile app (or check the keypad display) to verify a “Replace Battery” warning appears.
+    \item In Firestore, confirm that:
+    \begin{itemize}
+        \item A “BATTERY\_DEPLETED” event is logged with timestamp and battery level = 0\%.  
+        \item \texttt{LOCK\_STATE} remains 0 (locked).  
+    \end{itemize}
+    \item Insert and turn the physical key override; verify that the door unlocks mechanically.
+    \item After replacing or recharging the battery above 20\%, attempt a valid PIN entry to confirm normal electronic operation resumes and logs a “POWER\_RESTORED” event.
 \end{itemize}
+\newpage
 \subparagraph{Expectations of Test}
 \begin{center}
-    \begin{tabular}{|c|p{10cm}|}
-      \hline
-      \textbf{Result} & \textbf{Conditions} \\
-      \hline
-      \textbf{PASS} &
-        \begin{minipage}[t]{\linewidth}
-        \begin{itemize}
-          \item Bolt does not move on electronic command.
-          \item Firestore logs “Battery Depleted” error.
-          \item Physical key unlocks door.
-          \item App advises “Replace Battery” notification. \\
-        \end{itemize}
-        \end{minipage} \\
-      \hline
-      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
-      \hline
-    \end{tabular}
-    \end{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Entering a valid PIN at 0\% battery does not retract the bolt—\texttt{LOCK\_STATE} remains 0.
+      \item Firestore logs a “BATTERY\_DEPLETED” event with battery = 0\%.
+      \item The mobile app (or keypad) shows “Replace Battery.”
+      \item Physical key override unlocks the door mechanically despite dead electronics.
+      \item After battery replacement/recharge above 20\%, entering a valid PIN retracts the bolt, and Firestore logs “POWER\_RESTORED” with battery \(>\) 20\%.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any of the following occurs:
+    \begin{itemize}
+      \item Door unlocks electronically at 0\% battery.  
+      \item Firestore does not record a “BATTERY\_DEPLETED” event or logs an incorrect battery level.  
+      \item No “Replace Battery” warning appears on the app/keypad.  
+      \item Physical key override fails to unlock at 0\%.  
+      \item After recharging above 20\%, the electronic PIN entry still fails or logs no “POWER\_RESTORED” event.  
+    \end{itemize} \\
+  \hline
+\end{tabular}
+\end{center}
 
 
 \newpage
@@ -395,7 +447,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \begin{itemize}
           \item ESP32 performs a brown-out reset when voltage is out of range.
           \item No permanent hardware damage occurs.
-          \item Device reconnects to Wi-Fi and Firestore automatically.
+          \item Device reconnects to Wi-Fi and Postgres automatically.
           \item System resumes normal operation within 10 seconds of recovery. \\
         \end{itemize}
         \end{minipage} \\
@@ -416,7 +468,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Initiate an unlock operation by entering a valid PIN or triggering via Firestore.
+    \item Initiate an unlock operation by entering a valid PIN or triggering via Postgres.
     \item While the lock bolt is actuating (in motion), manually reboot the ESP32 (e.g., press reset button).
     \item After reboot, observe the behavior of the lock and system logs.
 \end{itemize}
@@ -432,7 +484,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \begin{itemize}
           \item Device reboots without hardware fault.
           \item Lock resumes to the correct and safe final position (locked or unlocked).
-          \item State in Firestore is updated accurately post-recovery.
+          \item State in Postgres is updated accurately post-recovery.
           \item System logs include a reboot event and status report.\\
         \end{itemize}
         \end{minipage} \\
@@ -453,9 +505,9 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Send an unlock command via Firestore with a known state change (e.g., `isLocked: false`).
+    \item Send an unlock command via Postgres with a known state change (e.g., `isLocked: false`).
     \item Observe that the lock successfully unlocks on first command.
-    \item Without changing the command value (keep `isLocked: false`), trigger a second Firestore write with the same content.
+    \item Without changing the command value (keep `isLocked: false`), trigger a second Postgres write with the same content.
     \item Monitor system behavior, actuator activity, and system logs.
 \end{itemize}
 
@@ -492,9 +544,9 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \subparagraph{How We Test It}
 \begin{itemize}
     \item Manually obstruct the solenoid or insert debris to simulate a jam in the latch.
-    \item Send an unlock command via keypad or Firestore.
+    \item Send an unlock command via keypad or Postgres.
     \item Observe whether the solenoid attempts to actuate, fails, and triggers timeout logic.
-    \item Check system logs, app notifications, and Firestore status.
+    \item Check system logs, app notifications, and Postgres status.
 \end{itemize}
 
 \subparagraph{Expectations of Test}
@@ -508,7 +560,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \begin{itemize}
           \item Solenoid attempt is detected and terminated within a defined timeout window (e.g., 3 seconds).
           \item System logs a “Mechanical Jam Detected” or similar error.
-          \item Firestore reflects failure or stuck status.
+          \item Postgres reflects failure or stuck status.
           \item App displays a warning to the user (e.g., “Unlock Failed – Check Lock Mechanism”).\\
         \end{itemize}
         \end{minipage} \\
@@ -532,7 +584,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \begin{itemize}
     \item Power on the smart lock system normally.
     \item Use the physical key to manually unlock or lock the door.
-    \item Observe system behavior (e.g., sensors, logs, Firestore sync).
+    \item Observe system behavior (e.g., sensors, logs, Postgres sync).
     \item Attempt an electronic command (lock/unlock) immediately afterward to verify proper system alignment.
 \end{itemize}
 
@@ -547,7 +599,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \begin{itemize}
           \item Manual override is mechanically smooth and does not interfere with solenoid.
           \item System detects state change via sensor (e.g., magnetic or position feedback).
-          \item Firestore and app update to reflect new lock state.
+          \item Postgres and app update to reflect new lock state.
           \item Subsequent electronic commands work normally without misalignment.\\
         \end{itemize}
         \end{minipage} \\
@@ -558,19 +610,20 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \end{center}
 
 \newpage
+\begin{samepage}
 \subsection*{16. Hall-Sensor Noise Rejection Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
     \item Verify that the system correctly interprets magnetic sensor signals despite electrical noise or transient spikes.
     \item Prevent false positives (e.g., reporting "locked" when bolt hasn't reached the lock position).
-    \item Ensure the lock status reported to the app and Firestore is accurate and trustworthy.
+    \item Ensure the lock status reported to the app and Postgres is accurate and trustworthy.
 \end{itemize}
 
 \subparagraph{How We Test It}
 \begin{itemize}
     \item Simulate magnetic noise or signal fluctuations near the Hall-effect sensor using a signal generator or nearby magnet source.
     \item Observe whether the system falsely detects a "locked" or "unlocked" state.
-    \item Compare physical bolt position with system status shown in Firestore and app.
+    \item Compare physical bolt position with system status shown in Postgres and app.
     \item Repeat under normal operation and edge cases (e.g., during solenoid movement).
 \end{itemize}
 
@@ -584,7 +637,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \begin{minipage}[t]{\linewidth}
         \begin{itemize}
           \item System does not falsely report "locked" or "unlocked" due to magnetic interference.
-          \item Lock state in Firestore matches actual bolt position.
+          \item Lock state in Postgres matches actual bolt position.
           \item App accurately reflects the physical lock status.
           \item Optional: Sensor readings are filtered or debounced in software to ignore noise. \\
         \end{itemize}
@@ -594,6 +647,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
       \hline
     \end{tabular}
 \end{center}
+\end{samepage}
+
 
 \newpage
 \subsection*{17. I²C Temperature Sensor Fault Tolerance Test}
@@ -608,7 +663,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \begin{itemize}
     \item Emulate an I²C fault using a glitch generator, cable disturbance, or by temporarily disconnecting the sensor.
     \item Allow the sensor to resume normal operation after 1–2 cycles.
-    \item Observe system logs, display/app data, and Firestore fields related to temperature.
+    \item Observe system logs, display/app data, and Postgres fields related to temperature.
     \item Confirm whether system handles retry logic or flags invalid reads.
 \end{itemize}
 
@@ -623,7 +678,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \begin{itemize}
           \item System does not crash, hang, or misbehave when invalid data is received.
           \item Invalid temperature readings are ignored or marked as “error” in logs.
-          \item Firestore/app either retains last valid value or displays "unavailable".
+          \item Postgres/app either retains last valid value or displays "unavailable".
           \item Normal readings resume once sensor stabilizes.\\
         \end{itemize}
         \end{minipage} \\
@@ -712,6 +767,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 
 
 \newpage
+\begin{samepage}
 \subsection*{20. Low Temperature Operation Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -748,6 +804,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
       \hline
     \end{tabular}
 \end{center}
+\end{samepage}
+
 
 
 \newpage
@@ -869,6 +927,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 
 
 \newpage
+\begin{samepage}
 \subsection*{24. OTA Update Failure and Rollback Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -907,9 +966,13 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
       \hline
     \end{tabular}
 \end{center}
+\end{samepage}
+
 
 
 \newpage
+\begin{samepage}
+
 \subsection*{25. API Rate Limiting and HTTP 429 Handling Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -949,9 +1012,13 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
       \hline
     \end{tabular}
 \end{center}
+\end{samepage}
+
 
 
 \newpage
+\begin{samepage}
+
 \subsection*{26. SSL Certificate Expiration Handling Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -990,9 +1057,11 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
       \hline
     \end{tabular}
 \end{center}
+\end{samepage}
 
 
 \newpage
+\begin{samepage}
 \subsection*{27. JWT Expiration and Cloud Authentication Rejection Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -1030,9 +1099,12 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
       \hline
     \end{tabular}
 \end{center}
+\end{samepage}
 
 
 \newpage
+\begin{samepage}
+
 \subsection*{28. SPI Flash Corruption and Boot Configuration Error Handling Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -1071,9 +1143,12 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
       \hline
     \end{tabular}
 \end{center}
+\end{samepage}
 
 
 \newpage
+\begin{samepage}
+
 \subsection*{29. Flash Storage Full During OTA Update Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -1112,6 +1187,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
       \hline
     \end{tabular}
 \end{center}
+\end{samepage}
 
 
 \newpage
@@ -1158,23 +1234,44 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \newpage
 \subsection{Less Common Scenarios (Tests 31–40)}
 
-\subsection*{31. Multi-factor Auth Proximity Test}
+\begin{samepage}
+\subsection*{31. Magnetic interference from magnets false lock state.}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Confirm the system requires both a valid PIN and Bluetooth proximity to unlock.
-    \item Observe behavior if Bluetooth disconnects mid-process.
+    \item Test the impact of magnetic interference from magnets on the lock's functionality.
+    \item Observe behavior if when locking and unlocking when magnets are nearby lock.
 \end{itemize}
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Start PIN entry and slowly move the paired phone out of Bluetooth range.
-    \item Review logs to see how the system treats incomplete multi-factor input.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Door only unlocks when both factors are simultaneously validated.
-    \item Firestore logs clearly show whether it was the PIN or BLE that failed.
+    \item Test unlock and lock function on app with magnets nearby.
+    \item Test pin functionality with magnets present.
 \end{itemize}
 
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Lock and unlock commands execute successfully without delay or mechanical failure.
+          \item Magnets do not cause the lock to false report "locked" or "unlocked" due to magnetic interference.
+          \item Device state remains unchanged and stable.
+          \item No crash, hang, or unintended execution occurs.\\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+\end{samepage}
+
+
+\newpage
+\begin{samepage}
 \subsection*{32. Time-zone Mismatch Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -1183,16 +1280,37 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \end{itemize}
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Set the phone to Pacific Time and the lock to Coordinated Universal Time.
+    \item Set the phone to Pacific Time and the lock to Mountain, Eastern, etc. time.
     \item Generate and use an OTP, and observe if the mismatch causes issues.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item OTPs still work during their intended validity window.
-    \item Scheduled events (e.g., auto-lock) trigger based on synchronized absolute times.
-\end{itemize}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Pin verification succeeds regardless of time zone.
+          \item Scheduled actions and OTPs remain aligned with their intended times.
+          \item OTP pins during designated times work at lock's local time zone\\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+\end{samepage}
 
-\subsection*{33. DST Transition Auto-lock Test}
+
+
+
+
+\newpage
+\begin{samepage}
+\subsection*{33. Daylight Savings Transition Auto-lock Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
     \item Confirm that daylight saving time transitions don't disrupt automated locking.
@@ -1203,11 +1321,29 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Observe actual lock behavior before, during, and after the transition.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Only one auto-lock event occurs, even with the clock shift.
-    \item No skipped or duplicated scheduling happens.
-\end{itemize}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item The auto-lock event triggers at the correct local time, accounting for the DST shift.
+          \item No skipped or duplicated scheduling happens.
+          \item The lock state reflects the correct time after the transition.\\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Lock unlocks at wrong time after daylight savings time transition. \\
+      \hline
+    \end{tabular}
+\end{center}
+\end{samepage}
 
+
+\newpage
+\begin{samepage}
 \subsection*{34. Admin vs. Guest Role Change Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -1215,31 +1351,67 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \end{itemize}
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Change a user's role (e.g., from guest to admin) directly in Firestore.
+    \item Change a user's role (e.g., from guest to admin) directly in Postgres.
     \item Attempt access under both roles shortly after the change.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item The new role is honored without requiring system restart or delay.
-    \item Access permissions align with the updated role instantly.
-\end{itemize}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item The new role is honored without requiring system restart or delay.
+          \item Access permissions align with the updated role instantly.
+          \item Admins can perform all actions, while guests are restricted as expected.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+\end{samepage}
 
+
+\newpage
+\begin{samepage} 
 \subsection*{35. BLE Range Boundary Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Determine the Bluetooth unlocking behavior at different physical distances.
+    \item Determine the Bluetooth WiFi setup behavior at different physical distances.
 \end{itemize}
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Gradually move the phone away from the lock in 0.5-meter steps, from 1 m up to 6 m.
-    \item Test unlocking at each position and note the results.
+    \item Start trying to give the lock WiFi credentials at a 6-meter distance.
+    \item Measure at what point is lock able to receive the credentials.
 \end{itemize}
 \subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Unlocks reliably at closer distances.
-    \item Fails gracefully beyond Bluetooth’s effective range.
-\end{itemize}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Lock successfully receives WiFi credentials only within the expected 1 meter BLE range.
+          \item BLE connection is stable and reliable within the expected range.
+          \item Lock is able to connect to WiFi successfully and only when in range.\\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+\end{samepage}
 
+
+
+\newpage
 \subsection*{36. Almost-Synchronous App and Keypad Usage Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -1264,7 +1436,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \begin{itemize}
           \item The first input within the half-second takes precedence.
           \item The correct lock-state is reflected both in the app and on the physical lock.
-          \item Firestore and app reflect the final consistent state without falling into an ambiguous or unresponsive state. \\
+          \item Postgres and app reflect the final consistent state without falling into an ambiguous or unresponsive state. \\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -1277,6 +1449,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 
 % 37. Reusing Emergency PIN Test
 
+\newpage
+\begin{samepage}
 \subsection*{37. Reusing Emergency PIN Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
@@ -1299,7 +1473,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
         \begin{minipage}[t]{\linewidth}
         \begin{itemize}
           \item PIN is removed and declared ineligible after one-usage.
-          \item Reusing the PIN flashes to the user that the PIN is invalid.
+          \item Reusing the PIN flashes to the user that the PIN is invalid.\\
         \end{itemize}
         \end{minipage} \\
       \hline
@@ -1307,11 +1481,186 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
       \hline
     \end{tabular}
 \end{center}
+\end{samepage}
 
 
+% 38
+
+\newpage
+\begin{samepage}
+\subsection*{38. App Reconnect After Airplane Mode Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that a user connecting to airplane mode and off airplane mode retains their connectivity to the app.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item User has app open and turns on airplane mode.
+    \item User waits a minute, then disconnects from airplane mode.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item App connects back to the database with correct data.
+          \item App continues to function as expected after phone has regained connection.\\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or correct. \\
+      \hline
+    \end{tabular}
+\end{center}
+\end{samepage}
+
+% 39
+
+\newpage
+\begin{samepage}
+\subsection*{39. Generating Identical OTP and Emergency PINs Test.}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that the app won't generate two PINs simultaneously that are identical at the same time.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item User generates a OTP PIN from the OTP list.
+    \item User then generates Emergency PINs until one matches/doesn't match the OTP PIN.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item No emergency PIN matches no OTP PIN.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or correct. \\
+      \hline
+    \end{tabular}
+\end{center}
+\end{samepage}
 
 
+% 40
 
+\newpage
+\begin{samepage}
+\subsection*{40. Fresh PIN Usage Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that the lock accepts valid PINs within seconds after creation.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item User generates a PIN of either kind.
+    \item User then quickly within 1 to 2 seconds uses the PIN on the keypad.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Keypad unlocks given the fresh PIN input.
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or correct. \\
+      \hline
+    \end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 41
+
+\newpage
+\begin{samepage}
+\subsection*{41. PIN Deletion During Keypad Usage Test.}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that the lock does not accept a PIN after it has been deleted while the user is in the middle of entering a code on the keypad.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item User generates an OTP Pin.
+    \item User then swipes to delete the PIN while actively typing it on the keypad.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Lock fails to unlock via the keypad when entering a PIN that was deleted while in the action of entering into the keypad.\\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or correct. \\
+      \hline
+    \end{tabular}
+\end{center}
+\end{samepage}
+
+% 42
+
+\newpage
+\begin{samepage}
+\subsection*{42. Lock Already Unlocked and Emergency PIN Used.}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that the lock does not exhibit any unintended behaviors like re-locking when already unlocked and an emergency PIN is then used.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item User ensures that the lock is in the unlocked state via the mobile app.
+    \item User then uses an emergency PIN from their account list..
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Lock remains in the same unlocked state without any ambiguous states after using emergency PIN on already unlocked door.\\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or correct. \\
+      \hline
+    \end{tabular}
+\end{center}
+\end{samepage}
 
 
 
