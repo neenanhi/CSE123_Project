@@ -1662,6 +1662,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \end{center}
 \end{samepage}
 
+\input{43_and_beyond.tex}
 
 
 
@@ -1687,95 +1688,5 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 
 
 
-
-
-
-
-
-
-
-
-
-\newpage
-\subsection{Rare Scenarios (Tests 61–65)}
-
-\subsection*{61. Cosmic Ray Bit-Flip Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Evaluate the system’s resilience to random memory errors, such as those caused by cosmic rays.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Use a simulator to inject random bit flips into RAM and flash every 10 seconds.
-    \item Observe system behavior over an extended period.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item System detects and handles bit errors—either by correcting or isolating them.
-    \item No persistent crashes or loss of functionality.
-\end{itemize}
-
-\subsection*{62. Lightning Surge Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Assess whether the hardware can tolerate sudden electrical surges.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Apply a 1-kV spike to the 12V input for a 1 microsecond duration using a surge generator.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item No hardware is permanently damaged.
-    \item System recovers and operates normally after the surge event.
-\end{itemize}
-
-\subsection*{63. Seismic Vibration Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Verify the lock’s mechanical and electronic components withstand prolonged shaking.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Subject the device to a vibration range of 5–50 Hz at 0.5 g for 10 minutes.
-    \item Check for loosening, noise, or malfunction.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item All parts remain in place and fully operational.
-    \item Sensors continue to function accurately post-test.
-\end{itemize}
-
-\subsection*{64. Extreme Cold Operation Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Confirm functionality in severe cold conditions down to -40 °C.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Place the lock in a chamber set to -40 °C for 2 hours.
-    \item Perform 10 complete lock/unlock cycles.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Mechanism operates without freezing or delay.
-    \item No cracking or material degradation.
-    \item Battery and electronics remain reliable.
-\end{itemize}
-
-\subsection*{65. Extreme Heat Operation Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Test device reliability when exposed to 85 °C for extended periods.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Place the lock in a heat chamber at 85 °C.
-    \item Execute a lock/unlock cycle every 5 minutes over 2 hours.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item No thermal shutdown or malfunctions.
-    \item MCU and storage remain intact and responsive.
-\end{itemize}
+\input{Rare_Scenarios.tex}
 

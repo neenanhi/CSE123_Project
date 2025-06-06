@@ -1,0 +1,184 @@
+\newpage
+\begin{samepage}
+\subsection*{61. Cosmic Ray Bit-Flip Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Evaluate the system’s resilience to random memory errors caused by cosmic ray-induced bit flips.
+    \item Ensure no critical system failures occur due to single-event upsets.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Use a software simulator to inject random bit flips into RAM and flash every 10 seconds.
+    \item Observe the system for stability and recovery behavior over a 24-hour period.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item System detects, corrects, or isolates bit errors without crashing.
+      \item No data corruption in critical areas.
+      \item Normal operation resumes automatically after error correction.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Persistent system crashes, lockouts, or permanent data corruption. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+\newpage
+\begin{samepage}
+\subsection*{62. Lightning Surge Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Assess hardware resilience to sudden electrical surges or transient spikes.
+    \item Verify lock recovers to normal operation after surge exposure.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Use a surge generator to apply a 1-kV spike to the 12V input for 1 microsecond.
+    \item Monitor the lock’s immediate and long-term response.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item No permanent damage to circuitry or lock mechanism.
+      \item Lock operates normally after the surge event.
+      \item No residual performance degradation observed.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any permanent malfunction, damage, or inability to resume normal operation after surge exposure. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+\newpage
+\begin{samepage}
+\subsection*{63. Seismic Vibration Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure the lock’s mechanical and electronic components remain secure and functional during prolonged vibrations.
+    \item Simulate real-world seismic or heavy traffic scenarios.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Use a vibration table to subject the lock to vibrations ranging 5–50 Hz at 0.5 g for 10 minutes.
+    \item Observe physical condition and test lock/unlock function during and after vibration.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item All mechanical parts remain in place and fully secure.
+      \item Lock unlocks smoothly after vibration testing.
+      \item No noise, rattling, or misalignment present.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any mechanical or electronic failure, loose components, or abnormal noises post-test. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+\newpage
+\begin{samepage}
+\subsection*{64. Extreme Cold Operation Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Confirm reliable operation in extreme cold conditions as low as -40 °C.
+    \item Assess material durability and battery performance under severe cold.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Place the lock in a temperature-controlled chamber set to -40 °C for 2 hours.
+    \item Perform 10 full lock/unlock cycles while still in the chamber.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Lock mechanism operates without freezing or jamming.
+      \item No visible cracking or material damage.
+      \item Battery voltage remains stable, with normal MCU response.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any freezing, material cracking, or failure to operate as expected in the cold environment. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+\newpage
+\begin{samepage}
+\subsection*{65. Extreme Heat Operation Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Assess the lock’s resilience when exposed to temperatures as high as 85 °C.
+    \item Confirm no thermal-induced failures or performance degradation.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Place the lock in a heat chamber at 85 °C.
+    \item Perform a lock/unlock cycle every 5 minutes for 2 hours to simulate repeated use.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item No thermal shutdown or performance drop during high-temperature testing.
+      \item Electronics, storage, and mechanical parts remain fully functional.
+      \item No melting, warping, or deformation observed.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any performance issues, lock/unlock failures, or material deformation at high temperatures. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
