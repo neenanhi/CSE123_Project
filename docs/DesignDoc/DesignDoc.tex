@@ -1,5 +1,5 @@
 \documentclass[a4paper,12pt]{article}
-% \usepackage[a4paper,margin=3cm]{geometry}
+\usepackage[a4paper,margin=3cm]{geometry}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{xcolor}
@@ -8,6 +8,8 @@
 \usepackage{booktabs}
 \usepackage{indentfirst}
 \usepackage{subcaption}
+\usepackage{comment} % for making comments
+\usepackage{amsmath}
 
 \setlength{\arrayrulewidth}{0.5mm}
 \setlength{\tabcolsep}{18pt}
@@ -55,11 +57,11 @@
 \newpage % to place TOB on page 2.
 \tableofcontents
 
-\input{Background.tex}
-
-\input{Problem_definition.tex}
+\input{Introduction.tex}
 
 \input{Installation.tex}
+
+\input{Design.tex}
 
 \input{Concepts_considered.tex}
 
@@ -83,6 +85,7 @@
 \input{Functional_prototype.tex} % new section
 % Describes what we have done compared to the manufactured design
 
+\input{Features_For_Future_Versions.tex} % for after final presentation
 
 \input{Economic_Analysis.tex} % This is a new section
 
