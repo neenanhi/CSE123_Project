@@ -14,9 +14,38 @@
  - Modeling
 \end{comment}
 
-\subsection{Aesthetic Prototype} % Neena will input the images here
+\subsection{Aesthetic Prototype}
 
 Following extensive brainstorming and analysis, our team carefully evaluated a wide range of potential features and implementation strategies for our smart lock system. Ultimately, we selected the concept of using a solenoid-based locking mechanism controlled via a keypad and a smartphone app. This approach balanced feasibility, security, and user convenience. Our selection process included the use of the 6-3-5 method, which helped generate and refine a wide range of ideas across five categories: Hardware \& Mechanics, Smartphone Integration, Security Features, Software \& Control, and Advanced Features. We also brainstormed ideas of how the lock would potentially look like, for easy installation and fix up when an issue arises. All of our ideas were formed based on this appendix section: \ref{BrainstormingIdeas}.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=0.80\textwidth]{img/AestheticPrototype.png}
+    \caption{Aesthetic Prototype}
+    \label{fig:aestheticPrototype}
+\end{figure}
+
+Figure \ref{fig:aestheticPrototype} illustrates our aesthetic prototype, which served as the foundation for the final functional prototype. The enclosure was designed to effectively house all internal components of the smart lock, including the circuit board and the ESP32-C3 module, while securely mounting the keypad on the exterior. Its design allowed for quick and simple assembly and provided clear visibility of the locking mechanism from the side, making it easy to identify whether the device was in the locked or unlocked state.
+
+After 3D printing the casing and assembling the internal components, we arrived at the final prototype shown in Figure \ref{fig:testOutside}.
+
+\begin{figure}[!ht]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.7\linewidth]{img/prototypeInside.png}
+  \caption{Internal view of assembled prototype}
+  \label{fig:pInside}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.7\linewidth]{img/prototypeOutside.png}
+  \caption{External view of assembled prototype}
+  \label{fig:pOutside}
+\end{subfigure}
+\caption{Assembled functional prototype with 3D-printed casing}
+\label{fig:testOutside}
+\end{figure}
 
 \subsection{Design for Manufacture, Assembly, Maintenance} % we need to add more detail from our previous work from 123A...read his comments from draft
 \subsubsection*{Design For Manufacture}
@@ -165,3 +194,6 @@ This simple model helps protect against unauthorized access while balancing usab
 
 These models helped guide hardware component choices (such as low-power microcontrollers and solenoid driver circuits), define software timing thresholds, and enforce robust security policies in our firmware design.
 
+\input{Battery_life.tex}
+
+\input{Ownership_access_control.tex}
