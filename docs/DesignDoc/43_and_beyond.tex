@@ -833,3 +833,171 @@
     \end{tabular}
 \end{center}
 \end{samepage}
+
+
+% 62
+
+\newpage
+\begin{samepage}
+\subsection*{62. Direct Cloud Modification Rejection Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that changing lock state directly in the cloud database does not unlock or lock the door.
+    \item Verify that only the app or authorized hardware commands can control the lock.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Manually change the \texttt{LOCK\_STATE} field in the cloud database to 1 (unlock) or 0 (lock).
+    \item Observe if the lock physically responds to this direct change.
+    \item Send an unlock/lock command from the app afterward to verify normal behavior.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Lock does not physically move when \texttt{LOCK\_STATE} is changed directly in the cloud.
+      \item Only commands from app or keypad trigger real mechanical movement.
+      \item Logs show no unintended actions during direct cloud change.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Lock physically unlocks/locks because of direct cloud edits without app/hardware command. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+
+% 63
+
+
+\newpage
+\begin{samepage}
+\subsection*{63. Delayed Unlock Feedback Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Confirm that if there’s a slight delay in unlocking (like due to slow WiFi or cloud latency), the app still shows a “pending” or waiting indicator.
+    \item Prevent confusion for the user who might think the unlock failed when it’s just slow.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Intentionally slow down the WiFi network or cloud server response.
+    \item Send an unlock command from the app.
+    \item Observe the app display and see if it shows “pending” or similar feedback.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item App clearly shows that unlock is pending or waiting.
+      \item Once delay resolves, app shows success or failure based on actual result.
+      \item No confusion or misleading message in the app UI.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & App shows wrong status (like immediate success or nothing at all) during network delay. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+
+% 64
+
+
+\newpage
+\begin{samepage}
+\subsection*{64. WiFi Channel Interference Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that nearby WiFi networks on the same or overlapping channels do not prevent the lock from responding to commands.
+    \item Ensure lock can handle a typical home environment with many devices.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Set up nearby WiFi access points on the same channel as the lock’s WiFi.
+    \item Try sending lock/unlock commands via app and observe behavior.
+    \item Repeat with different channels to compare.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Lock responds to unlock/lock commands normally despite interference.
+      \item No lost commands or random behavior seen.
+      \item Logs show no errors or retries triggered by interference.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Lock fails to respond, delays are excessive, or system logs show errors due to WiFi overlap. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 65
+
+
+
+\newpage
+\subsection*{65. Power Surge Resilience Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure the ESP32 safely handles sudden voltage spikes or drops (brown-out conditions).
+    \item Verify that the system resets safely without hardware damage.
+    \item Confirm that the device automatically resumes correct operation after reset.
+\end{itemize}
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Connect the device to a programmable power supply.
+    \item Apply a rapid voltage increase (e.g., spike to 4.5V) or decrease (e.g., drop below 3.0V) to simulate surge or brown-out.
+    \item Observe if the ESP32 performs a brown-out reset.
+    \item Monitor recovery behavior and system logs.
+\end{itemize}
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} &
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item ESP32 performs a brown-out reset when voltage is out of range.
+          \item No permanent hardware damage occurs.
+          \item Device reconnects to Wi-Fi and Postgres automatically.
+          \item System resumes normal operation within 10 seconds of recovery. \\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+    \end{center}

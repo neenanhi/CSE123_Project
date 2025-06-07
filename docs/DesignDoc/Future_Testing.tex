@@ -1,6 +1,6 @@
 \newpage
 \begin{samepage}
-    \subsection{Manufactured Product Testing}
+    \subsection{Appendix 3 - Product Testing Plan}
     \subsubsection{Common Scenarios Tests}
     % ---------------------------- Test 1 --------------------------------
     \subsection*{1. Valid PIN Entry Test}
@@ -420,42 +420,43 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \end{tabular}
 \end{center}
 
-
 \newpage
-\subsection*{11. Power Surge Resilience Test}
+\begin{samepage}
+\subsection*{11. Multi-User Simultaneous Access Test}
+
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Ensure the ESP32 safely handles sudden voltage spikes or drops (brown-out conditions).
-    \item Verify that the system resets safely without hardware damage.
-    \item Confirm that the device automatically resumes correct operation after reset.
+    \item Ensure that if two people try to unlock at the same time (like one on app and one on keypad), the system only unlocks once and logs both attempts.
+    \item Prevent confusion or mechanical issues from double actuation.
 \end{itemize}
+
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Connect the device to a programmable power supply.
-    \item Apply a rapid voltage increase (e.g., spike to 4.5V) or decrease (e.g., drop below 3.0V) to simulate surge or brown-out.
-    \item Observe if the ESP32 performs a brown-out reset.
-    \item Monitor recovery behavior and system logs.
+    \item Have one person unlock via app and another enter a PIN on keypad simultaneously (within 1-2 seconds).
+    \item Observe lock's behavior: does it unlock once cleanly?
+    \item Check system logs for both events.
 \end{itemize}
+
 \subparagraph{Expectations of Test}
 \begin{center}
-    \begin{tabular}{|c|p{10cm}|}
-      \hline
-      \textbf{Result} & \textbf{Conditions} \\
-      \hline
-      \textbf{PASS} &
-        \begin{minipage}[t]{\linewidth}
-        \begin{itemize}
-          \item ESP32 performs a brown-out reset when voltage is out of range.
-          \item No permanent hardware damage occurs.
-          \item Device reconnects to Wi-Fi and Postgres automatically.
-          \item System resumes normal operation within 10 seconds of recovery. \\
-        \end{itemize}
-        \end{minipage} \\
-      \hline
-      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
-      \hline
-    \end{tabular}
-    \end{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Lock only actuates once to unlock.
+      \item System logs show both events with no errors.
+      \item No repeated unlocking or stuck bolt motion.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Lock unlocks twice or logs errors when two users act at the same time. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
 
 \newpage
 \subsection*{12. Mid-Unlock Reboot Recovery Test}
