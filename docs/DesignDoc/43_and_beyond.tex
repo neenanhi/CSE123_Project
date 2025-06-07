@@ -1,0 +1,835 @@
+\newpage
+\begin{samepage}
+\subsection*{43. Water Resistance Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that the lock's outer case and electronics remain operational when exposed to rain or moisture.
+    \item Ensure that no short circuits or corrosion occur during or after water exposure.
+    \item Confirm that the lock can still perform basic functions like unlocking and status reporting.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Simulate light rain by spraying water evenly over the lock case for 5 minutes.
+    \item Observe lock functionality during and immediately after spraying:
+    \begin{itemize}
+        \item Check that the lock can still unlock using a valid PIN.
+        \item Ensure no error messages or power resets occur.
+    \end{itemize}
+    \item After drying, inspect the internal electronics for any signs of water damage or corrosion.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Lock remains fully functional during and after water exposure.
+      \item No electrical shorts, corrosion, or reset events occur.
+      \item All mechanical and electronic components remain dry internally.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any sign of malfunction during rain simulation (e.g., lock won’t open, short circuits, or visible internal corrosion). \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 44
+
+\newpage
+\begin{samepage}
+\subsection*{44. Shock and Vibration Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure the lock case and internal electronics can withstand physical shocks and vibrations from door slams or impacts.
+    \item Verify no functional or cosmetic damage occurs after simulated impacts.
+    \item Confirm the lock can still unlock and report status accurately.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Apply mechanical shocks by gently striking the door or lock case with a rubber mallet.
+    \item Simulate door vibration by rapidly opening and closing the door multiple times.
+    \item Observe lock operation before, during, and after the tests:
+    \begin{itemize}
+        \item Enter a valid PIN and check if the lock unlocks.
+        \item Look for physical cracks or alignment issues.
+    \end{itemize}
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item No damage to lock case or internal parts.
+      \item Lock unlocks normally with correct PIN after shocks and vibrations.
+      \item No rattling or misalignment in case parts.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any malfunction or visible damage (e.g., broken parts, misalignment, or failed unlock test). \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 45
+
+\newpage
+\begin{samepage}
+\subsection*{45. Tamper Detection Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Confirm that the lock’s tamper detection mechanism functions properly.
+    \item Verify that tamper attempts (like partially opening the case) trigger the correct alerts.
+    \item Ensure no false triggers during normal operation.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Slightly loosen or pry the case to simulate forced access.
+    \item Observe lock behavior during and after this attempt:
+    \begin{itemize}
+        \item Check if LED indicator blinks or an alarm sounds.
+        \item Verify that a “tamper event” is logged in Postgres if online.
+    \end{itemize}
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Tamper detection is triggered immediately when the case is pried.
+      \item Alarm or LED indicator responds as intended.
+      \item Event logged in Postgres if Wi-Fi is available.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & No alarm, no LED blink, or no Postgres log during tamper simulation. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+% 46
+
+
+\newpage
+\begin{samepage}
+\subsection*{46. EMI (Electromagnetic Interference) Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that the lock continues to operate normally when exposed to common sources of RF noise.
+    \item Ensure no false unlocking or failures occur due to nearby electromagnetic fields.
+    \item Test for overall robustness in environments like commercial buildings with many RF devices.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Place RF devices (like a Wi-Fi router, handheld radio, or microwave) near the lock while it’s running.
+    \item Enter a valid PIN and observe lock behavior for delays or malfunctions.
+    \item Test communication with Postgres (if Wi-Fi is available) to ensure no RF interference.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item No changes in lock response time or behavior.
+      \item Lock still unlocks with valid PIN.
+      \item Communication with Postgres (if available) remains stable.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Lock fails to respond, false unlocks, or data issues during RF exposure. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+
+% 47
+
+\newpage
+\begin{samepage}
+\subsection*{47. Battery Swapping Time Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Make sure that a depleted battery can be swapped out quickly and safely by the user.
+    \item Confirm the lock system operates normally and immediately after a fresh battery.
+    \item Check that no errors or abnormal behavior occur during or after the swap.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Simulate battery depletion until the lock no longer responds.
+    \item Swap in a fully charged battery, measuring the time until lock operates again.
+    \item Verify the lock can accept PIN entry and respond to app commands immediately.
+    \item Check Postgres or local logs for “POWER\_RESTORED” event and normal lock state.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Fresh battery swap is completed within 10 seconds.
+      \item Lock accepts valid PIN entry and responds to app commands immediately after swap.
+      \item No errors, resets, or abnormal delays are observed.
+      \item Postgres or system logs event with correct timestamp.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any of the PASS conditions are not met, or lock remains unresponsive after swap. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 48
+
+
+\newpage
+\begin{samepage}
+\subsection*{48. Battery Cycle Life Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Assess how many charge/discharge cycles the battery can endure before significant capacity loss occurs.
+    \item Confirm the battery meets lifespan expectations for typical usage scenarios.
+    \item Evaluate any system degradation from aging batteries.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Fully charge the battery and measure its capacity (e.g., using a battery analyzer or capacity measurement tool).
+    \item Discharge the battery completely through fast discharge source.
+    \item Repeat this charge-discharge cycle 300 times (or manufacturer’s recommended cycle count).
+    \item After 300 cycles, measure the battery capacity again and compare to initial measurement.
+    \item Observe lock performance during and after these cycles.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Battery retains at least 80\% of its original capacity after 300 cycles.
+      \item No lock performance degradation or instability occurs during normal operation.
+      \item Post-test capacity and logs indicate continued reliable operation.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Capacity drops below 80\% or lock experiences malfunctions during or after cycling. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 49
+
+
+
+\newpage
+\subsection*{49. RTC Drift Test After Offline Period}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Measure the time drift of the ESP32’s RTC after prolonged offline operation (e.g., one week without network time synchronization).
+    \item Assess whether the RTC accuracy meets system requirements for timestamping events and logs.
+    \item Determine if corrective measures (e.g., periodic NTP sync) are necessary.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Synchronize the ESP32’s RTC to accurate time (e.g., via NTP).
+    \item Disconnect the device from the network and keep powered for one week.
+    \item After one week, compare the ESP32 RTC time against a reference clock (e.g., atomic clock, smartphone).
+    \item Record the time difference (drift) in minutes.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item RTC drift is less than or equal to 1 minute after one week offline.
+          \item System logs reflect consistent and accurate timestamps.
+          \item No significant impact on event timing or logging accuracy.\\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+
+
+% 50
+
+
+
+\newpage
+\begin{samepage}
+\subsection*{50. Partial PIN Entry Timeout Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that if a user starts entering a PIN but stops, the system eventually clears the partial entry.
+    \item Confirm that incomplete PIN entries do not accidentally trigger a false unlock or other errors.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Enter the first 2 digits of a valid 4-digit PIN and then wait for 30 seconds without completing it.
+    \item Observe whether the system automatically clears the partial entry.
+    \item Enter a valid PIN after the timeout period to confirm the system still works.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Partial PIN entry clears automatically after 30 seconds of no input.
+      \item No unintended unlock or errors happen during partial entry.
+      \item Entering a complete valid PIN after timeout unlocks the door as normal.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Partial PIN doesn’t clear on its own, or a partial PIN causes an unintended unlock or error. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 51
+
+
+\newpage
+\begin{samepage}
+\subsection*{51. Short Repeated Unlock Commands Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Ensure that the system does not try to unlock repeatedly if multiple unlock commands come in very quickly.
+    \item Confirm that only the first unlock command executes and no confusion or extra mechanical wear happens.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Use two phones or apps to send unlock commands within 2 seconds of each other.
+    \item Observe the bolt movement and system response.
+    \item Check that only one unlock movement occurs and both commands are logged correctly.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Only one unlock actuation occurs for the rapid commands.
+      \item Both commands are logged in the database or logs.
+      \item No duplicate unlocking motions, error logs, or misalignment of bolt position.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Lock actuates multiple times or errors are seen during rapid unlock commands. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+
+% 52
+
+
+\newpage
+\begin{samepage}
+\subsection*{52. Battery Contact Flicker Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Check how the system handles momentary loss of power if the battery contacts flicker or become loose.
+    \item Make sure the system recovers cleanly and no permanent errors happen.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Gently wiggle the battery to simulate a brief disconnect or flicker.
+    \item Observe whether the lock resets, logs a power event, and recovers.
+    \item Try to unlock using a valid PIN after the power flicker.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item System safely resets if power flickers and fully recovers.
+      \item No error logs or false unlocks happen because of the flicker.
+      \item Valid PIN unlock works after power recovers.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & System crashes, lock stays stuck, or partial unlock occurs during battery flicker. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+
+% 53
+
+
+
+\newpage
+\begin{samepage}
+\subsection*{53. Partial Keypad Failure Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Check how the lock system responds if one of the keypad buttons is physically stuck or not working.
+    \item Make sure that other keys still work and that the system does not unlock unexpectedly.
+    \item Confirm proper error handling for partial keypad failure.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Simulate a stuck or non-functional key by taping it down or disconnecting that key's wire (if possible).
+    \item Try to enter a valid PIN that requires the failed key.
+    \item Then try a PIN that does not use the failed key.
+    \item Observe if lock behavior is consistent and safe.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Lock does not unlock with partial PINs or if the broken key is needed.
+      \item Other keys work normally and unaffected PINs unlock as expected.
+      \item System does not produce random errors or unlock with bad PINs.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Lock unlocks even when an incorrect PIN is entered due to keypad error, or system becomes unresponsive. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 54
+
+
+\newpage
+\begin{samepage}
+\subsection*{54. Nearby Electromagnetic Fields Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Make sure that nearby electromagnetic interference does not cause false unlocks or errors.
+    \item Verify the lock keeps working normally when in areas with high RF noise (like near a microwave or big power transformer).
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Place the lock within 0.5 m of an active microwave oven or other RF source.
+    \item Send commands and try keypad unlocks while device is exposed.
+    \item Observe if the lock still works and no false signals are seen.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item No false unlocks or random keypad responses.
+      \item Unlocks and commands work normally without delay or errors.
+      \item System logs show no interference warnings or error events.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Lock unlocks by itself, shows errors, or stops responding during RF exposure. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 55
+
+
+\newpage
+\begin{samepage}
+\subsection*{55. Dust or Debris in Keypad Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Make sure that small amounts of dust, dirt, or moisture on the keypad do not stop it from working.
+    \item Confirm no random unlocks or false signals happen because of dirt.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Sprinkle a small amount of dust or dirt on the keypad.
+    \item Enter a valid PIN and see if the lock responds normally.
+    \item Clean off the keypad and test again to make sure it still works as before.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Valid PINs still unlock the lock even with a little dirt.
+      \item No false unlocks or random entries are seen.
+      \item Cleaning the keypad fully restores normal performance.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Keypad stops responding, triggers false unlocks, or logs errors because of dirt. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+
+% 56
+
+
+\newpage
+\begin{samepage}
+\subsection*{56. Keypad Button Wear Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that repeated use of the same button doesn't cause it to fail or degrade performance.
+    \item Make sure the keypad can handle frequent presses in real-world usage.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Use a mechanical tester (or finger) to press the same button at least 5000 times.
+    \item After testing, enter a valid PIN that uses that button and see if it still works normally.
+    \item Also test that other buttons on the keypad still function without issue.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Key still works after 5000 presses.
+      \item Valid PINs that use the worn key still unlock correctly.
+      \item No sticky keys or false inputs occur after the test.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Key fails to register presses, or valid PINs can’t unlock after wear test. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 57
+
+
+\newpage
+\begin{samepage}
+\subsection*{57. Bolt Retraction Minimum Voltage Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Check the lowest voltage where the solenoid bolt still retracts reliably.
+    \item Confirm that unlocking works even when the battery is getting low.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Use a power supply to set the voltage of the system.
+    \item Slowly reduce voltage from nominal (e.g., 12 V) down in steps (e.g., 0.5 V).
+    \item At each step, send an unlock command and see if bolt retracts fully.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Bolt retracts fully down to the minimum voltage (as per product spec).
+      \item Unlocks smoothly, no partial or stuck motion.
+      \item System logs or status remain normal (no errors, no misalignment).\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Bolt fails to fully retract or system errors occur before minimum voltage limit. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+
+% 58
+
+
+
+\newpage
+\begin{samepage}
+\subsection*{58. ESP to Solenoid Relay Stress Test}
+
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that repeated relay switching by the ESP32 doesn’t cause damage or misfires.
+    \item Ensure the relay coil and driver can handle frequent switching.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Command the ESP32 to toggle the solenoid relay 500 times rapidly (like 1 Hz or faster).
+    \item Watch for stuck relay, missed commands, or system resets.
+    \item Confirm the lock still functions normally after the stress test.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Relay toggles correctly every time.
+      \item No sticking or missed commands.
+      \item Lock responds normally to unlock/lock commands after the test.
+      \item No heating or damage to relay or ESP32 driver pins.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Relay fails to toggle, sticks, or lock fails after test due to hardware damage. \\
+  \hline
+\end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 59
+
+
+
+
+\newpage
+\subsection*{59. I²C Temperature Sensor Fault Tolerance Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify the system handles brief communication errors or invalid data from the temperature sensor gracefully.
+    \item Ensure no crashes, system hangs, or misleading readings are shown to the user.
+    \item Confirm that erroneous data is filtered or flagged appropriately.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Emulate an I²C fault using a glitch generator, cable disturbance, or by temporarily disconnecting the sensor.
+    \item Allow the sensor to resume normal operation after 1–2 cycles.
+    \item Observe system logs, display/app data, and Postgres fields related to temperature.
+    \item Confirm whether system handles retry logic or flags invalid reads.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item System does not crash, hang, or misbehave when invalid data is received.
+          \item Invalid temperature readings are ignored or marked as “error” in logs.
+          \item Postgres/app either retains last valid value or displays "unavailable".
+          \item Normal readings resume once sensor stabilizes.\\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+
+
+
+% 60
+
+
+\newpage
+\begin{samepage}
+\subsection*{60. OTA Update Failure and Rollback Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify that the smart lock safely handles OTA update interruptions during mid-download.
+    \item Confirm the system automatically rolls back to the prior stable firmware version.
+    \item Ensure no corruption or bricking occurs, maintaining device operability.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Initiate an OTA firmware update.
+    \item Simulate failure by interrupting the download mid-transfer (e.g., disconnect network or power).
+    \item Power cycle the device and observe boot behavior.
+    \item Verify the device boots the previous firmware version without errors.
+    \item Test normal lock/unlock functionality after rollback.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Device detects incomplete or corrupted OTA update.
+          \item Automatically rolls back to the previous firmware version.
+          \item Device boots successfully without entering a bricked state.
+          \item Lock functions correctly with prior firmware after rollback.
+          \item System logs the failed update and rollback event.\\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+\end{samepage}
+
+
+% 61
+
+
+
+\newpage
+\begin{samepage}
+
+\subsection*{61. SPI Flash Corruption and Boot Configuration Error Handling Test}
+\subparagraph{Test Goals and Purpose}
+\begin{itemize}
+    \item Verify the system can detect and handle corrupted SPI flash data.
+    \item Ensure the device fails gracefully and does not enter an unstable or undefined state.
+    \item Confirm that the firmware provides recovery options, such as default fallback config or safe mode.
+    \item Prevent bricking or incorrect behavior due to unreadable configuration data.
+\end{itemize}
+
+\subparagraph{How We Test It}
+\begin{itemize}
+    \item Intentionally corrupt the configuration section of the SPI flash (e.g., overwrite with invalid or random data).
+    \item Reboot the smart lock and observe its behavior during initialization.
+    \item Check system logs and debug output for detection and reporting of the corruption.
+    \item Evaluate whether the system uses fallback defaults or enters a known safe state.
+\end{itemize}
+
+\subparagraph{Expectations of Test}
+\begin{center}
+    \begin{tabular}{|c|p{10cm}|}
+      \hline
+      \textbf{Result} & \textbf{Conditions} \\
+      \hline
+      \textbf{PASS} & 
+        \begin{minipage}[t]{\linewidth}
+        \begin{itemize}
+          \item Firmware detects SPI flash corruption during boot.
+          \item Lock enters safe mode or loads default configuration.
+          \item Device does not crash, freeze, or act unpredictably.
+          \item Logs include clear error message for corrupted config.
+          \item Optional: App or user is notified to reconfigure settings.\\
+        \end{itemize}
+        \end{minipage} \\
+      \hline
+      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
+      \hline
+    \end{tabular}
+\end{center}
+\end{samepage}

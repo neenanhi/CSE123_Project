@@ -1,7 +1,7 @@
 \newpage
 \begin{samepage}
     \section{Manufactured Product Testing}
-    \subsection{Common Scenarios (Tests 1–30)}
+    \subsection{Common Scenarios Tests}
     % ---------------------------- Test 1 --------------------------------
     \subsection*{1. Valid PIN Entry Test}
     \subparagraph{Test Goals and Purpose}
@@ -270,14 +270,14 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \begin{itemize}
     \item Verify that the lock accepts a locally cached valid PIN when Wi-Fi is unavailable.
     \item Ensure the lock unlocks immediately (no network delay) using the onboard PIN list.
-    \item Confirm that, once Wi-Fi returns, the locally recorded event syncs up to Firestore with an “offline” flag.
+    \item Confirm that, once Wi-Fi returns, the locally recorded event syncs up to Postgres with an “offline” flag.
 \end{itemize}
 
 \subparagraph{How We Test It}
 \begin{itemize}
     \item Disable Wi-Fi on the ESP32 module.
     \item Enter a valid PIN on the keypad. The bolt should retract instantly.
-    \item Re-enable Wi-Fi, then check Firestore:
+    \item Re-enable Wi-Fi, then check Postgres:
     \begin{itemize}
         \item A new unlock event appears, marked with “offline”: true.
         \item \texttt{LOCK\_STATE} becomes 1 in the cloud.
@@ -294,7 +294,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \begin{minipage}[t]{\linewidth}
     \begin{itemize}
       \item Lock opens locally when Wi-Fi is off, and \texttt{LOCK\_STATE} stays 1 locally.
-      \item Upon Wi-Fi restoration, Firestore shows an “OFFLINE\_UNLOCK” event and \texttt{LOCK\_STATE = 1}.
+      \item Upon Wi-Fi restoration, Postgres shows an “OFFLINE\_UNLOCK” event and \texttt{LOCK\_STATE = 1}.
       \item No undue delay is observed by the user during offline use.\\
     \end{itemize}
     \end{minipage} \\
@@ -315,7 +315,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Verify that when the lock’s internal battery drops below 10\%, the system issues a clear low-battery alert.
     \item Ensure that at low battery ( \(\ge 5\%\) but $<10\%$), normal electronic unlocking still functions without interruption.
     \item Confirm that the alert persists on the mobile app and/or keypad display until the battery is above 20\%.
-    \item Check that a “LOW\_BATTERY” event, with the correct battery percentage, is logged in Firestore.
+    \item Check that a “LOW\_BATTERY” event, with the correct battery percentage, is logged in Postgres.
 \end{itemize}
 
 \subparagraph{How We Test It}
@@ -323,7 +323,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Gradually drain the lock’s battery until the charge indicator reads 9\% (or the system automatically reports “Battery below 10\%”).
     \item Attempt to unlock the door using a valid PIN. Observe that the bolt still retracts normally.
     \item Open the mobile app (or check the keypad display) to verify that a “Low Battery” warning is shown.
-    \item In Firestore (or your logging dashboard), confirm that:
+    \item In Postgres (or your logging dashboard), confirm that:
     \begin{itemize}
         \item A “LOW\_BATTERY” event appears, showing battery level = 9\% (or whatever the actual percentage is when the alert triggered).
         \item \texttt{LOCK\_STATE} changes to 1 when you entered the valid PIN.
@@ -347,7 +347,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \begin{itemize}
       \item When the battery reaches 9\%, the system immediately displays a “Low Battery” warning on the app/keypad.
       \item Valid PIN entries at 9\% all cause the bolt to retract (i.e., \texttt{LOCK\_STATE = 1}).
-      \item Firestore logs a “LOW\_BATTERY” event with the correct battery percentage.
+      \item Postgres logs a “LOW\_BATTERY” event with the correct battery percentage.
       \item The “Low Battery” alert remains active until the battery charge is above 20\%.
       \item After charging above 20\%, the warning disappears from both the app and keypad.\\
     \end{itemize}
@@ -357,7 +357,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \begin{itemize}
       \item No “Low Battery” warning appears when battery $<10\%$.  
       \item Lock fails to unlock with a valid PIN at 9\% battery.  
-      \item Firestore does not record a “LOW\_BATTERY” event or records an incorrect percentage.  
+      \item Postgres does not record a “LOW\_BATTERY” event or records an incorrect percentage.  
       \item Warning does not clear after charging above 20\%.  
     \end{itemize} \\
   \hline
@@ -372,7 +372,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
     \item Verify that when the battery is completely drained (0\%), the electronic unlocking mechanism fails to actuate.
-    \item Ensure the system logs a “Battery Depleted” error event in Firestore.
+    \item Ensure the system logs a “Battery Depleted” error event in Postgres.
     \item Confirm that the physical key override still functions to unlock the door.
     \item Check that the mobile app displays a clear “Replace Battery” notification.
 \end{itemize}
@@ -382,7 +382,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \item Allow the lock’s battery to discharge down to 0\% (watch the low‐battery indicator until it reads “0\%” or shuts off).
     \item At the keypad, enter a valid 4-digit PIN. Observe that the bolt does not move and the door remains locked.
     \item Open the mobile app (or check the keypad display) to verify a “Replace Battery” warning appears.
-    \item In Firestore, confirm that:
+    \item In Postgres, confirm that:
     \begin{itemize}
         \item A “BATTERY\_DEPLETED” event is logged with timestamp and battery level = 0\%.  
         \item \texttt{LOCK\_STATE} remains 0 (locked).  
@@ -401,17 +401,17 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \begin{minipage}[t]{\linewidth}
     \begin{itemize}
       \item Entering a valid PIN at 0\% battery does not retract the bolt—\texttt{LOCK\_STATE} remains 0.
-      \item Firestore logs a “BATTERY\_DEPLETED” event with battery = 0\%.
+      \item Postgres logs a “BATTERY\_DEPLETED” event with battery = 0\%.
       \item The mobile app (or keypad) shows “Replace Battery.”
       \item Physical key override unlocks the door mechanically despite dead electronics.
-      \item After battery replacement/recharge above 20\%, entering a valid PIN retracts the bolt, and Firestore logs “POWER\_RESTORED” with battery \(>\) 20\%.\\
+      \item After battery replacement/recharge above 20\%, entering a valid PIN retracts the bolt, and Postgres logs “POWER\_RESTORED” with battery \(>\) 20\%.\\
     \end{itemize}
     \end{minipage} \\
   \hline
   \textbf{FAIL} & Any of the following occurs:
     \begin{itemize}
       \item Door unlocks electronically at 0\% battery.  
-      \item Firestore does not record a “BATTERY\_DEPLETED” event or logs an incorrect battery level.  
+      \item Postgres does not record a “BATTERY\_DEPLETED” event or logs an incorrect battery level.  
       \item No “Replace Battery” warning appears on the app/keypad.  
       \item Physical key override fails to unlock at 0\%.  
       \item After recharging above 20\%, the electronic PIN entry still fails or logs no “POWER\_RESTORED” event.  
@@ -533,42 +533,45 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \end{center}
 
 \newpage
-\subsection*{14. Solenoid Jam Detection Test}
+\begin{samepage}
+\subsection*{14. Installation on Different Standard Doors Test}
+
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Verify that the system detects when the solenoid fails to complete its movement due to physical obstruction.
-    \item Ensure that the system does not enter an unsafe or unknown state.
-    \item Confirm that the system times out the unlock operation and alerts the user appropriately.
+    \item Make sure the lock can be easily installed on different common door types.
+    \item Check that the lock works well on both wood and metal doors of standard sizes.
+    \item Confirm that the lock stays secure and works normally after installation.
 \end{itemize}
 
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Manually obstruct the solenoid or insert debris to simulate a jam in the latch.
-    \item Send an unlock command via keypad or Postgres.
-    \item Observe whether the solenoid attempts to actuate, fails, and triggers timeout logic.
-    \item Check system logs, app notifications, and Postgres status.
+    \item Pick three types of doors (e.g., solid wood, metal, composite) with standard thickness (e.g., 1.75 inches).
+    \item Follow the installation instructions to attach the lock to each door.
+    \item Test if the lock works (lock/unlock) after installation on each door type.
+    \item Look for gaps, loose fittings, or any mechanical issues.
 \end{itemize}
 
 \subparagraph{Expectations of Test}
 \begin{center}
-    \begin{tabular}{|c|p{10cm}|}
-      \hline
-      \textbf{Result} & \textbf{Conditions} \\
-      \hline
-      \textbf{PASS} & 
-        \begin{minipage}[t]{\linewidth}
-        \begin{itemize}
-          \item Solenoid attempt is detected and terminated within a defined timeout window (e.g., 3 seconds).
-          \item System logs a “Mechanical Jam Detected” or similar error.
-          \item Postgres reflects failure or stuck status.
-          \item App displays a warning to the user (e.g., “Unlock Failed – Check Lock Mechanism”).\\
-        \end{itemize}
-        \end{minipage} \\
-      \hline
-      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
-      \hline
-    \end{tabular}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Lock installs securely on all tested door types.
+      \item Lock and unlock functions work without sticking or misalignment.
+      \item No gaps, wobbles, or looseness in the lock after installation.
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Any one of the PASS conditions is missing or if the lock cannot be securely mounted. \\
+  \hline
+\end{tabular}
 \end{center}
+\end{samepage}
+
 
 
 \newpage
@@ -649,83 +652,83 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \end{center}
 \end{samepage}
 
-
 \newpage
-\subsection*{17. I²C Temperature Sensor Fault Tolerance Test}
+\begin{samepage}
+\subsection*{17. ESP to Solenoid Relay Stress Test}
+
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Verify the system handles brief communication errors or invalid data from the temperature sensor gracefully.
-    \item Ensure no crashes, system hangs, or misleading readings are shown to the user.
-    \item Confirm that erroneous data is filtered or flagged appropriately.
+    \item Verify that repeated relay switching by the ESP32 doesn’t cause damage or misfires.
+    \item Ensure the relay coil and driver can handle frequent switching.
 \end{itemize}
 
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Emulate an I²C fault using a glitch generator, cable disturbance, or by temporarily disconnecting the sensor.
-    \item Allow the sensor to resume normal operation after 1–2 cycles.
-    \item Observe system logs, display/app data, and Postgres fields related to temperature.
-    \item Confirm whether system handles retry logic or flags invalid reads.
+    \item Command the ESP32 to toggle the solenoid relay 500 times rapidly (like 1 Hz or faster).
+    \item Watch for stuck relay, missed commands, or system resets.
+    \item Confirm the lock still functions normally after the stress test.
 \end{itemize}
 
 \subparagraph{Expectations of Test}
 \begin{center}
-    \begin{tabular}{|c|p{10cm}|}
-      \hline
-      \textbf{Result} & \textbf{Conditions} \\
-      \hline
-      \textbf{PASS} & 
-        \begin{minipage}[t]{\linewidth}
-        \begin{itemize}
-          \item System does not crash, hang, or misbehave when invalid data is received.
-          \item Invalid temperature readings are ignored or marked as “error” in logs.
-          \item Postgres/app either retains last valid value or displays "unavailable".
-          \item Normal readings resume once sensor stabilizes.\\
-        \end{itemize}
-        \end{minipage} \\
-      \hline
-      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
-      \hline
-    \end{tabular}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Relay toggles correctly every time.
+      \item No sticking or missed commands.
+      \item Lock responds normally to unlock/lock commands after the test.
+      \item No heating or damage to relay or ESP32 driver pins.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Relay fails to toggle, sticks, or lock fails after test due to hardware damage. \\
+  \hline
+\end{tabular}
 \end{center}
+\end{samepage}
 
 
 \newpage
-\subsection*{18. RTC Drift Test After Offline Period}
+\begin{samepage}
+\subsection*{18. Break Lock Casing by Hand Test}
+
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Measure the time drift of the ESP32’s RTC after prolonged offline operation (e.g., one week without network time synchronization).
-    \item Assess whether the RTC accuracy meets system requirements for timestamping events and logs.
-    \item Determine if corrective measures (e.g., periodic NTP sync) are necessary.
+    \item Check if the lock casing can withstand someone trying to break it by hand.
+    \item Make sure the casing protects the lock’s inner parts and doesn’t break easily.
 \end{itemize}
 
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Synchronize the ESP32’s RTC to accurate time (e.g., via NTP).
-    \item Disconnect the device from the network and keep powered for one week.
-    \item After one week, compare the ESP32 RTC time against a reference clock (e.g., atomic clock, smartphone).
-    \item Record the time difference (drift) in minutes.
+    \item Try to pull, bend, or twist the lock casing with normal hand strength.
+    \item Use only hands—no tools or extra force.
+    \item Check for cracks, breaks, or anything that makes the lock easier to tamper with.
 \end{itemize}
 
 \subparagraph{Expectations of Test}
 \begin{center}
-    \begin{tabular}{|c|p{10cm}|}
-      \hline
-      \textbf{Result} & \textbf{Conditions} \\
-      \hline
-      \textbf{PASS} & 
-        \begin{minipage}[t]{\linewidth}
-        \begin{itemize}
-          \item RTC drift is less than or equal to 1 minute after one week offline.
-          \item System logs reflect consistent and accurate timestamps.
-          \item No significant impact on event timing or logging accuracy.\\
-        \end{itemize}
-        \end{minipage} \\
-      \hline
-      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
-      \hline
-    \end{tabular}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Casing stays solid and does not crack or break.
+      \item Lock keeps working as normal after the test.
+      \item No gaps or looseness appear in the casing.
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Casing cracks, bends out of shape, or the lock stops working right after the test. \\
+  \hline
+\end{tabular}
 \end{center}
-
+\end{samepage}
 
 \newpage
 \subsection*{19. High Temperature Operation Test}
@@ -925,46 +928,43 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
     \end{tabular}
 \end{center}
 
-
 \newpage
 \begin{samepage}
-\subsection*{24. OTA Update Failure and Rollback Test}
+\subsection*{24. Data Logging Consistency Test}
+
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Verify that the smart lock safely handles OTA update interruptions during mid-download.
-    \item Confirm the system automatically rolls back to the prior stable firmware version.
-    \item Ensure no corruption or bricking occurs, maintaining device operability.
+    \item Make sure every unlock and lock event is properly recorded in the logs or Postgres.
+    \item Check for missing or duplicated log entries.
 \end{itemize}
 
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Initiate an OTA firmware update.
-    \item Simulate failure by interrupting the download mid-transfer (e.g., disconnect network or power).
-    \item Power cycle the device and observe boot behavior.
-    \item Verify the device boots the previous firmware version without errors.
-    \item Test normal lock/unlock functionality after rollback.
+    \item Perform 10 unlock/lock cycles in a row.
+    \item Use a valid PIN for each cycle.
+    \item Use invalid PINs to test rejection.
+    \item Compare physical lock state changes to the logs in Postgres.
+    \item Check timestamps and event types.
 \end{itemize}
 
 \subparagraph{Expectations of Test}
 \begin{center}
-    \begin{tabular}{|c|p{10cm}|}
-      \hline
-      \textbf{Result} & \textbf{Conditions} \\
-      \hline
-      \textbf{PASS} & 
-        \begin{minipage}[t]{\linewidth}
-        \begin{itemize}
-          \item Device detects incomplete or corrupted OTA update.
-          \item Automatically rolls back to the previous firmware version.
-          \item Device boots successfully without entering a bricked state.
-          \item Lock functions correctly with prior firmware after rollback.
-          \item System logs the failed update and rollback event.\\
-        \end{itemize}
-        \end{minipage} \\
-      \hline
-      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
-      \hline
-    \end{tabular}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Every physical event has a matching log entry.
+      \item No duplicated or missing log entries.
+      \item Timestamps align with real-world event timing.
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Logs are missing events, have duplicates, or show wrong timestamps. \\
+  \hline
+\end{tabular}
 \end{center}
 \end{samepage}
 
@@ -1101,47 +1101,41 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \end{center}
 \end{samepage}
 
-
 \newpage
 \begin{samepage}
+\subsection*{28. App Command Rejection for Wrong Lock State Test}
 
-\subsection*{28. SPI Flash Corruption and Boot Configuration Error Handling Test}
 \subparagraph{Test Goals and Purpose}
 \begin{itemize}
-    \item Verify the system can detect and handle corrupted SPI flash data.
-    \item Ensure the device fails gracefully and does not enter an unstable or undefined state.
-    \item Confirm that the firmware provides recovery options, such as default fallback config or safe mode.
-    \item Prevent bricking or incorrect behavior due to unreadable configuration data.
+    \item Ensure that the lock does not try to unlock if already unlocked, or lock again if already locked.
+    \item Prevent wasted power and mechanical wear from unnecessary commands.
 \end{itemize}
 
 \subparagraph{How We Test It}
 \begin{itemize}
-    \item Intentionally corrupt the configuration section of the SPI flash (e.g., overwrite with invalid or random data).
-    \item Reboot the smart lock and observe its behavior during initialization.
-    \item Check system logs and debug output for detection and reporting of the corruption.
-    \item Evaluate whether the system uses fallback defaults or enters a known safe state.
+    \item Manually set the lock to the unlocked state.
+    \item From the app, send an unlock command while it’s already unlocked.
+    \item Observe lock behavior and check logs.
 \end{itemize}
 
 \subparagraph{Expectations of Test}
 \begin{center}
-    \begin{tabular}{|c|p{10cm}|}
-      \hline
-      \textbf{Result} & \textbf{Conditions} \\
-      \hline
-      \textbf{PASS} & 
-        \begin{minipage}[t]{\linewidth}
-        \begin{itemize}
-          \item Firmware detects SPI flash corruption during boot.
-          \item Lock enters safe mode or loads default configuration.
-          \item Device does not crash, freeze, or act unpredictably.
-          \item Logs include clear error message for corrupted config.
-          \item Optional: App or user is notified to reconfigure settings.\\
-        \end{itemize}
-        \end{minipage} \\
-      \hline
-      \textbf{FAIL} & Any one of the PASS conditions is missing or incorrect. \\
-      \hline
-    \end{tabular}
+\begin{tabular}{|c|p{10cm}|}
+  \hline
+  \textbf{Result} & \textbf{Conditions} \\
+  \hline
+  \textbf{PASS} &
+    \begin{minipage}[t]{\linewidth}
+    \begin{itemize}
+      \item Lock ignores duplicate commands for the current state.
+      \item No duplicate mechanical actuation happens.
+      \item Logs show the duplicate command was rejected safely.\\
+    \end{itemize}
+    \end{minipage} \\
+  \hline
+  \textbf{FAIL} & Lock tries to unlock again, wasting power or causing errors. \\
+  \hline
+\end{tabular}
 \end{center}
 \end{samepage}
 
@@ -1232,7 +1226,7 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 % End for Common Scenarios (Tests 1 - 30)
 
 \newpage
-\subsection{Less Common Scenarios (Tests 31–40)}
+\subsection{Less Common Scenarios Tests}
 
 \begin{samepage}
 \subsection*{31. Magnetic interference from magnets false lock state.}
@@ -1662,120 +1656,8 @@ Either wait for the lockout timer to expire or enter an admin PIN to clear the l
 \end{center}
 \end{samepage}
 
+\input{43_and_beyond.tex}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\newpage
-\subsection{Rare Scenarios (Tests 61–65)}
-
-\subsection*{61. Cosmic Ray Bit-Flip Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Evaluate the system’s resilience to random memory errors, such as those caused by cosmic rays.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Use a simulator to inject random bit flips into RAM and flash every 10 seconds.
-    \item Observe system behavior over an extended period.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item System detects and handles bit errors—either by correcting or isolating them.
-    \item No persistent crashes or loss of functionality.
-\end{itemize}
-
-\subsection*{62. Lightning Surge Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Assess whether the hardware can tolerate sudden electrical surges.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Apply a 1-kV spike to the 12V input for a 1 microsecond duration using a surge generator.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item No hardware is permanently damaged.
-    \item System recovers and operates normally after the surge event.
-\end{itemize}
-
-\subsection*{63. Seismic Vibration Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Verify the lock’s mechanical and electronic components withstand prolonged shaking.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Subject the device to a vibration range of 5–50 Hz at 0.5 g for 10 minutes.
-    \item Check for loosening, noise, or malfunction.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item All parts remain in place and fully operational.
-    \item Sensors continue to function accurately post-test.
-\end{itemize}
-
-\subsection*{64. Extreme Cold Operation Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Confirm functionality in severe cold conditions down to -40 °C.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Place the lock in a chamber set to -40 °C for 2 hours.
-    \item Perform 10 complete lock/unlock cycles.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item Mechanism operates without freezing or delay.
-    \item No cracking or material degradation.
-    \item Battery and electronics remain reliable.
-\end{itemize}
-
-\subsection*{65. Extreme Heat Operation Test}
-\subparagraph{Test Goals and Purpose}
-\begin{itemize}
-    \item Test device reliability when exposed to 85 °C for extended periods.
-\end{itemize}
-\subparagraph{How We Test It}
-\begin{itemize}
-    \item Place the lock in a heat chamber at 85 °C.
-    \item Execute a lock/unlock cycle every 5 minutes over 2 hours.
-\end{itemize}
-\subparagraph{Expectations of Test}
-\begin{itemize}
-    \item No thermal shutdown or malfunctions.
-    \item MCU and storage remain intact and responsive.
-\end{itemize}
+\input{Rare_Scenarios.tex}
 
